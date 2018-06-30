@@ -1,0 +1,25 @@
+<ion-header>
+  <ion-navbar color="orange">
+    <ion-title>Vista del rio</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+
+  <ion-item class="menu-opt" no-lines (tap)="navigate('EntryPage')">
+    <ion-avatar item-start>
+      <ion-icon color="amber" name="add"></ion-icon>
+    </ion-avatar>
+    Add
+  </ion-item>
+
+  <br>
+
+  <ion-item class="menu-opt" no-lines (tap)="navigate('ReportPage')">
+    <ion-avatar item-start>
+      <ion-icon color="amber" name="list-box"></ion-icon>
+    </ion-avatar>
+    Report
+  </ion-item>
+
+</ion-content>
