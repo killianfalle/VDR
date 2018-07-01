@@ -4,22 +4,32 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content>
 
-  <ion-item class="menu-opt" no-lines (tap)="navigate('EntryPage')">
-    <ion-avatar item-start>
-      <ion-icon color="amber" name="add"></ion-icon>
-    </ion-avatar>
-    Add
-  </ion-item>
+  <ion-card (tap)="navigate('EntryPage')">
+    <ion-row text-center margin-top>
+      <ion-col>
+        <ion-icon color="amber" name="add"></ion-icon>
+      </ion-col>
+    </ion-row>
+    <ion-row text-center margin-bottom>
+      <ion-col>
+        Entry
+      </ion-col>
+    </ion-row>
+  </ion-card>
 
-  <br>
-
-  <ion-item class="menu-opt" no-lines (tap)="navigate('ReportPage')">
-    <ion-avatar item-start>
-      <ion-icon color="amber" name="list-box"></ion-icon>
-    </ion-avatar>
-    Report
-  </ion-item>
+  <ion-card (tap)="navigate('ReportPage')">
+    <ion-row text-center margin-top>
+      <ion-col>
+        <ion-icon color="amber" name="list-box"></ion-icon>
+      </ion-col>
+    </ion-row>
+    <ion-row text-center margin-bottom>
+      <ion-col>
+        Report
+      </ion-col>
+    </ion-row>
+  </ion-card>
 
 </ion-content>

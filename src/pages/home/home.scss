@@ -1,15 +1,12 @@
 page-home {
-	ion-avatar {
-		min-height: 0 !important;
+
+	.card {
+		.row .col {
+			font-size: 1.8em;
+		}
 	}
 
-	ion-avatar[item-start] {
-		margin: 8px 16px 8px 21px !important;
-	}
-
-	.menu-opt {
-		padding: 10px;
-		font-size: 2.0em;
-		border: 1px solid color($colors,dark) !important;
+	.icon {
+		font-size: 5em;
 	}
 }
