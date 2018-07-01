@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
 import { IonicPage } from 'ionic-angular';
-import { SettingsPage } from '../settings/settings';
-import { HomePage } from '../home/home';
 
 @IonicPage()
 @Component({
@@ -10,7 +8,8 @@ import { HomePage } from '../home/home';
 export class TabsPage {
 
   tab1Root = 'HomePage';
-  tab2Root = 'SettingsPage';
+  tab2Root = 'StaffPage';
+  tab3Root = 'SettingsPage';
 
   constructor() {
 

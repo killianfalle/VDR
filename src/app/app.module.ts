@@ -6,13 +6,23 @@ import { MyApp } from './app.component';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
+var config = {
+      backButtonText: '',
+      iconMode: 'ios',
+      mode:'ios',
+      modalEnter: 'modal-slide-in',
+      modalLeave: 'modal-slide-out',
+      pageTransition: 'ios',
+      tabsHideOnSubPages: true,
+    };
+
 @NgModule({
   declarations: [
     MyApp,
   ],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(MyApp)
+    IonicModule.forRoot(MyApp,config)
   ],
   bootstrap: [IonicApp],
   entryComponents: [
