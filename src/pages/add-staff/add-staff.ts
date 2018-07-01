@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 /**
- * Generated class for the StaffPage page.
+ * Generated class for the AddStaffPage page.
  *
  * See https://ionicframework.com/docs/components/#navigation for more info on
  * Ionic pages and navigation.
@@ -10,20 +10,16 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 @IonicPage()
 @Component({
-  selector: 'page-staff',
-  templateUrl: 'staff.html',
+  selector: 'page-add-staff',
+  templateUrl: 'add-staff.html',
 })
-export class StaffPage {
+export class AddStaffPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
   }
 
-  navigate() {
-  	this.navCtrl.push('AddStaffPage');
-  }
-
   ionViewDidLoad() {
-    console.log('ionViewDidLoad StaffPage');
+    console.log('ionViewDidLoad AddStaffPage');
   }
 
 }

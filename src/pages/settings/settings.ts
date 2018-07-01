@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { App, IonicPage, NavController, NavParams } from 'ionic-angular';
 
 /**
  * Generated class for the SettingsPage page.
@@ -15,7 +15,19 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 })
 export class SettingsPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(
+  	public app: App, 
+  	public navCtrl: NavController, 
+  	public navParams: NavParams) {
+  }
+
+
+  navigate() {
+  	this.navCtrl.push('ChangePasswordPage');
+  }
+
+  logout() {
+  	this.app.getRootNav().setRoot('LoginPage');
   }
 
   ionViewDidLoad() {

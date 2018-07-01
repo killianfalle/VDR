@@ -13,6 +13,125 @@
 </ion-header>
 
 
-<ion-content padding>
+<ion-content>
+
+	<div [hidden]="steps != 1">
+		<h3 text-center>Classification</h3>
+
+		<ion-row>
+			<ion-col>
+				<ion-card (tap)="select_class('layer')">
+					<ion-item text-center>
+				    	<h1>Layer</h1>
+					</ion-item>
+				</ion-card>
+			</ion-col>
+
+			<ion-col>
+				<ion-card (tap)="select_class('layer_b')">
+					<ion-item text-center>
+					    <h1>Layer</h1>
+					    <p>Class B</p>
+					</ion-item>
+				</ion-card>
+			</ion-col>
+		</ion-row>
+
+		<ion-row>
+			<ion-col>
+				<ion-card (tap)="select_class('breeder')">
+					<ion-item text-center>
+					    <h1>Breeder</h1>
+					</ion-item>
+				</ion-card>
+			</ion-col>
+
+			<ion-col>
+				<ion-card (tap)="select_class('brown')">
+					<ion-item text-center>
+					    <h1>Brown</h1>
+					</ion-item>
+				</ion-card>
+			</ion-col>
+		</ion-row>
+
+		<ion-row>
+			<ion-col>
+				<ion-card (tap)="select_class('others')">
+					<ion-item text-center>
+					    <h1>Others</h1>
+					</ion-item>
+				</ion-card>
+			</ion-col>
+		</ion-row>
+	</div>
+
+	<div [hidden]="steps != 2">
+		<h3 text-center>Size</h3>
+
+		<ion-row>
+			<ion-col>
+				<ion-card (tap)="select_size('pwe')">
+					<ion-item text-center>
+				    	<h1>PWE</h1>
+					</ion-item>
+				</ion-card>
+			</ion-col>
+
+			<ion-col>
+				<ion-card (tap)="select_size('pullet')">
+					<ion-item text-center>
+					    <h1>Pullet</h1>
+					</ion-item>
+				</ion-card>
+			</ion-col>
+		</ion-row>
+
+		<ion-row>
+			<ion-col>
+				<ion-card (tap)="select_size('small')">
+					<ion-item text-center>
+					    <h1>Small</h1>
+					</ion-item>
+				</ion-card>
+			</ion-col>
+
+			<ion-col>
+				<ion-card (tap)="select_size('medium')">
+					<ion-item text-center>
+					    <h1>Medium</h1>
+					</ion-item>
+				</ion-card>
+			</ion-col>
+		</ion-row>
+
+		<ion-row>
+			<ion-col>
+				<ion-card (tap)="select_size('large')">
+					<ion-item text-center>
+					    <h1>Large</h1>
+					</ion-item>
+				</ion-card>
+			</ion-col>
+
+			<ion-col>
+				<ion-card (tap)="select_size('x_large')">
+					<ion-item text-center>
+					    <h1>Extra Large</h1>
+					</ion-item>
+				</ion-card>
+			</ion-col>
+		</ion-row>
+	</div>
+
+	<div padding>
+		<button [hidden]="steps == 1 || steps == 4" ion-button color="orange" outline block (tap)="backPage()">
+			Back
+		</button>
+		<button [hidden]="steps == 4" ion-button color="orange" outline block (tap)="nextPage()">
+			Next
+		</button>
+	</div>
+
 
 </ion-content>

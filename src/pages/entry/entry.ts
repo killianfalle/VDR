@@ -19,6 +19,8 @@ export class EntryPage {
 
   form: any;
 
+  steps: any = 1;
+
   constructor(
   	public navCtrl: NavController,
   	public navParams: NavParams
@@ -31,6 +33,25 @@ export class EntryPage {
   		classification : null,
   		size: null
   	}
+  }
+
+  select_class(_class) {
+    this.form.classification = _class;
+    console.log(this.form);
+  }
+
+  select_size(_size) {
+    this.form.size = _size;
+    console.log(this.form);
+  }
+
+  backPage() {
+    this.steps -= 1;
+  }
+
+  nextPage() {
+    if(this.steps >= 1 || this.steps <= 4)
+      this.steps += 1;
   }
 
   ionViewDidLoad() {

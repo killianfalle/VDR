@@ -15,14 +15,14 @@
 
 <ion-content padding>
 
-	<ion-item class="menu-opt" icon-only>
+	<ion-item class="menu-opt" icon-only (tap)="navigate()">
     	<ion-icon color="amber" name="lock"></ion-icon>
 	  	Change Password
 	</ion-item>
 
 	<br>
 
-	<ion-item class="menu-opt" icon-only>
+	<ion-item class="menu-opt" icon-only (tap)="logout()">
 	    <ion-icon color="amber" name="log-out"></ion-icon>
 	  	Logout
 	</ion-item>
