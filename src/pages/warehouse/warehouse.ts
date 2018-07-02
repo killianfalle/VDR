@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 /**
- * Generated class for the TransactionPage page.
+ * Generated class for the WarehousePage page.
  *
  * See https://ionicframework.com/docs/components/#navigation for more info on
  * Ionic pages and navigation.
@@ -10,10 +10,10 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 @IonicPage()
 @Component({
-  selector: 'page-transaction',
-  templateUrl: 'transaction.html',
+  selector: 'page-warehouse',
+  templateUrl: 'warehouse.html',
 })
-export class TransactionPage {
+export class WarehousePage {
 
   tabs: any = 'finish';
 
@@ -21,7 +21,7 @@ export class TransactionPage {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad TransactionPage');
+    console.log('ionViewDidLoad WarehousePage');
   }
 
 }

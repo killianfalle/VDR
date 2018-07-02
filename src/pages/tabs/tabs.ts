@@ -9,9 +9,12 @@ export class TabsPage {
 
   tab1Root = 'HomePage';
   tab2Root = 'StaffPage';
-  tab3Root = 'SettingsPage';
+  tab3Root = 'WarehousePage';
+  tab4Root = 'SettingsPage';
+
+  role: any;
 
   constructor() {
-
+  	this.role = 'admin';
   }
 }

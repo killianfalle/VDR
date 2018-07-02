@@ -1,4 +1,4 @@
-page-transaction {
+page-warehouse {
 	.card {
 		background: #EEEEEE;
 	}
@@ -6,5 +6,10 @@ page-transaction {
 	.segment-button {
 		height: 3.3em !important;
 		line-height: 3.3em !important;
+	}
+
+	.void {
+		color: color($colors,light);
+		background: color($colors,danger);
 	}
 }
