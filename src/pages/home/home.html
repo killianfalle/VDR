@@ -19,6 +19,19 @@
     </ion-row>
   </ion-card>
 
+  <ion-card (tap)="navigate('TransactionPage')">
+    <ion-row text-center margin-top>
+      <ion-col>
+        <ion-icon color="amber" name="list-box"></ion-icon>
+      </ion-col>
+    </ion-row>
+    <ion-row text-center margin-bottom>
+      <ion-col>
+        Transaction
+      </ion-col>
+    </ion-row>
+  </ion-card>
+
   <ion-card (tap)="navigate('ReportPage')">
     <ion-row text-center margin-top>
       <ion-col>

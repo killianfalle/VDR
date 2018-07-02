@@ -20,7 +20,7 @@
 
 		<ion-row>
 			<ion-col>
-				<ion-card (tap)="select_class('layer')">
+				<ion-card [ngClass]="{'selected' : (form.classification == 'Layer')}" (click)="select_class('Layer')">
 					<ion-item text-center>
 				    	<h1>Layer</h1>
 					</ion-item>
@@ -28,7 +28,7 @@
 			</ion-col>
 
 			<ion-col>
-				<ion-card (tap)="select_class('layer_b')">
+				<ion-card [ngClass]="{'selected' : (form.classification == 'Layer class b')}" (tap)="select_class('Layer class b')">
 					<ion-item text-center>
 					    <h1>Layer</h1>
 					    <p>Class B</p>
@@ -39,7 +39,7 @@
 
 		<ion-row>
 			<ion-col>
-				<ion-card (tap)="select_class('breeder')">
+				<ion-card [ngClass]="{'selected' : (form.classification == 'Breeder')}" (tap)="select_class('Breeder')">
 					<ion-item text-center>
 					    <h1>Breeder</h1>
 					</ion-item>
@@ -47,7 +47,7 @@
 			</ion-col>
 
 			<ion-col>
-				<ion-card (tap)="select_class('brown')">
+				<ion-card [ngClass]="{'selected' : (form.classification == 'Brown')}" (tap)="select_class('Brown')">
 					<ion-item text-center>
 					    <h1>Brown</h1>
 					</ion-item>
@@ -57,7 +57,7 @@
 
 		<ion-row>
 			<ion-col>
-				<ion-card (tap)="select_class('others')">
+				<ion-card [ngClass]="{'selected' : (form.classification == 'Others')}" (tap)="select_class('Others')">
 					<ion-item text-center>
 					    <h1>Others</h1>
 					</ion-item>
@@ -71,7 +71,7 @@
 
 		<ion-row>
 			<ion-col>
-				<ion-card (tap)="select_size('pwe')">
+				<ion-card [ngClass]="{'selected' : (form.size == 'PWE')}" (tap)="select_size('PWE')">
 					<ion-item text-center>
 				    	<h1>PWE</h1>
 					</ion-item>
@@ -79,7 +79,7 @@
 			</ion-col>
 
 			<ion-col>
-				<ion-card (tap)="select_size('pullet')">
+				<ion-card [ngClass]="{'selected' : (form.size == 'Pullet')}" (tap)="select_size('Pullet')">
 					<ion-item text-center>
 					    <h1>Pullet</h1>
 					</ion-item>
@@ -89,7 +89,7 @@
 
 		<ion-row>
 			<ion-col>
-				<ion-card (tap)="select_size('small')">
+				<ion-card [ngClass]="{'selected' : (form.size == 'Small')}" (tap)="select_size('Small')">
 					<ion-item text-center>
 					    <h1>Small</h1>
 					</ion-item>
@@ -97,7 +97,7 @@
 			</ion-col>
 
 			<ion-col>
-				<ion-card (tap)="select_size('medium')">
+				<ion-card [ngClass]="{'selected' : (form.size == 'Medium')}" (tap)="select_size('Medium')">
 					<ion-item text-center>
 					    <h1>Medium</h1>
 					</ion-item>
@@ -107,7 +107,7 @@
 
 		<ion-row>
 			<ion-col>
-				<ion-card (tap)="select_size('large')">
+				<ion-card [ngClass]="{'selected' : (form.size == 'Large')}" (tap)="select_size('Large')">
 					<ion-item text-center>
 					    <h1>Large</h1>
 					</ion-item>
@@ -115,23 +115,99 @@
 			</ion-col>
 
 			<ion-col>
-				<ion-card (tap)="select_size('x_large')">
+				<ion-card [ngClass]="{'selected' : (form.size == 'Extra large')}" (tap)="select_size('Extra large')">
 					<ion-item text-center>
-					    <h1>Extra Large</h1>
+					    <h1>Extra</h1>
+					    <h1>Large</h1>
 					</ion-item>
 				</ion-card>
 			</ion-col>
 		</ion-row>
 	</div>
 
-	<div padding>
-		<button [hidden]="steps == 1 || steps == 4" ion-button color="orange" outline block (tap)="backPage()">
-			Back
-		</button>
-		<button [hidden]="steps == 4" ion-button color="orange" outline block (tap)="nextPage()">
-			Next
-		</button>
+	<div [hidden]="steps != 3">
+
+		<ion-row>
+			<ion-col>
+				<ion-card [ngClass]="{'selected' : (form.qty_type == 'Tray')}" (tap)="select_qty('Tray')">
+					<ion-item text-center>
+				    	<h1>Tray</h1>
+					</ion-item>
+				</ion-card>
+			</ion-col>
+
+			<ion-col>
+				<ion-card [ngClass]="{'selected' : (form.qty_type == 'Pc')}" (tap)="select_qty('Pc')">
+					<ion-item text-center>
+					    <h1>Pc</h1>
+					</ion-item>
+				</ion-card>
+			</ion-col>
+		</ion-row>
+
+		<ion-row>
+			<ion-col>
+				<ion-card>
+					<ion-item>
+						<ion-label>QTY :</ion-label>
+						<ion-input type="text" [(ngModel)]="form.qty" text-right></ion-input>
+					</ion-item>
+				</ion-card>
+			</ion-col>
+		</ion-row>
+
+		<ion-row>
+			<ion-col>
+				<ion-card>
+					<ion-item>
+						<ion-label>Total :</ion-label>
+						<ion-input type="text" [(ngModel)]="form.total" text-right></ion-input>
+					</ion-item>
+				</ion-card>
+			</ion-col>
+		</ion-row>
+
+		<ion-row>
+			<ion-col>
+				<ion-card>
+					<ion-item>
+						<ion-label>Release Date :</ion-label>
+						<ion-datetime [(ngModel)]="form.release_date"></ion-datetime>
+					</ion-item>
+				</ion-card>
+			</ion-col>
+		</ion-row>
 	</div>
 
+	<ion-row padding>
+		<ion-col [hidden]="steps == 1">
+			<button ion-button color="dark" block (click)="onPage('back'); $event.stopPropagation();">
+				Back
+			</button>
+		</ion-col>
+
+		&nbsp;
+		&nbsp;
+
+		<ion-col [hidden]="steps == 3">
+			<button ion-button color="orange" block (click)="onPage(); $event.stopPropagation()">
+				Next
+			</button>
+		</ion-col>
+
+		<ion-col *ngIf="steps == 3">
+			<button ion-button color="primary" block (click)="preview(); $event.stopPropagation()">
+				Review
+			</button>
+		</ion-col>
+	</ion-row>
+
+	<ion-row padding *ngIf="steps == 3">
+		<ion-col>
+			<button ion-button color="orange" block (click)="submit(); $event.stopPropagation()">
+				Submit
+			</button>
+		</ion-col>
+	</ion-row>
 
 </ion-content>

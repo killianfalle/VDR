@@ -31,7 +31,12 @@ export class EntryPage {
   initForm() {
   	this.form = {
   		classification : null,
-  		size: null
+  		size: null,
+      qty_type: null,
+      qty: null,
+      total: null,
+      release_date: null,
+      current_date: new Date().toISOString()
   	}
   }
 
@@ -45,13 +50,20 @@ export class EntryPage {
     console.log(this.form);
   }
 
-  backPage() {
-    this.steps -= 1;
+  select_qty(_qty) {
+    this.form.qty_type = _qty;
+    console.log(this.form);
   }
 
-  nextPage() {
-    if(this.steps >= 1 || this.steps <= 4)
+  onPage(page = 'next') {
+    if(page == 'next')
       this.steps += 1;
+    else
+      this.steps -= 1;
+  }
+
+  preview(){
+    this.navCtrl.push('ReviewEntryPage', { data : this.form });
   }
 
   ionViewDidLoad() {
