@@ -15,13 +15,25 @@
 
 <ion-content padding>
 
-	<button ion-button outline icon-start block color="orange" (tap)="navigate()">
-		<ion-icon name="add"></ion-icon>
-		Add Staff
-	</button>
+	<ion-item no-lines>
+		<form>
+			<ion-searchbar mode="md" placeholder="search"></ion-searchbar>
+		</form>
+		
+		<button ion-button outline icon-start padding color="orange" (tap)="navigate()" item-end>
+			<ion-icon name="person-add"></ion-icon>
+			Add Staff
+		</button>
+	</ion-item>
 
-	<ion-list margin-top>
-	  <ion-item>John Doe</ion-item>
-	  <ion-item>Maria Juanna</ion-item>
+	<ion-list>
+	  <ion-item>
+	  	<h3>John Doe</h3>
+	  	<p>Admin Staff</p>
+	  </ion-item>
+	  <ion-item>
+	  	<h3>Maria Juanna</h3>
+	  	<p>Warehouse Staff</p>
+	  </ion-item>
 	</ion-list>
 </ion-content>

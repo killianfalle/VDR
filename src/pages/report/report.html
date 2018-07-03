@@ -23,12 +23,12 @@
 	</ion-item>
 
 	<div padding>
-		<button ion-button block color="orange">Export CSV</button>
+		<button ion-button block color="orange" (click)="exportCSV(); $event.stopPropagation()">Export CSV</button>
 	</div>
 
 	<br>
 
-	<ion-card>
+	<ion-card *ngFor="let data of record">
 		<ion-row>
 			<ion-col col-3 margin-left>
 				<h2>Class</h2>
@@ -37,7 +37,7 @@
 				<h2>:</h2>
 			</ion-col>
 			<ion-col col-6>
-				<h2>Breeder</h2>
+				<h2>{{ data.class }}</h2>
 			</ion-col>
 		</ion-row>
 		<ion-row>
@@ -48,7 +48,7 @@
 				<h2>:</h2>
 			</ion-col>
 			<ion-col col-6>
-				<h2>Small</h2>
+				<h2>{{ data.size }}</h2>
 			</ion-col>
 		</ion-row>
 		<ion-row>
@@ -59,7 +59,7 @@
 				<h2>:</h2>
 			</ion-col>
 			<ion-col col-6>
-				<h2>Tray</h2>
+				<h2>{{ data.type }}</h2>
 			</ion-col>
 		</ion-row>
 		<ion-row>
@@ -70,7 +70,7 @@
 				<h2>:</h2>
 			</ion-col>
 			<ion-col col-6>
-				<h2>5</h2>
+				<h2>{{ data.qty }}</h2>
 			</ion-col>
 		</ion-row>
 		<ion-row>
@@ -81,67 +81,9 @@
 				<h2>:</h2>
 			</ion-col>
 			<ion-col col-6>
-				<h2>2018-01-01</h2>
+				<h2>{{ data.release }}</h2>
 			</ion-col>
 		</ion-row>
 	</ion-card>
 
-	<ion-card>
-		<ion-row>
-			<ion-col col-3 margin-left>
-				<h2>Class</h2>
-			</ion-col>
-			<ion-col col-1>
-				<h2>:</h2>
-			</ion-col>
-			<ion-col col-6>
-				<h2>Breeder</h2>
-			</ion-col>
-		</ion-row>
-		<ion-row>
-			<ion-col col-3 margin-left>
-				<h2>Size</h2>
-			</ion-col>
-			<ion-col col-1>
-				<h2>:</h2>
-			</ion-col>
-			<ion-col col-6>
-				<h2>Small</h2>
-			</ion-col>
-		</ion-row>
-		<ion-row>
-			<ion-col col-3 margin-left>
-				<h2>Type</h2>
-			</ion-col>
-			<ion-col col-1>
-				<h2>:</h2>
-			</ion-col>
-			<ion-col col-6>
-				<h2>Tray</h2>
-			</ion-col>
-		</ion-row>
-		<ion-row>
-			<ion-col col-3 margin-left>
-				<h2>Quantity</h2>
-			</ion-col>
-			<ion-col col-1>
-				<h2>:</h2>
-			</ion-col>
-			<ion-col col-6>
-				<h2>5</h2>
-			</ion-col>
-		</ion-row>
-		<ion-row>
-			<ion-col col-3 margin-left>
-				<h2>Release</h2>
-			</ion-col>
-			<ion-col col-1>
-				<h2>:</h2>
-			</ion-col>
-			<ion-col col-6>
-				<h2>2018-01-01</h2>
-			</ion-col>
-		</ion-row>
-	</ion-card>
-	
 </ion-content>

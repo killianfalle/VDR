@@ -38,7 +38,7 @@
 
 			<br>
 
-			<ion-card>
+			<ion-card *ngFor="let transaction of finish_transactions">
 				<ion-row>
 					<ion-col col-3 margin-left>
 						<h2>Class</h2>
@@ -47,7 +47,7 @@
 						<h2>:</h2>
 					</ion-col>
 					<ion-col col-6>
-						<h2>Breeder</h2>
+						<h2>{{ transaction.class }}</h2>
 					</ion-col>
 				</ion-row>
 				<ion-row>
@@ -58,7 +58,7 @@
 						<h2>:</h2>
 					</ion-col>
 					<ion-col col-6>
-						<h2>Small</h2>
+						<h2>{{ transaction.size }}</h2>
 					</ion-col>
 				</ion-row>
 				<ion-row>
@@ -69,7 +69,7 @@
 						<h2>:</h2>
 					</ion-col>
 					<ion-col col-6>
-						<h2>Tray</h2>
+						<h2>{{ transaction.type }}</h2>
 					</ion-col>
 				</ion-row>
 				<ion-row>
@@ -80,7 +80,7 @@
 						<h2>:</h2>
 					</ion-col>
 					<ion-col col-6>
-						<h2>5</h2>
+						<h2>{{ transaction.qty }}</h2>
 					</ion-col>
 				</ion-row>
 				<ion-row>
@@ -91,71 +91,7 @@
 						<h2>:</h2>
 					</ion-col>
 					<ion-col col-6>
-						<h2>2018-01-01</h2>
-					</ion-col>
-				</ion-row>
-
-				<ion-row>
-					<ion-col>
-						<button ion-button color="danger" block>Void</button>
-					</ion-col>
-				</ion-row>
-			</ion-card>
-
-			<ion-card>
-				<ion-row>
-					<ion-col col-3 margin-left>
-						<h2>Class</h2>
-					</ion-col>
-					<ion-col col-1>
-						<h2>:</h2>
-					</ion-col>
-					<ion-col col-6>
-						<h2>Breeder</h2>
-					</ion-col>
-				</ion-row>
-				<ion-row>
-					<ion-col col-3 margin-left>
-						<h2>Size</h2>
-					</ion-col>
-					<ion-col col-1>
-						<h2>:</h2>
-					</ion-col>
-					<ion-col col-6>
-						<h2>Small</h2>
-					</ion-col>
-				</ion-row>
-				<ion-row>
-					<ion-col col-3 margin-left>
-						<h2>Type</h2>
-					</ion-col>
-					<ion-col col-1>
-						<h2>:</h2>
-					</ion-col>
-					<ion-col col-6>
-						<h2>Tray</h2>
-					</ion-col>
-				</ion-row>
-				<ion-row>
-					<ion-col col-3 margin-left>
-						<h2>Quantity</h2>
-					</ion-col>
-					<ion-col col-1>
-						<h2>:</h2>
-					</ion-col>
-					<ion-col col-6>
-						<h2>5</h2>
-					</ion-col>
-				</ion-row>
-				<ion-row>
-					<ion-col col-3 margin-left>
-						<h2>Release</h2>
-					</ion-col>
-					<ion-col col-1>
-						<h2>:</h2>
-					</ion-col>
-					<ion-col col-6>
-						<h2>2018-01-01</h2>
+						<h2>{{ transaction.release }}</h2>
 					</ion-col>
 				</ion-row>
 
@@ -179,7 +115,7 @@
 
 			<br>
 
-			<ion-card>
+			<ion-card *ngFor="let transaction of pending_transactions">
 				<ion-row>
 					<ion-col col-3 margin-left>
 						<h2>Class</h2>
@@ -188,7 +124,7 @@
 						<h2>:</h2>
 					</ion-col>
 					<ion-col col-6>
-						<h2>Brown</h2>
+						<h2>{{ transaction.class }}</h2>
 					</ion-col>
 				</ion-row>
 				<ion-row>
@@ -199,7 +135,7 @@
 						<h2>:</h2>
 					</ion-col>
 					<ion-col col-6>
-						<h2>Small</h2>
+						<h2>{{ transaction.size }}</h2>
 					</ion-col>
 				</ion-row>
 				<ion-row>
@@ -210,7 +146,7 @@
 						<h2>:</h2>
 					</ion-col>
 					<ion-col col-6>
-						<h2>Tray</h2>
+						<h2>{{ transaction.type }}</h2>
 					</ion-col>
 				</ion-row>
 				<ion-row>
@@ -221,7 +157,7 @@
 						<h2>:</h2>
 					</ion-col>
 					<ion-col col-6>
-						<h2>5</h2>
+						<h2>{{ transaction.qty }}</h2>
 					</ion-col>
 				</ion-row>
 				<ion-row>
@@ -232,77 +168,22 @@
 						<h2>:</h2>
 					</ion-col>
 					<ion-col col-6>
-						<h2>2018-01-01</h2>
+						<h2>{{ transaction.release }}</h2>
 					</ion-col>
 				</ion-row>
 
 				<ion-row>
 					<ion-col>
+						<button ion-button color="danger" block>Void</button>
+					</ion-col>
+					<ion-col>
 						<button ion-button block>Print</button>
-					</ion-col>
-				</ion-row>
-			</ion-card>
-
-			<ion-card>
-				<ion-row>
-					<ion-col col-3 margin-left>
-						<h2>Class</h2>
-					</ion-col>
-					<ion-col col-1>
-						<h2>:</h2>
-					</ion-col>
-					<ion-col col-6>
-						<h2>Brown</h2>
-					</ion-col>
-				</ion-row>
-				<ion-row>
-					<ion-col col-3 margin-left>
-						<h2>Size</h2>
-					</ion-col>
-					<ion-col col-1>
-						<h2>:</h2>
-					</ion-col>
-					<ion-col col-6>
-						<h2>Small</h2>
-					</ion-col>
-				</ion-row>
-				<ion-row>
-					<ion-col col-3 margin-left>
-						<h2>Type</h2>
-					</ion-col>
-					<ion-col col-1>
-						<h2>:</h2>
-					</ion-col>
-					<ion-col col-6>
-						<h2>Tray</h2>
-					</ion-col>
-				</ion-row>
-				<ion-row>
-					<ion-col col-3 margin-left>
-						<h2>Quantity</h2>
-					</ion-col>
-					<ion-col col-1>
-						<h2>:</h2>
-					</ion-col>
-					<ion-col col-6>
-						<h2>5</h2>
-					</ion-col>
-				</ion-row>
-				<ion-row>
-					<ion-col col-3 margin-left>
-						<h2>Release</h2>
-					</ion-col>
-					<ion-col col-1>
-						<h2>:</h2>
-					</ion-col>
-					<ion-col col-6>
-						<h2>2018-01-01</h2>
 					</ion-col>
 				</ion-row>
 
 				<ion-row>
 					<ion-col>
-						<button ion-button block>Print</button>
+						<button ion-button color="orange" block>Release</button>
 					</ion-col>
 				</ion-row>
 			</ion-card>

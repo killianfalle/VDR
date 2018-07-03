@@ -35,7 +35,7 @@
 
 	      <br>
 
-	      <button ion-button type="submit" color="orange" block (tap)="sign_in()">Sign in</button>
+	      <button ion-button type="submit" color="orange" block (click)="sign_in(); $event.stopPropagation()">Sign in</button>
 	  </div>
 
 </ion-content>

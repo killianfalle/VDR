@@ -20,7 +20,7 @@
 
 		<ion-row>
 			<ion-col>
-				<ion-card [ngClass]="{'selected' : (form.classification == 'Layer')}" (click)="select_class('Layer')">
+				<ion-card [ngClass]="{'selected' : (form.class == 'Layer')}" (click)="select_class('Layer','LA')">
 					<ion-item text-center>
 				    	<h1>Layer</h1>
 					</ion-item>
@@ -28,7 +28,7 @@
 			</ion-col>
 
 			<ion-col>
-				<ion-card [ngClass]="{'selected' : (form.classification == 'Layer class b')}" (tap)="select_class('Layer class b')">
+				<ion-card [ngClass]="{'selected' : (form.class == 'Layer ( Class B )')}" (tap)="select_class('Layer ( Class B )')">
 					<ion-item text-center>
 					    <h1>Layer</h1>
 					    <p>Class B</p>
@@ -39,7 +39,7 @@
 
 		<ion-row>
 			<ion-col>
-				<ion-card [ngClass]="{'selected' : (form.classification == 'Breeder')}" (tap)="select_class('Breeder')">
+				<ion-card [ngClass]="{'selected' : (form.class == 'Breeder')}" (tap)="select_class('Breeder','BR')">
 					<ion-item text-center>
 					    <h1>Breeder</h1>
 					</ion-item>
@@ -47,7 +47,7 @@
 			</ion-col>
 
 			<ion-col>
-				<ion-card [ngClass]="{'selected' : (form.classification == 'Brown')}" (tap)="select_class('Brown')">
+				<ion-card [ngClass]="{'selected' : (form.class == 'Brown')}" (tap)="select_class('Brown','BW')">
 					<ion-item text-center>
 					    <h1>Brown</h1>
 					</ion-item>
@@ -57,7 +57,7 @@
 
 		<ion-row>
 			<ion-col>
-				<ion-card [ngClass]="{'selected' : (form.classification == 'Others')}" (tap)="select_class('Others')">
+				<ion-card [ngClass]="{'selected' : (form.class == 'Others')}" (tap)="select_class('Others')">
 					<ion-item text-center>
 					    <h1>Others</h1>
 					</ion-item>
@@ -119,6 +119,49 @@
 					<ion-item text-center>
 					    <h1>Extra</h1>
 					    <h1>Large</h1>
+					</ion-item>
+				</ion-card>
+			</ion-col>
+		</ion-row>
+
+		<ion-row [hidden]="form.class != 'Layer' && form.class != 'Breeder' && form.class != 'Brown'">
+			<ion-col>
+				<ion-card [ngClass]="{'selected' : (form.size == class_key+' SS')}" (tap)="select_size('SS')">
+					<ion-item text-center>
+					    <h1>
+						    <span [hidden]="form.class != 'Layer'">LA</span> 
+						    <span [hidden]="form.class != 'Breeder'">BR</span> 
+						    <span [hidden]="form.class != 'Brown'">BW</span> 
+						    SS
+						</h1>
+					</ion-item>
+				</ion-card>
+			</ion-col>
+
+			<ion-col>
+				<ion-card [ngClass]="{'selected' : (form.size == class_key+' Crack 3')}" (tap)="select_size('Crack 3')">
+					<ion-item text-center>
+					    <h1>
+					    	<span [hidden]="form.class != 'Layer'">LA</span> 
+					    	<span [hidden]="form.class != 'Breeder'">BR</span> 
+					    	<span [hidden]="form.class != 'Brown'">BW</span> 
+					    	Crack 3
+					    </h1>
+					</ion-item>
+				</ion-card>
+			</ion-col>
+		</ion-row>
+
+		<ion-row [hidden]="form.class != 'Layer' && form.class != 'Breeder' && form.class != 'Brown'">
+			<ion-col>
+				<ion-card [ngClass]="{'selected' : (form.size == class_key+' Crack 1/2')}" (tap)="select_size('Crack 1/2')">
+					<ion-item text-center>
+					    <h1>
+						    <span [hidden]="form.class != 'Layer'">LA</span> 
+						    <span [hidden]="form.class != 'Breeder'">BR</span> 
+						    <span [hidden]="form.class != 'Brown'">BW</span> 
+						    Crack 1/2
+						</h1>
 					</ion-item>
 				</ion-card>
 			</ion-col>

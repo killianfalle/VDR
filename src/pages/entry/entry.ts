@@ -18,6 +18,7 @@ import { IonicPage,
 export class EntryPage {
 
   form: any;
+  class_key: any = null;
 
   steps: any = 1;
 
@@ -30,7 +31,7 @@ export class EntryPage {
 
   initForm() {
   	this.form = {
-  		classification : null,
+  		class : null,
   		size: null,
       qty_type: null,
       qty: null,
@@ -40,12 +41,16 @@ export class EntryPage {
   	}
   }
 
-  select_class(_class) {
-    this.form.classification = _class;
+  select_class(_class,_key = null) {
+    this.form.class = _class;
+    this.class_key = _key;
     console.log(this.form);
   }
 
   select_size(_size) {
+    if(_size == 'SS' || _size == 'Crack 3' || _size == 'Crack 1/2')
+      _size = this.class_key +' '+_size;
+
     this.form.size = _size;
     console.log(this.form);
   }

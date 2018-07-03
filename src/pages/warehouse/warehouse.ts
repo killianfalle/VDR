@@ -17,7 +17,47 @@ export class WarehousePage {
 
   tabs: any = 'finish';
 
+  finish_transactions: any = [];
+  pending_transactions: any = [];
+
   constructor(public navCtrl: NavController, public navParams: NavParams) {
+  	this.load_data();
+  }
+
+  load_data(){
+  	this.finish_transactions = [
+  		{
+  			class : 'Breeder',
+  			size: 'Small',
+  			type: 'Tray',
+  			qty: '5',
+  			release: '2018-01-01'
+  		},
+  		{
+  			class : 'Breeder',
+  			size: 'Large',
+  			type: 'Tray',
+  			qty: '5',
+  			release: '2018-01-01'
+  		},
+  	];
+
+  	this.pending_transactions = [
+  		{
+  			class : 'Brown',
+  			size: 'Small',
+  			type: 'Tray',
+  			qty: '5',
+  			release: '2018-01-01'
+  		},
+  		{
+  			class : 'Layer',
+  			size: 'Large',
+  			type: 'Tray',
+  			qty: '5',
+  			release: '2018-01-01'
+  		},
+  	];
   }
 
   ionViewDidLoad() {
