@@ -22,7 +22,7 @@ export class ReportPage {
     fieldSeparator: ',',
     quoteStrings: '"',
     decimalseparator: '.',
-    headers: ['class','size','type','qty','release'],
+    headers: ['Class','Size','Type','Qty','Date Release'],
     showTitle: false,
     useBom: true,
     removeNewLines: false
