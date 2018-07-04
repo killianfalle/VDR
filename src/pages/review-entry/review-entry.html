@@ -23,11 +23,11 @@
 	<hr>
 
 	<ion-item no-lines>
-		Purchase
+		<h4>Purchase</h4>
 		<h3 item-end>{{ data.current_date }}</h3>
 	</ion-item>
 	<ion-item no-lines>
-		Release
+		<h4>Release</h4>
 		<h3 item-end [hidden]="!data.release_date">{{ data.release_date }}</h3>
 	</ion-item>
 
@@ -38,27 +38,18 @@
 		<ion-item no-lines text-center>
 			<h1>{{ data.class }}</h1>
 		</ion-item>
-	</ion-row>
-
-	<ion-row>
 		<ion-item>
 			<h3>Size</h3>
 		</ion-item>
 		<ion-item no-lines text-center>
 			<h1>{{ data.size }}</h1>
 		</ion-item>
-	</ion-row>
-
-	<ion-row>
 		<ion-item>
 			<h3>Type</h3>
 		</ion-item>
 		<ion-item no-lines text-center>
 			<h1>{{ data.qty_type }}</h1>
 		</ion-item>
-	</ion-row>
-
-	<ion-row>
 		<ion-item>
 			<h3>Quantity</h3>
 		</ion-item>
