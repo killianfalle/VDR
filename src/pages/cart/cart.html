@@ -29,7 +29,7 @@
 				<ion-item *ngFor="let item of items.orders">
 					<h4>{{ item.class }}</h4>
 					<h4 padding-left>{{ item.size }}({{ item.type }})</h4>
-					<p  padding-left>{{ item.quantity }}x10</p>
+					<p  padding-left>{{ item.quantity }}x{{ item.price }}</p>
 				</ion-item>
 			</ion-list>
 

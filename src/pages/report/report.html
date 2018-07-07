@@ -28,62 +28,19 @@
 
 	<br>
 
-	<ion-card *ngFor="let data of record">
-		<ion-row>
-			<ion-col col-3 margin-left>
-				<h2>Class</h2>
-			</ion-col>
-			<ion-col col-1>
-				<h2>:</h2>
-			</ion-col>
-			<ion-col col-6>
-				<h2>{{ data.class }}</h2>
-			</ion-col>
-		</ion-row>
-		<ion-row>
-			<ion-col col-3 margin-left>
-				<h2>Size</h2>
-			</ion-col>
-			<ion-col col-1>
-				<h2>:</h2>
-			</ion-col>
-			<ion-col col-6>
-				<h2>{{ data.size }}</h2>
-			</ion-col>
-		</ion-row>
-		<ion-row>
-			<ion-col col-3 margin-left>
-				<h2>Type</h2>
-			</ion-col>
-			<ion-col col-1>
-				<h2>:</h2>
-			</ion-col>
-			<ion-col col-6>
-				<h2>{{ data.type }}</h2>
-			</ion-col>
-		</ion-row>
-		<ion-row>
-			<ion-col col-3 margin-left>
-				<h2>Quantity</h2>
-			</ion-col>
-			<ion-col col-1>
-				<h2>:</h2>
-			</ion-col>
-			<ion-col col-6>
-				<h2>{{ data.qty }}</h2>
-			</ion-col>
-		</ion-row>
-		<ion-row>
-			<ion-col col-3 margin-left>
-				<h2>Release</h2>
-			</ion-col>
-			<ion-col col-1>
-				<h2>:</h2>
-			</ion-col>
-			<ion-col col-6>
-				<h2>{{ data.release }}</h2>
-			</ion-col>
-		</ion-row>
+	<ion-card *ngFor="let report of reports">
+		<ion-card-header>
+			<p>Owner: {{ report.first_name }} {{ report.last_name }}</p>
+			<p>Release Date: {{ report.release_date }}</p>
+		</ion-card-header>
+
+		<ion-list>
+			<ion-item>
+				<h4>{{ report.class }}</h4>
+				<h4 padding-left>{{ report.size }}({{ report.type }})</h4>
+				<p  padding-left>{{ report.quantity }}x{{ report.price }}</p>
+			</ion-item>
+		</ion-list>
 	</ion-card>
 
 </ion-content>

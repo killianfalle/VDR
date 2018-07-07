@@ -15,9 +15,10 @@ import { DataProvider } from '../../providers/data-provider';
 })
 export class TransactionPage {
 
-  tabs: any = 'finish';
+  tabs: any = 'cleared';
 
-  finish_transactions: any = [];
+  cleared_transactions: any = [];
+  releasing_transactions: any = [];
   pending_transactions: any = [];
 
   constructor(
@@ -34,11 +35,30 @@ export class TransactionPage {
           case "pending":
             this.pending_transactions = res._data.data;
             break;
+          case "releasing":
+            this.releasing_transactions = res._data.data;
+            break;
           default:
-            this.finish_transactions = res._data.data;
+            this.cleared_transactions = res._data.data;
             break;
         }
     });
+  }
+
+  void_transaction(id) {
+    this.provider.postData({ transaction : id },'set_void_transaction').then((res:any) => {
+      if(res._data.status){
+        this.get_transaction();
+      }
+    })
+  }
+
+  cancel_transaction(id) {
+    this.provider.postData({ transaction : id, status : 'cancel' },'update_transaction_status').then((res:any) => {
+      if(res._data.status){
+        this.get_transaction();
+      }
+    })
   }
 
   ionViewDidLoad() {

@@ -1,5 +1,9 @@
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { Component,
+         OnInit } from '@angular/core';
+import { IonicPage,
+         NavController, 
+         NavParams } from 'ionic-angular';
+import { DataProvider } from '../../providers/data-provider';
 import { Angular2Csv } from 'angular2-csv/Angular2-csv';
 
 /**
@@ -14,45 +18,36 @@ import { Angular2Csv } from 'angular2-csv/Angular2-csv';
   selector: 'page-report',
   templateUrl: 'report.html',
 })
-export class ReportPage {
+export class ReportPage implements OnInit {
 
-  record:any = [];  
+  reports:any = [];  
 
   public options = { 
     fieldSeparator: ',',
     quoteStrings: '"',
     decimalseparator: '.',
-    headers: ['Class','Size','Type','Qty','Date Release'],
+    headers: ['Transaction #','First Name','Last Name','Release Date','Product','Class','Size','Type','Qty','Price','Total'],
     showTitle: false,
     useBom: true,
     removeNewLines: false
   };
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
-  	this.load_data();
+  constructor(
+    public navCtrl: NavController, 
+    public navParams: NavParams,
+    public provider: DataProvider) {
   }
 
-  load_data(){
-  	this.record = [
-  		{
-  			class : 'Breeder',
-  			size: 'Small',
-  			type : 'Tray',
-  			qty: '5',
-  			release: '2018-01-01'
-  		},
-  		{
-  			class : 'Breeder',
-  			size: 'Large',
-  			type : 'Pc',
-  			qty: '7',
-  			release: '2018-01-01'
-  		},
-  	];
+  ngOnInit() {
+    this.provider.getData('','get_report').then((res: any) => {
+      if(res._data.status){
+        this.reports = res._data.data;
+      }
+    });
   }
 
   exportCSV(){
-    new Angular2Csv(this.record,'Report', this.options);
+    new Angular2Csv(this.reports,'Report', this.options);
   }
 
   ionViewDidLoad() {
