@@ -1,6 +1,11 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
-
+import { IonicPage,
+         NavController,
+         NavParams } from 'ionic-angular';
+import { Validators,
+         FormBuilder, 
+         FormGroup } from '@angular/forms';
+import { DataProvider } from '../../providers/data-provider';
 /**
  * Generated class for the LoginPage page.
  *
@@ -15,16 +20,39 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 })
 export class LoginPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  user: FormGroup;
+
+  constructor(
+    public navCtrl: NavController, 
+    public navParams: NavParams,
+    public provider: DataProvider,
+    private form: FormBuilder) {
+    
+    this.initForm();
+  }
+
+  initForm() {
+    this.user = this.form.group({
+      email: ['', Validators.required],
+      password: ['', Validators.required]
+    });
+  }
+
+  sign_in() {
+    this.provider.postData(this.user.value,'login').then((res: any) => {
+        if(res._data.status){
+          localStorage.setItem('_info',JSON.stringify(res._data.info));
+          localStorage.setItem('_token',res._data.token);
+
+          setTimeout(() => {
+  	        this.navCtrl.setRoot('TabsPage');
+          },300)
+        }
+    });
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad LoginPage');
-  }
-
-  sign_in(){
-    console.log("sign in");
-  	this.navCtrl.setRoot('TabsPage');
   }
 
 }

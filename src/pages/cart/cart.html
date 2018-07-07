@@ -1,0 +1,48 @@
+<!--
+  Generated template for the CartPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar color="orange">
+    <ion-title>Cart</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+<ion-content padding>
+
+	<div text-center>
+		<h4>Vista del rio</h4>
+		<p>Carmen Cagayan de Oro City</p>
+	</div>
+
+	<div *ngFor="let items of cart">
+		<ion-card>
+			<ion-card-header>
+				<p>{{ items.first_name }} {{ items.last_name }}</p>
+			</ion-card-header>
+
+			<ion-list>
+				<ion-item *ngFor="let item of items.orders">
+					<h4>{{ item.class }}</h4>
+					<h4 padding-left>{{ item.size }}({{ item.type }})</h4>
+					<p  padding-left>{{ item.quantity }}x10</p>
+				</ion-item>
+			</ion-list>
+
+			<ion-card-content>
+				<h4 ion-text color="danger">Total : {{ items.total_payment }}</h4>
+			</ion-card-content>
+		</ion-card>
+	
+		<button ion-button outline block color="orange" (tap)="check_out(items.id);">
+			CheckOut
+		</button>
+
+		<br>
+	</div>
+
+</ion-content>

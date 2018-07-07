@@ -12,9 +12,9 @@ export class TabsPage {
   tab3Root = 'WarehousePage';
   tab4Root = 'SettingsPage';
 
-  role: any;
+  user: any;
 
   constructor() {
-  	this.role = 'admin';
+  	this.user = JSON.parse(localStorage.getItem('_info'));
   }
 }

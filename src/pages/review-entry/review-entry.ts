@@ -15,7 +15,7 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 })
 export class ReviewEntryPage {
 
-  data: any;
+  data: any = {};
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
   	this.data = navParams.get('data');
