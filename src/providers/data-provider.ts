@@ -23,20 +23,19 @@ export class DataProvider {
 		public http: Http,
 		private toastCtrl: ToastController,
 		public app: App,
-		private storage: Storage,
 		private alertCtrl: AlertController,
      	public events: Events)
 	{ }
 
 	postData(data, route){
 		return new Promise((resolve, reject) => {
-			let token = localStorage.getItem('token');
+			let token = localStorage.getItem('_token');
 			let headers = new Headers();
 			headers.append('Authorization', 'Bearer ' + token);
 			headers.append('Accept', 'application/json');
 			headers.append('Content-Type', 'application/json');
 			
-			this.http.post(this.api.src+'/'+route, JSON.stringify(data), {headers: headers}).subscribe(res => {
+			this.http.post(this.api.src+route, JSON.stringify(data), {headers: headers}).subscribe(res => {
 				resolve(res.json());
 			}, (err) => {        
 				reject(err);
@@ -49,7 +48,7 @@ export class DataProvider {
 
 			let headers = new Headers();
 
-			let token = localStorage.getItem('token');
+			let token = localStorage.getItem('_token');
 
 			if(token != null){
 				headers.append('Authorization', 'Bearer ' + token);

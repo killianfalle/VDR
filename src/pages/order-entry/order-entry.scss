@@ -1,4 +1,4 @@
-page-entry {
+page-order-entry {
 	
 	.row , .col {
 		margin: 0;
@@ -9,9 +9,11 @@ page-entry {
 		position: relative;
 		min-height: 80px;
 		background: #EEEEEE;
+		border: 1px solid color($colors,orange);
 	}
 
 	.item {
+		color: color($colors,orange);
 		position: absolute;
 	    top: 50%;
 	    left: 50%;
@@ -21,5 +23,9 @@ page-entry {
 
 	.selected {
 		background: color($colors,yellow);
+	}
+
+	.text-input[disabled] {
+		opacity: 1 !important;
 	}
 }

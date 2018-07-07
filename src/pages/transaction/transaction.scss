@@ -7,4 +7,15 @@ page-transaction {
 		height: 3.3em !important;
 		line-height: 3.3em !important;
 	}
+
+	.card-content {
+		.item {
+			background: transparent;
+		}
+	}
+
+	.button {
+		padding: 10px;
+		min-width: 100px;
+	}
 }

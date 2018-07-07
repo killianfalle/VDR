@@ -1,5 +1,5 @@
 <!--
-  Generated template for the StaffPage page.
+  Generated template for the CustomerPage page.
 
   See http://ionicframework.com/docs/components/#navigation for more info on
   Ionic pages and navigation.
@@ -7,33 +7,29 @@
 <ion-header>
 
   <ion-navbar color="orange">
-    <ion-title>Staff</ion-title>
+    <ion-title>Customer</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content>
-
+	
 	<form>
 		<ion-searchbar mode="md" placeholder="search"></ion-searchbar>
 	</form>
-
+	
 	<ion-item no-lines>
 		<button ion-button outline icon-start padding color="orange" (tap)="navigate()" item-end>
 			<ion-icon name="person-add"></ion-icon>
-			Add Staff
+			Add Customer
 		</button>
 	</ion-item>
 
 	<ion-list>
-	  <ion-item *ngFor="let staff of staffs">
-	  	<h2 text-capitalize>{{ staff.first_name }} {{ staff.last_name }}</h2>
-	  	<h3>{{ staff.email }}</h3>
-	  	<p *ngIf="staff.type == 'admin_staff'" text-capitalize>Admin Staff</p>
-	  	<p *ngIf="staff.type == 'sale_staff'" text-capitalize>Sale Staff</p>
-	  	<p *ngIf="staff.type == 'warehouse_staff'" text-capitalize>Warehouse Staff</p>
+	  <ion-item *ngFor="let customer of customers">
+	  	<h2 text-capitalize>{{ customer.first_name }} {{ customer.last_name }}</h2>
 	  </ion-item>
 	</ion-list>
-	
+
 </ion-content>

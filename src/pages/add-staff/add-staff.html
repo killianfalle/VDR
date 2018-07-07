@@ -15,59 +15,62 @@
 
 <ion-content padding>
 
-	<ion-item-divider>
-		Personal Information
-	</ion-item-divider>
-	<ion-item>
-		<ion-label floating>First Name</ion-label>
-		<ion-input type="text" text-center></ion-input>
-	</ion-item>
+	<form [formGroup]="info" (ngSubmit)="register()">
+		<ion-item-divider>
+			Personal Information
+		</ion-item-divider>
+		<ion-item>
+			<ion-label floating>First Name</ion-label>
+			<ion-input type="text" text-center formControlName="first_name"></ion-input>
+		</ion-item>
 
-	<br>
+		<br>
 
-	<ion-item>
-		<ion-label floating>Last Name</ion-label>
-		<ion-input type="text" text-center></ion-input>
-	</ion-item>
+		<ion-item>
+			<ion-label floating>Last Name</ion-label>
+			<ion-input type="text" text-center formControlName="last_name"></ion-input>
+		</ion-item>
 
-	<br>
+		<br>
 
-	<ion-item>
-		<ion-label floating>User type</ion-label>
-		<ion-select>
-			<ion-option value="admin_staff">Admin Staff</ion-option>
-			<ion-option value="warehouse_staff">Warehouse Staff</ion-option>
-		</ion-select>
-	</ion-item>
+		<ion-item>
+			<ion-label floating>User type</ion-label>
+			<ion-select formControlName="type">
+				<ion-option value="admin_staff">Admin Staff</ion-option>
+				<ion-option value="sale_staff">Sale Staff</ion-option>
+				<ion-option value="warehouse_staff">Warehouse Staff</ion-option>
+			</ion-select>
+		</ion-item>
 
-	<br>
-	<br>
+		<br>
+		<br>
 
-	<ion-item-divider>
-		Account Information
-	</ion-item-divider>
-	<ion-item>
-		<ion-label floating>Email</ion-label>
-		<ion-input type="text" text-center></ion-input>
-	</ion-item>
+		<ion-item-divider>
+			Account Information
+		</ion-item-divider>
+		<ion-item>
+			<ion-label floating>Email</ion-label>
+			<ion-input type="text" text-center formControlName="email"></ion-input>
+		</ion-item>
 
-	<br>
+		<br>
 
-	<ion-item>
-		<ion-label floating>Password</ion-label>
-		<ion-input type="text" text-center></ion-input>
-	</ion-item>
+		<ion-item>
+			<ion-label floating>Password</ion-label>
+			<ion-input type="password" text-center formControlName="password"></ion-input>
+		</ion-item>
 
-	<br>
+		<br>
 
-	<ion-item>
-		<ion-label floating>Confirm Password</ion-label>
-		<ion-input type="text" text-center></ion-input>
-	</ion-item>
+		<ion-item>
+			<ion-label floating>Confirm Password</ion-label>
+			<ion-input type="password" text-center formControlName="confirm_password"></ion-input>
+		</ion-item>
 
-	<br>
-	<br>
+		<br>
+		<br>
 
-	<button ion-button block color="orange">Submit</button>
+		<button ion-button block color="orange">Submit</button>
+	</form>
 
 </ion-content>

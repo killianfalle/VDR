@@ -27,7 +27,11 @@ export class SettingsPage {
   }
 
   logout() {
-  	this.app.getRootNav().setRoot('LoginPage');
+    localStorage.clear();
+
+    setTimeout(() => {
+  	  this.app.getRootNav().setRoot('LoginPage');
+    },300);
   }
 
   ionViewDidLoad() {

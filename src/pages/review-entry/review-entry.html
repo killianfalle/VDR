@@ -15,47 +15,21 @@
 
 <ion-content padding>
 
-	<div text-center>
+	<div class="company" text-center>
 		<h4>Vista del rio</h4>
-		<p>Carmen Cagayan de oro city</p>
+		<p>Carmen Cagayan de Oro City</p>
 	</div>
 
-	<hr>
+	<br>
 
-	<ion-item no-lines>
-		<h4>Purchase</h4>
-		<h3 item-end>{{ data.current_date }}</h3>
-	</ion-item>
-	<ion-item no-lines>
-		<h4>Release</h4>
-		<h3 item-end [hidden]="!data.release_date">{{ data.release_date }}</h3>
-	</ion-item>
+	<div margin-top text-wrap>
+		<h4>{{ data.class.name }}</h4>
+		<h4 padding-left>{{ data.size.name }}({{ data.qty_type.name }})</h4>
+		<p  padding-left>{{ data.quantity }}x{{ data.price }}</p>
+	</div>
 
-	<ion-row>
-		<ion-item>
-			<h3>Classification</h3>
-		</ion-item>
-		<ion-item no-lines text-center>
-			<h1>{{ data.class }}</h1>
-		</ion-item>
-		<ion-item>
-			<h3>Size</h3>
-		</ion-item>
-		<ion-item no-lines text-center>
-			<h1>{{ data.size }}</h1>
-		</ion-item>
-		<ion-item>
-			<h3>Type</h3>
-		</ion-item>
-		<ion-item no-lines text-center>
-			<h1>{{ data.qty_type }}</h1>
-		</ion-item>
-		<ion-item>
-			<h3>Quantity</h3>
-		</ion-item>
-		<ion-item no-lines text-center>
-			<h1>{{ data.qty }}</h1>
-		</ion-item>
-	</ion-row>
+	<div class="total" padding-top text-wrap>
+		<h4>Total : <span color="danger">&#8369;{{ data.total }}</span></h4>
+	</div>
 
 </ion-content>

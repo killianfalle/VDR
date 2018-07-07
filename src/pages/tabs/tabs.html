@@ -1,6 +1,6 @@
 <ion-tabs color="deep-orange">
-  <ion-tab [show]="role == 'admin' || role == 'admin_staff'" [root]="tab1Root" tabTitle="Home" tabIcon="home"></ion-tab>
-  <ion-tab [show]="role == 'admin'" [root]="tab2Root" tabTitle="Staff" tabIcon="person"></ion-tab>
-  <ion-tab [show]="role == 'warehouse_staff'" [root]="tab3Root" tabTitle="Transaction" tabIcon="filing"></ion-tab>
+  <ion-tab [show]="user.type == 'admin' || user.type == 'admin_staff'" [root]="tab1Root" tabTitle="Home" tabIcon="home"></ion-tab>
+  <ion-tab [show]="user.type == 'admin'" [root]="tab2Root" tabTitle="Staff" tabIcon="person"></ion-tab>
+  <ion-tab [show]="user.type == 'warehouse_staff'" [root]="tab3Root" tabTitle="Transaction" tabIcon="filing"></ion-tab>
   <ion-tab [root]="tab4Root" tabTitle="Settings" tabIcon="settings"></ion-tab>
 </ion-tabs>

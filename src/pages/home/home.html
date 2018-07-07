@@ -1,12 +1,15 @@
 <ion-header>
   <ion-navbar color="orange">
     <ion-title>Vista del rio</ion-title>
+    <ion-buttons end>
+      <cart></cart>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
 <ion-content>
 
-  <ion-card (tap)="navigate('EntryPage')">
+  <ion-card (tap)="navigate('CustomerEntryPage')">
     <ion-row text-center margin-top>
       <ion-col>
         <ion-icon color="amber" name="add-circle"></ion-icon>
@@ -14,7 +17,20 @@
     </ion-row>
     <ion-row text-center margin-bottom>
       <ion-col>
-        Entry
+        Order Entry
+      </ion-col>
+    </ion-row>
+  </ion-card>
+
+  <ion-card (tap)="navigate('CustomerPage')">
+    <ion-row text-center margin-top>
+      <ion-col>
+        <ion-icon color="amber" name="person"></ion-icon>
+      </ion-col>
+    </ion-row>
+    <ion-row text-center margin-bottom>
+      <ion-col>
+        Customer
       </ion-col>
     </ion-row>
   </ion-card>
