@@ -16,8 +16,12 @@
 <ion-content>
 
 	<ion-segment [(ngModel)]="tabs" color="dark" (ionChange)="get_transaction()">
-		<ion-segment-button value="finish">
-			Finish 
+		<ion-segment-button value="cleared">
+			Cleared 
+		</ion-segment-button>
+
+		<ion-segment-button value="releasing">
+			Ready for Release 
 		</ion-segment-button>
 
 		<ion-segment-button value="pending">
@@ -26,7 +30,7 @@
 	</ion-segment>
 
 	<div [ngSwitch]="tabs" >
-		<div *ngSwitchCase="'finish'">
+		<div *ngSwitchCase="'cleared'">
 			<br>
 
 			<ion-item>
@@ -38,71 +42,71 @@
 
 			<br>
 
-			<ion-card *ngFor="let transaction of finish_transactions">
-				<div *ngFor="let order of transaction.orders">
-					<ion-row>
-						<ion-col col-3 margin-left>
-							<h2>Prodct</h2>
-						</ion-col>
-						<ion-col col-1>
-							<h2>:</h2>
-						</ion-col>
-						<ion-col col-6>
-							<h2>{{ order.product }}</h2>
-						</ion-col>
-					</ion-row>
-					<ion-row>
-						<ion-col col-3 margin-left>
-							<h2>Class</h2>
-						</ion-col>
-						<ion-col col-1>
-							<h2>:</h2>
-						</ion-col>
-						<ion-col col-6>
-							<h2>{{ order.class }}</h2>
-						</ion-col>
-					</ion-row>
-					<ion-row>
-						<ion-col col-3 margin-left>
-							<h2>Size</h2>
-						</ion-col>
-						<ion-col col-1>
-							<h2>:</h2>
-						</ion-col>
-						<ion-col col-6>
-							<h2>{{ order.size }}</h2>
-						</ion-col>
-					</ion-row>
-					<ion-row>
-						<ion-col col-3 margin-left>
-							<h2>Qty Type</h2>
-						</ion-col>
-						<ion-col col-1>
-							<h2>:</h2>
-						</ion-col>
-						<ion-col col-6>
-							<h2>{{ order.type }}</h2>
-						</ion-col>
-					</ion-row>
-					<ion-row>
-						<ion-col col-3 margin-left>
-							<h2>Quantity</h2>
-						</ion-col>
-						<ion-col col-1>
-							<h2>:</h2>
-						</ion-col>
-						<ion-col col-6>
-							<h2>{{ order.quantity }}</h2>
-						</ion-col>
-					</ion-row>
+			<div *ngFor="let transaction of cleared_transactions">
+				<ion-card>
+					<ion-card-header>
+						<p>Owner: {{ transaction.first_name }} {{ transaction.last_name }}</p>
+						<h4>Release Date : {{ transaction.release_at | date : 'MM/dd/yy' }}</h4>
+					</ion-card-header>
 
-					<ion-row>
-						<ion-col>
-							<button ion-button color="danger" block>Void</button>
-						</ion-col>
-					</ion-row>
-				</div>
-			</ion-card>
+					<ion-list>
+						<ion-item *ngFor="let item of transaction.orders">
+							<h4>{{ item.class }}</h4>
+							<h4 padding-left>{{ item.size }}({{ item.type }})</h4>
+							<p  padding-left>{{ item.quantity }}x{{ item.price }}</p>
+						</ion-item>
+					</ion-list>
+				</ion-card>
+			
+				<br>
+			</div>
+		</div>
+
+		<div *ngSwitchCase="'releasing'">
+			<br>
+			
+			<ion-item>
+				<ion-label>
+					<ion-icon name="md-calendar"></ion-icon>
+				</ion-label>
+				<ion-datetime></ion-datetime>
+			</ion-item>	
+
+			<br>
+
+			<div *ngFor="let transaction of releasing_transactions">
+				<ion-card>
+					<ion-card-header>
+						<p>Owner : {{ transaction.first_name }} {{ transaction.last_name }}</p>
+						<h4 item-end>Release Date : {{ transaction.release_at | date : 'MM/dd/yy' }}</h4>
+					</ion-card-header>
+
+					<ion-list>
+						<ion-item *ngFor="let item of transaction.orders">
+							<h4>{{ item.class }}</h4>
+							<h4 padding-left>{{ item.size }}({{ item.type }})</h4>
+							<p  padding-left>{{ item.quantity }}x{{ item.price }}</p>
+						</ion-item>
+					</ion-list>
+
+					<ion-card-content>
+						<ion-row>
+							<ion-col>
+								<button ion-button block color="primary">
+									Print
+								</button>
+							</ion-col>
+							<ion-col>
+								<button ion-button block color="danger" (tap)="void_transaction(transaction.id);">
+									Void
+								</button>
+							</ion-col>
+						</ion-row>
+					</ion-card-content>
+				</ion-card>
+			
+				<br>
+			</div>
 		</div>
 
 		<div *ngSwitchCase="'pending'">
@@ -120,32 +124,37 @@
 			<div *ngFor="let transaction of pending_transactions">
 				<ion-card>
 					<ion-card-header>
-						<p>{{ transaction.first_name }} {{ transaction.last_name }}</p>
+						<p>Owner: {{ transaction.first_name }} {{ transaction.last_name }}</p>
 					</ion-card-header>
 
 					<ion-list>
 						<ion-item *ngFor="let item of transaction.orders">
 							<h4>{{ item.class }}</h4>
 							<h4 padding-left>{{ item.size }}({{ item.type }})</h4>
-							<p  padding-left>{{ item.quantity }}x10</p>
+							<p  padding-left>{{ item.quantity }}x{{ item.price }}</p>
 						</ion-item>
 					</ion-list>
 
 					<ion-card-content>
-						<h4 ion-text color="danger">Total : {{ transaction.total_payment }}</h4>
-
-						<button ion-button color="danger" float-right>
-							Cancel
-						</button>
-						<button ion-button color="primary" float-right>
-							Print
-						</button>
+						<ion-row>
+							<ion-col>
+								<button ion-button block color="orange">
+									Ready for release
+								</button>
+							</ion-col>
+						</ion-row>
+						<ion-row>
+							<ion-col>
+								<button ion-button block color="danger" (tap)="cancel_transaction(transaction.id)">
+									Cancel
+								</button>
+							</ion-col>
+						</ion-row>
 					</ion-card-content>
 				</ion-card>
 			
 				<br>
 			</div>
-
 		</div>
 	</div>
 

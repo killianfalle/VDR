@@ -1,8 +1,8 @@
 import { Component,
-		 OnInit } from '@angular/core';
+		     OnInit } from '@angular/core';
 import { IonicPage,
-		 NavController, 
-		 NavParams } from 'ionic-angular';
+		     NavController, 
+		     NavParams } from 'ionic-angular';
 import { DataProvider } from '../../providers/data-provider';
 
 /**
@@ -41,7 +41,7 @@ export class CartPage implements OnInit {
   }
 
   check_out(id) {
-  	this.provider.postData({ transaction : id },'update_transaction_status').then((res:any) => {
+  	this.provider.postData({ transaction : id, status : 'pending' },'update_transaction_status').then((res:any) => {
   		if(res._data.status){
   			this.ngOnInit();
   		}
