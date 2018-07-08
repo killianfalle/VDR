@@ -8,6 +8,9 @@
 
   <ion-navbar color="orange">
     <ion-title>Order Entry</ion-title>
+    <ion-buttons end>
+      <cart></cart>
+    </ion-buttons>
   </ion-navbar>
 
 </ion-header>
@@ -113,7 +116,7 @@
 	<ion-row padding *ngIf="steps == 3">
 		<ion-col>
 			<button ion-button color="orange" block (click)="submit(); $event.stopPropagation()">
-				Submit
+				Add to Cart
 			</button>
 		</ion-col>
 	</ion-row>

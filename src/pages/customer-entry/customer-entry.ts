@@ -20,6 +20,7 @@ export class CustomerEntryPage implements OnInit {
 
   customers: any = [];
   result: any = 0;
+  key:any;
 
   constructor(
   	public navCtrl: NavController, 
@@ -36,10 +37,14 @@ export class CustomerEntryPage implements OnInit {
     })
   }
 
-  navigate(_customer) {
-  	this.navCtrl.push('OrderEntryPage', {
-      customer : _customer
-    });
+  navigate(_customer,_key) {
+    this.key = _key;
+
+    setTimeout(() => {
+    	this.navCtrl.push('OrderEntryPage', {
+        customer : _customer
+      });
+    },300)
   }
 
   ionViewDidLoad() {
