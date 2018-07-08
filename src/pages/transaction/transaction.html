@@ -8,6 +8,9 @@
 
   <ion-navbar color="orange">
     <ion-title>Transaction</ion-title>
+    <ion-buttons end>
+      <cart></cart>
+    </ion-buttons>
   </ion-navbar>
 
 </ion-header>
@@ -44,7 +47,7 @@
 
 			<div *ngFor="let transaction of cleared_transactions">
 				<ion-card>
-					<ion-card-header>
+					<ion-card-header text-capitalize>
 						<p>Owner: {{ transaction.first_name }} {{ transaction.last_name }}</p>
 						<h4>Release Date : {{ transaction.release_at | date : 'MM/dd/yy' }}</h4>
 					</ion-card-header>
@@ -76,7 +79,7 @@
 
 			<div *ngFor="let transaction of releasing_transactions">
 				<ion-card>
-					<ion-card-header>
+					<ion-card-header  text-capitalize>
 						<p>Owner : {{ transaction.first_name }} {{ transaction.last_name }}</p>
 						<h4 item-end>Release Date : {{ transaction.release_at | date : 'MM/dd/yy' }}</h4>
 					</ion-card-header>
@@ -123,7 +126,7 @@
 
 			<div *ngFor="let transaction of pending_transactions">
 				<ion-card>
-					<ion-card-header>
+					<ion-card-header  text-capitalize>
 						<p>Owner: {{ transaction.first_name }} {{ transaction.last_name }}</p>
 					</ion-card-header>
 
@@ -139,7 +142,7 @@
 						<ion-row>
 							<ion-col>
 								<button ion-button block color="orange">
-									Ready for release
+									Ready for Release
 								</button>
 							</ion-col>
 						</ion-row>

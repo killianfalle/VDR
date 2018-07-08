@@ -8,6 +8,9 @@
 
   <ion-navbar color="orange">
     <ion-title>Customer</ion-title>
+    <ion-buttons end>
+      <cart></cart>
+    </ion-buttons>
   </ion-navbar>
 
 </ion-header>
@@ -20,9 +23,8 @@
 	</form>
 
 	<ion-list margin-top>
-	  <ion-item *ngFor="let customer of customers">
+	  <ion-item *ngFor="let customer of customers; let i = index" [ngClass]="{'selected' : (i == key)}" (tap)="navigate(customer,i)" detail-push>
 	  	<h2 text-capitalize>{{ customer.first_name }} {{ customer.last_name }}</h2>
-	  	<button ion-button color="dark" (tap)="navigate(customer)" item-end>Entry</button>
 	  </ion-item>
 	</ion-list>
 

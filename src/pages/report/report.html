@@ -8,6 +8,9 @@
 
   <ion-navbar color="orange">
     <ion-title>Report</ion-title>
+    <ion-buttons end>
+      <cart></cart>
+    </ion-buttons>
   </ion-navbar>
 
 </ion-header>
@@ -29,7 +32,7 @@
 	<br>
 
 	<ion-card *ngFor="let report of reports">
-		<ion-card-header>
+		<ion-card-header  text-capitalize>
 			<p>Owner: {{ report.first_name }} {{ report.last_name }}</p>
 			<p>Release Date: {{ report.release_date }}</p>
 		</ion-card-header>

@@ -7,7 +7,7 @@
 <ion-header>
 
   <ion-navbar color="orange">
-    <ion-title>Cart</ion-title>
+    <ion-title>My Cart</ion-title>
   </ion-navbar>
 
 </ion-header>
@@ -22,7 +22,7 @@
 	<div *ngFor="let items of cart">
 		<ion-card>
 			<ion-card-header>
-				<p>{{ items.first_name }} {{ items.last_name }}</p>
+				<p text-capitalize>Owner: {{ items.first_name }} {{ items.last_name }}</p>
 			</ion-card-header>
 
 			<ion-list>
