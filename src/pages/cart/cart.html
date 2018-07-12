@@ -12,33 +12,98 @@
 
 </ion-header>
 
-<ion-content padding>
+<ion-content>
 
 	<div text-center>
 		<h4>Vista del rio</h4>
 		<p>Carmen Cagayan de Oro City</p>
 	</div>
 
-	<div *ngFor="let items of cart">
+	<div *ngIf="cart.length == 0">
+		<hr>
+		<ion-item text-center no-lines>
+			<p>No item</p>
+		</ion-item>
+	</div>
+
+	<div *ngFor="let items of cart; let row = index">
 		<ion-card>
-			<ion-card-header>
-				<p text-capitalize>Owner: {{ items.first_name }} {{ items.last_name }}</p>
-			</ion-card-header>
+			<ion-item-divider>
+				<h4 text-capitalize>Owner: {{ items.first_name }} {{ items.last_name }}</h4>
+				<h4 ion-text color="primary"  (tap)="edit(row)" [hidden]="key == row" item-end>Edit</h4>
+			</ion-item-divider>
 
 			<ion-list>
-				<ion-item *ngFor="let item of items.orders">
-					<h4>{{ item.class }}</h4>
-					<h4 padding-left>{{ item.size }}({{ item.type }})</h4>
-					<p  padding-left>{{ item.quantity }}x{{ item.price }}</p>
-				</ion-item>
+				<ion-item-sliding *ngFor="let data of items.orders; let i = index">
+					<ion-item>
+						<ion-row>
+							<ion-col col-4 padding>
+								<h4>Class : </h4>
+							</ion-col>
+							<ion-col text-center align-self-center>
+								<h4>{{ data.class }}</h4>
+							</ion-col>
+						</ion-row>
+						<ion-row>
+							<ion-col col-4 padding>
+								<h4>Size & Type : </h4>
+							</ion-col>
+							<ion-col text-center align-self-center>
+								<h4>{{ data.size }}({{ data.type }})</h4>
+							</ion-col>
+						</ion-row>
+						<ion-row>
+							<ion-col col-4 align-self-center padding>
+								<h4>Quantity : </h4>
+							</ion-col>
+							<ion-col align-self-center text-right>
+								<ion-icon color="orange" name='add' *ngIf="key == row" (tap)="quantity(row,i)"></ion-icon>
+							</ion-col>
+							<ion-col text-center align-self-center>
+								<h1>{{ data.quantity }}</h1>
+							</ion-col>
+							<ion-col align-self-center>
+								<ion-icon color="orange" name='remove' *ngIf="key == row" (tap)="quantity(row,i,false)"></ion-icon>
+							</ion-col>
+						</ion-row>
+						<ion-row>
+							<ion-col col-4 padding>
+								<h4>Price : </h4>
+							</ion-col>
+							<ion-col text-center align-self-center>
+								<h4>P{{ data.price }}</h4>
+							</ion-col>
+						</ion-row>
+					</ion-item>
+
+					<ion-item-options side="right">
+				      <button ion-button icon-only color="danger" (tap)="delete(row,i,data)">
+				      	<ion-icon name="trash"></ion-icon>
+				      </button>
+				    </ion-item-options>
+				</ion-item-sliding>
 			</ion-list>
 
 			<ion-card-content>
-				<h4 ion-text color="danger">Total : {{ items.total_payment }}</h4>
+				<h4 ion-text color="danger" text-right>Total : P{{ items.total_payment }}</h4>
 			</ion-card-content>
 		</ion-card>
+
+		<ion-row *ngIf="key == row">
+			<ion-col>
+				<button ion-button outline block color="danger" (tap)="edit();">
+					Cancel
+				</button>
+			</ion-col>
+			&nbsp;
+			<ion-col>
+				<button ion-button outline block color="orange" (tap)="update(items);">
+					Save
+				</button>
+			</ion-col>
+		</ion-row>
 	
-		<button ion-button outline block color="orange" (tap)="check_out(items.id);">
+		<button [hidden]="key == row" ion-button outline block color="orange" (tap)="check_out(items.id);">
 			CheckOut
 		</button>
 

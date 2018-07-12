@@ -7,6 +7,9 @@
 <ion-header>
 
   <ion-navbar color="orange">
+  	<ion-buttons start>
+  	  <logo></logo>
+  	</ion-buttons>
     <ion-title>Vista del rio</ion-title>
     <ion-buttons end>
       <cart></cart>
@@ -18,152 +21,46 @@
 
 <ion-content>
 
-	<ion-segment [(ngModel)]="tabs" color="dark">
-		<ion-segment-button value="finish">
-			Finish 
-		</ion-segment-button>
+	<ion-item>
+		<ion-label>
+			<ion-icon name="md-calendar"></ion-icon>
+		</ion-label>
+		<ion-datetime></ion-datetime>
+	</ion-item>	
 
-		<ion-segment-button value="pending">
-			Release 
-		</ion-segment-button>
-	</ion-segment>
+	<br>
 
-	<div [ngSwitch]="tabs" >
-		<div *ngSwitchCase="'finish'">
-			<br>
+	<div *ngFor="let transaction of releasing_transactions">
+		<ion-card>
+			<ion-card-header  text-capitalize>
+				<p>Owner : {{ transaction.first_name }} {{ transaction.last_name }}</p>
+				<h4>Release Date : {{ transaction.release_at | date : 'MM/dd/yy' }}</h4>
+				<p>Status : 
+					<span>
+						<ion-badge color="secondary" [hidden]="transaction.status">Ready for Release</ion-badge>
+						<ion-badge color="danger" [hidden]="!transaction.status">Void</ion-badge>
+					</span>
+				</p>
+			</ion-card-header>
 
-			<ion-card *ngFor="let transaction of finish_transactions">
-				<ion-row>
-					<ion-col col-3 margin-left>
-						<h2>Class</h2>
-					</ion-col>
-					<ion-col col-1>
-						<h2>:</h2>
-					</ion-col>
-					<ion-col col-6>
-						<h2>{{ transaction.class }}</h2>
-					</ion-col>
-				</ion-row>
-				<ion-row>
-					<ion-col col-3 margin-left>
-						<h2>Size</h2>
-					</ion-col>
-					<ion-col col-1>
-						<h2>:</h2>
-					</ion-col>
-					<ion-col col-6>
-						<h2>{{ transaction.size }}</h2>
-					</ion-col>
-				</ion-row>
-				<ion-row>
-					<ion-col col-3 margin-left>
-						<h2>Type</h2>
-					</ion-col>
-					<ion-col col-1>
-						<h2>:</h2>
-					</ion-col>
-					<ion-col col-6>
-						<h2>{{ transaction.type }}</h2>
-					</ion-col>
-				</ion-row>
-				<ion-row>
-					<ion-col col-3 margin-left>
-						<h2>Quantity</h2>
-					</ion-col>
-					<ion-col col-1>
-						<h2>:</h2>
-					</ion-col>
-					<ion-col col-6>
-						<h2>{{ transaction.qty }}</h2>
-					</ion-col>
-				</ion-row>
-				<ion-row>
-					<ion-col col-3 margin-left>
-						<h2>Release</h2>
-					</ion-col>
-					<ion-col col-1>
-						<h2>:</h2>
-					</ion-col>
-					<ion-col col-6>
-						<h2>{{ transaction.release }}</h2>
-					</ion-col>
-				</ion-row>
+			<ion-list>
+				<ion-item *ngFor="let item of transaction.orders">
+					<h4>{{ item.class }}</h4>
+					<h4 padding-left>{{ item.size }}({{ item.type }})</h4>
+					<p  padding-left>{{ item.quantity }}x{{ item.price }}</p>
+				</ion-item>
+			</ion-list>
 
+			<ion-card-content>
 				<ion-row>
 					<ion-col>
-						<button ion-button color="danger" block>Void</button>
+						<button ion-button block color="primary" (tap)="verify_connectivity(transaction);">
+							Print
+						</button>
 					</ion-col>
 				</ion-row>
-			</ion-card>
-		</div>
-
-		<div *ngSwitchCase="'pending'">
-			<br>
-
-			<ion-card *ngFor="let transaction of pending_transactions">
-				<ion-row>
-					<ion-col col-3 margin-left>
-						<h2>Class</h2>
-					</ion-col>
-					<ion-col col-1>
-						<h2>:</h2>
-					</ion-col>
-					<ion-col col-6>
-						<h2>{{ transaction.class }}</h2>
-					</ion-col>
-				</ion-row>
-				<ion-row>
-					<ion-col col-3 margin-left>
-						<h2>Size</h2>
-					</ion-col>
-					<ion-col col-1>
-						<h2>:</h2>
-					</ion-col>
-					<ion-col col-6>
-						<h2>{{ transaction.size }}</h2>
-					</ion-col>
-				</ion-row>
-				<ion-row>
-					<ion-col col-3 margin-left>
-						<h2>Type</h2>
-					</ion-col>
-					<ion-col col-1>
-						<h2>:</h2>
-					</ion-col>
-					<ion-col col-6>
-						<h2>{{ transaction.type }}</h2>
-					</ion-col>
-				</ion-row>
-				<ion-row>
-					<ion-col col-3 margin-left>
-						<h2>Quantity</h2>
-					</ion-col>
-					<ion-col col-1>
-						<h2>:</h2>
-					</ion-col>
-					<ion-col col-6>
-						<h2>{{ transaction.qty }}</h2>
-					</ion-col>
-				</ion-row>
-				<ion-row>
-					<ion-col col-3 margin-left>
-						<h2>Release</h2>
-					</ion-col>
-					<ion-col col-1>
-						<h2>:</h2>
-					</ion-col>
-					<ion-col col-6>
-						<h2>{{ transaction.release }}</h2>
-					</ion-col>
-				</ion-row>
-
-				<ion-row>
-					<ion-col>
-						<button ion-button color="danger" block>Void</button>
-					</ion-col>
-				</ion-row>
-			</ion-card>
-		</div>
+			</ion-card-content>
+		</ion-card>
 	</div>
-
+	
 </ion-content>

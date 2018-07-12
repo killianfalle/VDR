@@ -67,7 +67,8 @@
 				<ion-card>
 					<ion-item>
 						<ion-label>QTY :</ion-label>
-						<ion-input type="text" [ngStyle]="{'color': '#222'}" [(ngModel)]="form.quantity" (input)="setTotal()" text-right></ion-input>
+						<ion-label class="custom-label">{{ form.qty_type.name }}</ion-label>
+						<ion-input type="number" [ngStyle]="{'color': '#222'}" [(ngModel)]="form.quantity" (input)="setTotal()" text-right>TEST</ion-input>
 					</ion-item>
 				</ion-card>
 			</ion-col>
@@ -78,7 +79,7 @@
 				<ion-card>
 					<ion-item>
 						<ion-label>Price :</ion-label>
-						<ion-input type="text" [ngStyle]="{'color': '#222'}" [(ngModel)]="form.price" (input)="setTotal()" text-right></ion-input>
+						<ion-input type="number" [ngStyle]="{'color': '#222'}" [(ngModel)]="form.price" (input)="setTotal()" text-right></ion-input>
 					</ion-item>
 				</ion-card>
 			</ion-col>
@@ -89,7 +90,7 @@
 				<ion-card>
 					<ion-item>
 						<ion-label>Total :</ion-label>
-						<ion-input type="text" [ngStyle]="{'color': '#222'}" [(ngModel)]="form.total" text-right disabled></ion-input>
+						<ion-input type="number" [ngStyle]="{'color': '#222'}" [(ngModel)]="form.total" text-right disabled></ion-input>
 					</ion-item>
 				</ion-card>
 			</ion-col>

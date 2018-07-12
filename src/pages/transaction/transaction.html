@@ -18,7 +18,7 @@
 
 <ion-content>
 
-	<ion-segment [(ngModel)]="tabs" color="dark" (ionChange)="get_transaction()">
+	<ion-segment mode="md" [(ngModel)]="tabs" color="dark" (ionChange)="get_transaction()">
 		<ion-segment-button value="cleared">
 			Cleared 
 		</ion-segment-button>
@@ -81,7 +81,13 @@
 				<ion-card>
 					<ion-card-header  text-capitalize>
 						<p>Owner : {{ transaction.first_name }} {{ transaction.last_name }}</p>
-						<h4 item-end>Release Date : {{ transaction.release_at | date : 'MM/dd/yy' }}</h4>
+						<h4>Release Date : {{ transaction.release_at | date : 'MM/dd/yy' }}</h4>
+						<p>Status : 
+							<span>
+								<ion-badge color="secondary" [hidden]="transaction.status">Ready for Release</ion-badge>
+								<ion-badge color="danger" [hidden]="!transaction.status">Void</ion-badge>
+							</span>
+						</p>
 					</ion-card-header>
 
 					<ion-list>
@@ -92,20 +98,20 @@
 						</ion-item>
 					</ion-list>
 
-					<ion-card-content>
+					<ion-item-divider>
 						<ion-row>
 							<ion-col>
-								<button ion-button block color="primary">
+								<button ion-button block color="primary" (tap)="verify_connectivity(transaction);">
 									Print
 								</button>
 							</ion-col>
-							<ion-col>
+							<ion-col [hidden]="transaction.status">
 								<button ion-button block color="danger" (tap)="void_transaction(transaction.id);">
 									Void
 								</button>
 							</ion-col>
 						</ion-row>
-					</ion-card-content>
+					</ion-item-divider>
 				</ion-card>
 			
 				<br>
@@ -138,10 +144,10 @@
 						</ion-item>
 					</ion-list>
 
-					<ion-card-content>
+					<ion-item-divider>
 						<ion-row>
 							<ion-col>
-								<button ion-button block color="orange">
+								<button ion-button block color="orange" (tap)="show_calendar(transaction.id)">
 									Ready for Release
 								</button>
 							</ion-col>
@@ -153,7 +159,7 @@
 								</button>
 							</ion-col>
 						</ion-row>
-					</ion-card-content>
+					</ion-item-divider>
 				</ion-card>
 			
 				<br>

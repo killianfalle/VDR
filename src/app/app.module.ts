@@ -9,6 +9,8 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { DataProvider } from '../providers/data-provider';
+import { PrinterProvider } from '../providers/printer';
+import { BluetoothSerial } from '@ionic-native/bluetooth-serial';
 
 var config = {
       backButtonText: '',
@@ -37,6 +39,8 @@ var config = {
     StatusBar,
     SplashScreen,
     DataProvider,
+    PrinterProvider,
+    BluetoothSerial,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

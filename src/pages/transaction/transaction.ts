@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { DataProvider } from '../../providers/data-provider';
+import { PrinterProvider } from '../../providers/printer';
+import moment from 'moment';
+
 /**
  * Generated class for the TransactionPage page.
  *
@@ -24,7 +27,8 @@ export class TransactionPage {
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams,
-    private provider: DataProvider) {
+    private provider: DataProvider,
+    private printer: PrinterProvider) {
   	this.get_transaction();
   }
 
@@ -45,6 +49,22 @@ export class TransactionPage {
     });
   }
 
+  show_calendar(id) {
+    this.navCtrl.push('CalendarPage', {
+      id : id,
+      self : this,
+      callback : this.releasing_transaction
+    })
+  }
+
+  releasing_transaction(id,date,self) {
+    self.provider.postData({ transaction : id, date : date, status : 'releasing' },'update_transaction_status').then((res:any) => {
+      if(res._data.status){
+        self.get_transaction();
+      }
+    })
+  }
+
   void_transaction(id) {
     this.provider.postData({ transaction : id },'set_void_transaction').then((res:any) => {
       if(res._data.status){
@@ -59,6 +79,34 @@ export class TransactionPage {
         this.get_transaction();
       }
     })
+  }
+
+  verify_connectivity(_data) {
+    this.printer.connectivity().then((res: any) => {
+      this.ready_print(_data);
+    }).catch((err) => {
+      console.log("printer not found");
+    });
+  }
+
+  ready_print(_data){
+    let item = '';
+
+    for(let counter = 0;counter < _data.orders.length;counter++){
+      item += `\n`+
+              _data.orders[counter].class +`\n`+
+              _data.orders[counter].size +` (`+_data.orders[counter].type+`)\n`+
+              _data.orders[counter].quantity +` x `+_data.orders[counter].price+`\n`;
+    }
+
+    this.printer.onWrite(`
+      \nOwner: `+_data.first_name+`  `+_data.last_name +`
+      \nRelease: `+moment(_data.release_at).format('MM/DD/YYYY')+`
+      \n-------------------------------\n`+
+         item + `
+      \n-------------------------------
+      \nTotal : P`+ _data.total_payment +`
+    \n`);
   }
 
   ionViewDidLoad() {
