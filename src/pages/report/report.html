@@ -22,28 +22,32 @@
 		<ion-label>
 			<ion-icon name="md-calendar"></ion-icon>
 		</ion-label>
-		<ion-datetime></ion-datetime>
+		<ion-datetime displayFormat="MM/DD/YYYY" [(ngModel)]="search_date" (ionChange)="ngOnInit()"></ion-datetime>
 	</ion-item>
 
 	<div padding>
-		<button ion-button block color="orange" (click)="exportCSV(); $event.stopPropagation()">Export CSV</button>
+		<button ion-button block color="orange" (click)="exportCSV(); $event.stopPropagation()">Export Result</button>
 	</div>
 
 	<br>
 
-	<ion-card *ngFor="let report of reports">
-		<ion-card-header  text-capitalize>
-			<p>Owner: {{ report.first_name }} {{ report.last_name }}</p>
-			<p>Release Date: {{ report.release_date }}</p>
-		</ion-card-header>
+	<div *ngFor="let report of reports">
+		<ion-card>
+			<ion-card-header text-capitalize>
+				<p>Owner: {{ report.first_name }} {{ report.last_name }}</p>
+				<h4>Release Date : {{ report.release_at | date : 'MM/dd/yy' }}</h4>
+			</ion-card-header>
 
-		<ion-list>
-			<ion-item>
-				<h4>{{ report.class }}</h4>
-				<h4 padding-left>{{ report.size }}({{ report.type }})</h4>
-				<p  padding-left>{{ report.quantity }}x{{ report.price }}</p>
-			</ion-item>
-		</ion-list>
-	</ion-card>
+			<ion-list>
+				<ion-item *ngFor="let item of report.orders">
+					<h4>{{ item.class }}</h4>
+					<h4 padding-left>{{ item.size }}({{ item.type }})</h4>
+					<p  padding-left>{{ item.quantity }}x{{ item.price }}</p>
+				</ion-item>
+			</ion-list>
+		</ion-card>
+	
+		<br>
+	</div>
 
 </ion-content>

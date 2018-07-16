@@ -6,6 +6,11 @@ page-cart {
 	.row , .col {
 		padding: 0;
 		margin: 0;
+
+		.icon {
+			font-size: 2em;
+			font-weight: bolder;
+		}
 	}
 
 	ion-item-sliding:nth-child(even) {

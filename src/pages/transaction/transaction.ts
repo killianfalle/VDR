@@ -1,7 +1,10 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { DataProvider } from '../../providers/data-provider';
-import { PrinterProvider } from '../../providers/printer';
+import { LoaderComponent } from '../../components/loader/loader';
+import { AlertComponent } from '../../components/alert/alert';
+import { Socket } from 'ng-socket-io';
+import { Observable } from 'rxjs/Observable';
 import moment from 'moment';
 
 /**
@@ -19,6 +22,7 @@ import moment from 'moment';
 export class TransactionPage {
 
   tabs: any = 'cleared';
+  search_date: any = '';
 
   cleared_transactions: any = [];
   releasing_transactions: any = [];
@@ -27,13 +31,52 @@ export class TransactionPage {
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams,
+    public loader: LoaderComponent,
+    public alert: AlertComponent,
     private provider: DataProvider,
-    private printer: PrinterProvider) {
+    private socket: Socket) {
   	this.get_transaction();
+
+    this.add_pending_transaction().subscribe((_data) => {
+      this.pending_transactions.push(_data);
+    });
+
+    this.remove_pending_transaction().subscribe((_data) => {
+      let index = this.pending_transactions.map(obj => obj.id).indexOf(_data);
+      if(index > -1){
+        this.pending_transactions.splice(index, 1);
+      }  
+    });
+
+    this.add_releasing_transaction().subscribe((_data) => {
+      this.releasing_transactions.push(_data);
+    });
+
+    this.set_void_releasing_transaction().subscribe((_data) => {
+      let index = this.releasing_transactions.map(obj => obj.id).indexOf(_data);
+      this.releasing_transactions[index].void = 1;
+    });
+
+    this.remove_releasing_transaction().subscribe((_data) => {
+      let index = this.releasing_transactions.map(obj => obj.id).indexOf(_data);
+      if(index > -1){
+        this.releasing_transactions.splice(index, 1);
+      }  
+    });
+
+    this.add_cleared_transaction().subscribe((_data) => {
+      this.cleared_transactions.push(_data);
+    });
+
+    this.set_void_cleared_transaction().subscribe((_data) => {
+      let index = this.cleared_transactions.map(obj => obj.id).indexOf(_data);
+      console.log(index);
+      this.cleared_transactions[index].void = 1;
+    });
   }
 
   get_transaction() {
-    this.provider.getData({ status : this.tabs },'get_transactions').then((res: any) => {
+    this.provider.getData({ status : this.tabs , date : this.search_date },'transaction').then((res: any) => {
       if(res._data.status)
         switch (this.tabs) {
           case "pending":
@@ -49,68 +92,140 @@ export class TransactionPage {
     });
   }
 
-  show_calendar(id) {
+  add_cleared_transaction() {
+    let observable = new Observable(observer => {
+      this.socket.on('add-cleared-transaction', (data) => {
+        observer.next(data.data);
+      });
+    })
+    return observable;
+  }
+
+  add_pending_transaction() {
+    let observable = new Observable(observer => {
+      this.socket.on('add-pending-transaction', (data) => {
+        observer.next(data.data);
+      });
+    })
+    return observable;
+  }
+
+  add_releasing_transaction() {
+    let observable = new Observable(observer => {
+      this.socket.on('add-releasing-transaction', (data) => {
+        observer.next(data.data);
+      });
+    })
+    return observable;
+  }
+
+  remove_pending_transaction() {
+    let observable = new Observable(observer => {
+      this.socket.on('remove-pending-transaction', (data) => {
+        observer.next(data.data);
+      });
+    })
+    return observable;
+  }
+
+  set_void_releasing_transaction() {
+    let observable = new Observable(observer => {
+      this.socket.on('set-void-releasing-transaction', (data) => {
+        observer.next(data.data);
+      });
+    })
+    return observable;
+  }
+
+  set_void_cleared_transaction() {
+    let observable = new Observable(observer => {
+      this.socket.on('set-void-cleared-transaction', (data) => {
+        observer.next(data.data);
+      });
+    })
+    return observable;
+  }
+
+  remove_releasing_transaction() {
+    let observable = new Observable(observer => {
+      this.socket.on('remove-releasing-transaction', (data) => {
+        observer.next(data.data);
+      });
+    })
+    return observable;
+  }
+
+  show_calendar(_data) {
     this.navCtrl.push('CalendarPage', {
-      id : id,
+      data : _data,
       self : this,
       callback : this.releasing_transaction
     })
   }
 
-  releasing_transaction(id,date,self) {
-    self.provider.postData({ transaction : id, date : date, status : 'releasing' },'update_transaction_status').then((res:any) => {
+  releasing_transaction(_data,date,self) {
+    self.provider.postData({ transaction : _data.id, date : date, status : 'releasing' },'transaction/status').then((res:any) => {
       if(res._data.status){
         self.get_transaction();
+
+        _data.status = 'releasing';
+        _data.release_at = date;
+        let params = { data : _data, type : 'add-releasing-transaction' };
+        self.socket.emit('transaction', { text: params });
+
+        params = { data : _data.id, type : 'remove-pending-transaction' };
+        self.socket.emit('transaction', { text: params });
       }
     })
   }
 
-  void_transaction(id) {
-    this.provider.postData({ transaction : id },'set_void_transaction').then((res:any) => {
-      if(res._data.status){
-        this.get_transaction();
-      }
-    })
-  }
+  void_transaction(id,type = 'cleared') {
+    this.alert.confirm().then((response:any) => {
+      if (response) {
+        this.provider.postData({ transaction : id },'transaction/void').then((res:any) => {
+          if(res._data.status){
+            this.get_transaction();
 
-  cancel_transaction(id) {
-    this.provider.postData({ transaction : id, status : 'cancel' },'update_transaction_status').then((res:any) => {
-      if(res._data.status){
-        this.get_transaction();
-      }
-    })
-  }
+            let params = {};
 
-  verify_connectivity(_data) {
-    this.printer.connectivity().then((res: any) => {
-      this.ready_print(_data);
-    }).catch((err) => {
-      console.log("printer not found");
+            switch (type) {
+              case "releasing":
+                params = { data : id, type : 'set-void-releasing-transaction' };
+                this.socket.emit('transaction', { text: params });
+                break;
+              case "cleared":
+                params = { data : id, type : 'set-void-cleared-transaction' };
+                this.socket.emit('transaction', { text: params });
+                break;
+              default:
+                break;
+            }
+          }
+        });
+      }
     });
   }
 
-  ready_print(_data){
-    let item = '';
-
-    for(let counter = 0;counter < _data.orders.length;counter++){
-      item += `\n`+
-              _data.orders[counter].class +`\n`+
-              _data.orders[counter].size +` (`+_data.orders[counter].type+`)\n`+
-              _data.orders[counter].quantity +` x `+_data.orders[counter].price+`\n`;
-    }
-
-    this.printer.onWrite(`
-      \nOwner: `+_data.first_name+`  `+_data.last_name +`
-      \nRelease: `+moment(_data.release_at).format('MM/DD/YYYY')+`
-      \n-------------------------------\n`+
-         item + `
-      \n-------------------------------
-      \nTotal : P`+ _data.total_payment +`
-    \n`);
+  cancel_transaction(_data) {
+    this.alert.confirm().then((response: any) => {
+      if(response){
+        this.provider.postData({ transaction : _data.id, status : 'cancel' },'transaction/status').then((res:any) => {
+          if(res._data.status){
+            this.get_transaction();
+            let params = { data : _data.id, type : 'remove-pending-transaction' };
+            this.socket.emit('transaction', { text: params });
+          }
+        });
+      }
+    });
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad TransactionPage');
+    this.loader.show_loader();
+  }
+
+  ionViewDidEnter() {
+    this.loader.hide_loader();
   }
 
 }

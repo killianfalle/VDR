@@ -6,7 +6,7 @@ import { Validators,
          FormBuilder, 
          FormGroup } from '@angular/forms';
 import { DataProvider } from '../../providers/data-provider';
-
+import { LoaderComponent } from '../../components/loader/loader';
 /**
  * Generated class for the AddCustomerPage page.
  *
@@ -23,14 +23,17 @@ export class AddCustomerPage {
 
   customer: FormGroup;
   _callback: any;
+  origin: any;
 
   constructor(
   	public navCtrl: NavController, 
   	public navParams: NavParams,
+    public loader: LoaderComponent,
   	private provider: DataProvider,
     private form: FormBuilder) {
 
     this._callback = navParams.get('callback');
+    this.origin = navParams.get('self');
     this.initForm();
   }
 
@@ -42,17 +45,21 @@ export class AddCustomerPage {
   }
 
   register() {
-    this.provider.postData(this.customer.value,'register/customer').then((res: any) => {
+    this.provider.postData(this.customer.value,'customer/register').then((res: any) => {
       if(res._data.status){
         console.log(res._data.message);
-        this._callback(this.navParams.get('self'));
+        this._callback(this.origin);
         this.navCtrl.pop();
       }
     });
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad AddCustomerPage');
+    this.loader.show_loader();
+  }
+
+  ionViewDidEnter() {
+    this.loader.hide_loader();
   }
 
 }

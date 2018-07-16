@@ -5,6 +5,7 @@ import { IonicPage,
          NavParams } from 'ionic-angular';
 import { DataProvider } from '../../providers/data-provider';
 import { Angular2Csv } from 'angular2-csv/Angular2-csv';
+import { LoaderComponent } from '../../components/loader/loader';
 
 /**
  * Generated class for the ReportPage page.
@@ -21,6 +22,7 @@ import { Angular2Csv } from 'angular2-csv/Angular2-csv';
 export class ReportPage implements OnInit {
 
   reports:any = [];  
+  search_date: any = '';
 
   public options = { 
     fieldSeparator: ',',
@@ -35,23 +37,28 @@ export class ReportPage implements OnInit {
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams,
-    public provider: DataProvider) {
+    public provider: DataProvider,
+    public loader: LoaderComponent) {
   }
 
   ngOnInit() {
-    this.provider.getData('','get_report').then((res: any) => {
+    this.provider.getData({ date : this.search_date },'report').then((res: any) => {
       if(res._data.status){
         this.reports = res._data.data;
       }
     });
   }
 
-  exportCSV(){
+  exportCSV() {
     new Angular2Csv(this.reports,'Report', this.options);
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad ReportPage');
+    this.loader.show_loader();
+  }
+
+  ionViewDidEnter() {
+    this.loader.hide_loader();
   }
 
 }

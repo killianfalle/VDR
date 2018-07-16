@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
-
+import { IonicPage,
+		 NavController, 
+		 NavParams } from 'ionic-angular';
+import { LoaderComponent } from '../../components/loader/loader';
 /**
  * Generated class for the ReviewEntryPage page.
  *
@@ -17,12 +19,19 @@ export class ReviewEntryPage {
 
   data: any = {};
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(
+  	public navCtrl: NavController, 
+  	public navParams: NavParams,
+  	public loader: LoaderComponent) {
   	this.data = navParams.get('data');
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad ReviewEntryPage');
+    this.loader.show_loader();
+  }
+
+  ionViewDidEnter() {
+    this.loader.hide_loader();
   }
 
 }

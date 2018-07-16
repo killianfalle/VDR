@@ -13,4 +13,14 @@ page-transaction {
 			background: transparent;
 		}
 	}
+
+	.row , .col {
+		margin: 0;
+		padding: 0;
+	}
+
+	.col:first-child {
+		margin: 0;
+		padding-right: 5px;
+	}
 }

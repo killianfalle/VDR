@@ -30,7 +30,7 @@
 		<ion-card>
 			<ion-item-divider>
 				<h4 text-capitalize>Owner: {{ items.first_name }} {{ items.last_name }}</h4>
-				<h4 ion-text color="primary"  (tap)="edit(row)" [hidden]="key == row" item-end>Edit</h4>
+				<h4 ion-text color="primary"  (tap)="edit(row,items)" [hidden]="key == row" item-end>Edit</h4>
 			</ion-item-divider>
 
 			<ion-list>
@@ -91,7 +91,7 @@
 
 		<ion-row *ngIf="key == row">
 			<ion-col>
-				<button ion-button outline block color="danger" (tap)="edit();">
+				<button ion-button outline block color="danger" (tap)="cancel_edit();">
 					Cancel
 				</button>
 			</ion-col>
@@ -103,7 +103,7 @@
 			</ion-col>
 		</ion-row>
 	
-		<button [hidden]="key == row" ion-button outline block color="orange" (tap)="check_out(items.id);">
+		<button [hidden]="key == row" ion-button outline block color="orange" (tap)="check_out(items);">
 			CheckOut
 		</button>
 

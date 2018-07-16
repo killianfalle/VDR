@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage } from 'ionic-angular';
+import { Socket } from 'ng-socket-io';
 
 @IonicPage()
 @Component({
@@ -12,9 +13,10 @@ export class TabsPage {
   tab3Root = 'WarehousePage';
   tab4Root = 'SettingsPage';
 
-  user: any;
+  profile: any;
 
-  constructor() {
-  	this.user = JSON.parse(localStorage.getItem('_info'));
+  constructor(private socket: Socket) {
+  	this.profile = JSON.parse(localStorage.getItem('_info'));
+  	this.socket.connect();
   }
 }

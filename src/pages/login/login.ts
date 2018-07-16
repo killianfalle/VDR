@@ -6,6 +6,7 @@ import { Validators,
          FormBuilder, 
          FormGroup } from '@angular/forms';
 import { DataProvider } from '../../providers/data-provider';
+import { LoaderComponent } from '../../components/loader/loader';
 /**
  * Generated class for the LoginPage page.
  *
@@ -26,7 +27,8 @@ export class LoginPage {
     public navCtrl: NavController, 
     public navParams: NavParams,
     public provider: DataProvider,
-    private form: FormBuilder) {
+    private form: FormBuilder,
+    public loader: LoaderComponent) {
     
     this.initForm();
   }
@@ -39,6 +41,8 @@ export class LoginPage {
   }
 
   sign_in() {
+    this.loader.show_loader('auth');
+
     this.provider.postData(this.user.value,'login').then((res: any) => {
         if(res._data.status){
           localStorage.setItem('_info',JSON.stringify(res._data.info));
@@ -46,13 +50,23 @@ export class LoginPage {
 
           setTimeout(() => {
   	        this.navCtrl.setRoot('TabsPage');
-          },300)
+          },300);
+
+          this.loader.hide_loader();
         }
-    });
+    }).catch((error) => {
+      this.loader.hide_loader();
+    })
+
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad LoginPage');
+    this.loader.show_loader();
+  }
+
+  ionViewDidEnter() {
+    this.loader.hide_loader();
   }
 
 }

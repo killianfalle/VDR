@@ -1,9 +1,12 @@
 import { Component,
-         OnInit } from '@angular/core';
+         OnInit,
+         Pipe } from '@angular/core';
 import { IonicPage,
          NavController,
          NavParams } from 'ionic-angular';
+import { LoaderComponent } from '../../components/loader/loader';
 import { DataProvider } from '../../providers/data-provider';
+
 /**
  * Generated class for the EntryPage page.
  *
@@ -32,7 +35,8 @@ export class OrderEntryPage implements OnInit {
   constructor(
   	public navCtrl: NavController,
   	public navParams: NavParams,
-    private provider: DataProvider
+    private provider: DataProvider,
+    public loader: LoaderComponent
   ) {
     this.customer = navParams.get('customer');
     this.user = JSON.parse(localStorage.getItem('_info'));
@@ -45,14 +49,14 @@ export class OrderEntryPage implements OnInit {
   		class : { id : '', name: ''},
   		size: { id : '', name: ''},
       qty_type: { id : '', name: ''},
-      quantity: 0,
-      price: 0,
-      total: 0
+      quantity: null,
+      price: null,
+      total: null
   	}
   }
 
   ngOnInit() {
-    this.provider.getData('','get_product').then((res: any) => {
+    this.provider.getData('','product').then((res: any) => {
       this.product = res._data;
       this.quantities = this.product.quantity;
       this.form.id = res._data.id;
@@ -88,13 +92,15 @@ export class OrderEntryPage implements OnInit {
   setTotal() {
     if(this.form.price != 0 && this.form.quantity != 0)
       this.form.total = parseFloat(this.form.price) * parseFloat(this.form.quantity);
+    if(this.form.price == 0 || this.form.quantity == 0)
+      this.form.total = null;
   }
 
   submit() {
     this.form.customer = this.customer.id;
     this.form.transacted_by = this.user.id;
 
-    this.provider.postData(this.form,'add_entry').then((res: any) => {
+    this.provider.postData(this.form,'transaction/entry').then((res: any) => {
       if(res._data.status){
         console.log(res._data.message);
         this.navCtrl.pop();
@@ -114,7 +120,12 @@ export class OrderEntryPage implements OnInit {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad EntryPage');
+    console.log('ionViewDidLoad LoginPage');
+    this.loader.show_loader();
+  }
+
+  ionViewDidEnter() {
+    this.loader.hide_loader();
   }
 
 }

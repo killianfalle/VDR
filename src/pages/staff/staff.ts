@@ -4,6 +4,7 @@ import { IonicPage,
          NavController, 
          NavParams } from 'ionic-angular';
 import { DataProvider } from '../../providers/data-provider';
+import { LoaderComponent } from '../../components/loader/loader';
 
 /**
  * Generated class for the StaffPage page.
@@ -19,17 +20,19 @@ import { DataProvider } from '../../providers/data-provider';
 })
 export class StaffPage implements OnInit{
 
-  result: any = 0;
   staffs: any = [];
+  keyword: any = '';
+  result: any = 0;
 
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams,
-    public provider: DataProvider) {
+    public provider: DataProvider,
+    public loader: LoaderComponent) {
   }
 
   ngOnInit(self = this) {
-    self.provider.getData('','get_staff').then((res: any) => {
+    self.provider.getData({ search : self.keyword },'staff').then((res: any) => {
         if(res._data.status){
           self.result = res._data.result;
           self.staffs = res._data.data;
@@ -44,8 +47,19 @@ export class StaffPage implements OnInit{
     });
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad StaffPage');
+  reset() {
+    this.keyword = '';
+    this.ngOnInit();
   }
+
+  ionViewDidLoad() {
+    console.log('ionViewDidLoad LoginPage');
+    this.loader.show_loader();
+  }
+
+  ionViewDidEnter() {
+    this.loader.hide_loader();
+  }
+
 
 }

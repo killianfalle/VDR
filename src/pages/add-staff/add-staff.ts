@@ -4,6 +4,8 @@ import { Validators,
          FormBuilder, 
          FormGroup } from '@angular/forms';
 import { DataProvider } from '../../providers/data-provider';
+import { LoaderComponent } from '../../components/loader/loader';
+
 /**
  * Generated class for the AddStaffPage page.
  *
@@ -24,6 +26,7 @@ export class AddStaffPage {
   constructor(
   	public navCtrl: NavController, 
   	public navParams: NavParams,
+    public loader: LoaderComponent,
   	public provider: DataProvider,
   	public form: FormBuilder) {
 
@@ -53,7 +56,11 @@ export class AddStaffPage {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad AddStaffPage');
+    this.loader.show_loader();
+  }
+
+  ionViewDidEnter() {
+    this.loader.hide_loader();
   }
 
 }

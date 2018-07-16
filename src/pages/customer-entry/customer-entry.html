@@ -18,9 +18,9 @@
 
 <ion-content>
 
-	<form>
-		<ion-searchbar mode="md" placeholder="search"></ion-searchbar>
-	</form>
+	<form (ngSubmit)="ngOnInit()">
+    <ion-searchbar mode="md" [(ngModel)]="keyword" name="keyword" (ionClear)="reset();" placeholder="search"></ion-searchbar>
+  </form>
 
 	<ion-list margin-top>
 	  <ion-item *ngFor="let customer of customers; let i = index" [ngClass]="{'selected' : (i == key)}" (tap)="navigate(customer,i)" detail-push>

@@ -1,7 +1,10 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { LoaderComponent } from '../../components/loader/loader';
 import { DataProvider } from '../../providers/data-provider';
 import { PrinterProvider } from '../../providers/printer';
+import { Socket } from 'ng-socket-io';
+import { Observable } from 'rxjs/Observable';
 import moment from 'moment';
 
 /**
@@ -18,27 +21,81 @@ import moment from 'moment';
 })
 export class WarehousePage {
 
+  profile:any;
   releasing_transactions: any = [];
 
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams,
+    public loader: LoaderComponent,
     private provider: DataProvider,
-    private printer: PrinterProvider) {
+    private printer: PrinterProvider,
+    private socket: Socket) {
+    this.profile = JSON.parse(localStorage.getItem('_info'));
     this.get_transaction();
+
+    this.add_releasing_transaction().subscribe((_data) => {
+      this.releasing_transactions.push(_data);
+    });
+
+    this.set_void_releasing_transaction().subscribe((_data) => {
+      let index = this.releasing_transactions.map(obj => obj.id).indexOf(_data);
+      this.releasing_transactions[index].void = 1;
+    });
+
+    this.remove_releasing_transaction().subscribe((_data) => {
+      let index = this.releasing_transactions.map(obj => obj.id).indexOf(_data);
+      if(index > -1){
+        this.releasing_transactions.splice(index, 1);
+      }  
+    });
   }
 
   get_transaction() {
-    this.provider.getData({ status : 'releasing' },'get_transactions').then((res: any) => {
+    this.provider.getData({ status : 'releasing' },'transaction').then((res: any) => {
       if(res._data.status)
           this.releasing_transactions = res._data.data;
     });
   }
 
- cleared_transaction(id) {
-    this.provider.postData({ transaction : id, status : 'cleared' },'update_transaction_status').then((res:any) => {
+  add_releasing_transaction() {
+    let observable = new Observable(observer => {
+      this.socket.on('add-releasing-transaction', (data) => {
+        observer.next(data.data);
+      });
+    })
+    return observable;
+  }
+
+  set_void_releasing_transaction() {
+    let observable = new Observable(observer => {
+      this.socket.on('set-void-releasing-transaction', (data) => {
+        observer.next(data.data);
+      });
+    })
+    return observable;
+  }
+
+  remove_releasing_transaction() {
+    let observable = new Observable(observer => {
+      this.socket.on('remove-releasing-transaction', (data) => {
+        observer.next(data.data);
+      });
+    })
+    return observable;
+  }
+
+  cleared_transaction(_data) {
+    this.provider.postData({ transaction : _data.id, status : 'cleared' },'transaction/status').then((res:any) => {
       if(res._data.status){
         this.get_transaction();
+
+        let params = { data : _data.id, type : 'remove-releasing-transaction' };
+        this.socket.emit('transaction', { text: params });
+
+        _data.status = 'cleared';
+        params = { data : _data, type : 'add-cleared-transaction' };
+        this.socket.emit('transaction', { text: params });
       }
     })
   }
@@ -68,11 +125,15 @@ export class WarehousePage {
       \n-------------------------------
     \n`);
 
-    this.cleared_transaction(_data.id);
+    this.cleared_transaction(_data);
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad WarehousePage');
+    this.loader.show_loader();
+  }
+
+  ionViewDidEnter() {
+    this.loader.hide_loader();
   }
 
 }

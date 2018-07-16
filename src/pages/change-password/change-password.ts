@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { IonicPage,
-		 NavController, 
-		 NavParams } from 'ionic-angular';
+    		 NavController, 
+    		 NavParams } from 'ionic-angular';
 import { Validators,
-		 FormBuilder, 
-		 FormGroup } from '@angular/forms';
+    		 FormBuilder, 
+    		 FormGroup } from '@angular/forms';
 import { DataProvider } from '../../providers/data-provider';
-
+import { LoaderComponent } from '../../components/loader/loader';
 /**
  * Generated class for the ChangePasswordPage page.
  *
@@ -21,13 +21,17 @@ import { DataProvider } from '../../providers/data-provider';
 })
 export class ChangePasswordPage {
 
+  profile: any;
   user: FormGroup;
 
   constructor(
-  	public navCtrl: NavController, 
-  	public navParams: NavParams,
-  	private provider: DataProvider,
-  	private form: FormBuilder) {
+    public navCtrl: NavController, 
+    public navParams: NavParams,
+    private provider: DataProvider,
+    private form: FormBuilder,
+    public loader: LoaderComponent) 
+  {
+    this.profile = JSON.parse(localStorage.getItem('_info'));
 
   	this.user = this.form.group({
       current: ['', Validators.required],
@@ -46,7 +50,11 @@ export class ChangePasswordPage {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad ChangePasswordPage');
+    this.loader.show_loader();
+  }
+
+  ionViewDidEnter() {
+    this.loader.hide_loader();
   }
 
 }

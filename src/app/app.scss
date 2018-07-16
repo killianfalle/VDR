@@ -14,3 +14,68 @@
 // To declare rules for a specific mode, create a child rule
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
+
+ion-loading.default {
+
+  ion-backdrop {
+  	opacity: 0.5 !important;
+  }
+
+  .loading-wrapper {
+    background: transparent;
+    box-shadow: none;
+
+    .spinner-dots{
+        width: 80px;
+        height: 100px;
+    }
+
+    ion-spinner {
+	    * {
+	      stroke: color($colors,light);
+	    }
+
+	    &.spinner-circles circle,
+	    &.spinner-bubbles circle,
+	    &.spinner-dots circle {
+	      fill: color($colors,light);
+	    }
+	}
+
+	ion-spinner svg:first-child {
+		left: 25px !important;
+	}
+	ion-spinner svg:nth-child(3) {
+		left: -25px !important;
+	}
+  }
+}
+
+ion-loading.custom {
+  ion-backdrop {
+  	opacity: 0.5 !important;
+  }
+
+  .loading-wrapper {
+  	color: color($colors,light);
+    background: color($colors,dark);
+    box-shadow: none;
+
+    .spinner-dots{
+        width: 80px;
+        height: 100px;
+    }
+
+    ion-spinner {
+	    * {
+	      stroke: color($colors,orange);
+	    }
+
+	    &.spinner-circles circle,
+	    &.spinner-bubbles circle,
+	    &.spinner-dots circle {
+	      fill: color($colors,light);
+	    }
+	}
+  }
+}
