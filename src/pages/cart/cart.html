@@ -19,7 +19,7 @@
 		<p>Carmen Cagayan de Oro City</p>
 	</div>
 
-	<div *ngIf="cart.length == 0">
+	<div *ngIf="cart.length == 0 && isBusy == true">
 		<hr>
 		<ion-item text-center no-lines>
 			<p>No item</p>
@@ -109,5 +109,7 @@
 
 		<br>
 	</div>
+
+	<spinner [hidden]="isBusy"></spinner>
 
 </ion-content>

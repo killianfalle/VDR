@@ -25,6 +25,8 @@ export class CartPage implements OnInit {
   cart:any = [];
   key:any;
 
+  isBusy:any = false;
+
   constructor(
   	public navCtrl: NavController, 
   	public navParams: NavParams,
@@ -36,18 +38,22 @@ export class CartPage implements OnInit {
   }
 
   ngOnInit() {
+    this.isBusy = false;
     this.provider.getData({ status : 'in_cart', user : this.user.id },'cart').then((res: any) => {
       if(res._data.status){
         this.cart = res._data.data;
       }
+      this.isBusy = true;
     });
   }
 
   edit(index,_data) {
     this.key = index;
+    localStorage.setItem('cart_item',JSON.stringify(_data));
   }
 
   cancel_edit() {
+    this.cart[this.key] = JSON.parse(localStorage.getItem('cart_item'));
     this.key = null;
   }
 

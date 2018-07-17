@@ -1,12 +1,15 @@
-import { Component } from '@angular/core';
-import { IonicPage } from 'ionic-angular';
+import { Component,
+         OnInit } from '@angular/core';
+import { IonicPage,
+         Platform } from 'ionic-angular';
+import { DataProvider } from '../../providers/data-provider';
 import { Socket } from 'ng-socket-io';
 
 @IonicPage()
 @Component({
   templateUrl: 'tabs.html'
 })
-export class TabsPage {
+export class TabsPage implements OnInit {
 
   tab1Root = 'HomePage';
   tab2Root = 'StaffPage';
@@ -15,8 +18,48 @@ export class TabsPage {
 
   profile: any;
 
-  constructor(private socket: Socket) {
+  constructor(
+    private socket: Socket,
+    private provider: DataProvider,
+    private platform: Platform) {
   	this.profile = JSON.parse(localStorage.getItem('_info'));
   	this.socket.connect();
+    this.notification();
   }
+
+  ngOnInit(){
+    try {
+      FCMPlugin.getToken((data) => {
+        localStorage.setItem('_device',data);
+        this.registerDevice(data);
+      }, (result) => {
+        console.log(result);
+      })
+    }catch(e) {
+      console.error(e);
+    }
+  }
+
+  registerDevice(token){
+    this.provider.postData({ token : token }, 'register/device').then((result:any) => {
+      console.log(result);
+    }, (err) => {
+      console.log(err);
+    });
+  }
+
+  async notification(){
+    try {
+      await this.platform.ready();
+
+      FCMPlugin.onNotification((data) => {
+        console.log(data);
+      }, (result) => {
+        console.log(result);
+      })
+    }catch(e) {
+      console.error(e);
+    }
+  }
+
 }

@@ -73,6 +73,8 @@
 					</ion-item-divider>
 				</ion-card>
 			</div>
+
+			<spinner [hidden]="isBusy"></spinner>
 		</div>
 
 		<div *ngSwitchCase="'releasing'">
@@ -112,9 +114,9 @@
 						</ion-row>
 					</ion-item-divider>
 				</ion-card>
-			
-				<br>
 			</div>
+
+			<spinner [hidden]="isBusy"></spinner>
 		</div>
 
 		<div *ngSwitchCase="'pending'">
@@ -148,6 +150,8 @@
 					</ion-item-divider>
 				</ion-card>
 			</div>
+
+			<spinner [hidden]="isBusy"></spinner>
 		</div>
 	</div>
 

@@ -41,5 +41,7 @@
 	  	<p *ngIf="staff.type == 'warehouse_staff'" text-capitalize>Warehouse Staff</p>
 	  </ion-item>
 	</ion-list>
+
+	<spinner [hidden]="isBusy"></spinner>
 	
 </ion-content>

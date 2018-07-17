@@ -24,6 +24,8 @@ export class StaffPage implements OnInit{
   keyword: any = '';
   result: any = 0;
 
+  isBusy:any = false;
+
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams,
@@ -32,11 +34,13 @@ export class StaffPage implements OnInit{
   }
 
   ngOnInit(self = this) {
+    self.isBusy = false;
     self.provider.getData({ search : self.keyword },'staff').then((res: any) => {
         if(res._data.status){
           self.result = res._data.result;
           self.staffs = res._data.data;
         }
+        self.isBusy = true;
     })
   }
 

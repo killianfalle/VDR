@@ -24,6 +24,8 @@ export class ReportPage implements OnInit {
   reports:any = [];  
   search_date: any = '';
 
+  isBusy: any = false;
+
   public options = { 
     fieldSeparator: ',',
     quoteStrings: '"',
@@ -42,10 +44,12 @@ export class ReportPage implements OnInit {
   }
 
   ngOnInit() {
+    this.isBusy = false;
     this.provider.getData({ date : this.search_date },'report').then((res: any) => {
       if(res._data.status){
         this.reports = res._data.data;
       }
+      this.isBusy = true;
     });
   }
 

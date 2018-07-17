@@ -26,6 +26,8 @@ export class CustomerPage {
 
   result: any = 0;
 
+  isBusy: any = false;
+
   constructor(
   	public navCtrl: NavController, 
   	public navParams: NavParams,
@@ -34,11 +36,13 @@ export class CustomerPage {
   { }
 
   ngOnInit(self = this) {
+    self.isBusy = false;
     self.provider.getData({ search : self.keyword },'customer').then((res: any) => {
         if(res._data.status){
           self.customers = res._data.data;
           self.result = res._data.result;
         }
+        self.isBusy = true;
     })
   }
 

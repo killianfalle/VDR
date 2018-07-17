@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage,
+         NavController, 
+         NavParams,
+         Events } from 'ionic-angular';
 import { DataProvider } from '../../providers/data-provider';
 import { LoaderComponent } from '../../components/loader/loader';
 import { AlertComponent } from '../../components/alert/alert';
@@ -28,12 +31,15 @@ export class TransactionPage {
   releasing_transactions: any = [];
   pending_transactions: any = [];
 
+  isBusy:any = false;
+
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams,
     public loader: LoaderComponent,
     public alert: AlertComponent,
     private provider: DataProvider,
+    private event: Events,
     private socket: Socket) {
   	this.get_transaction();
 
@@ -73,9 +79,33 @@ export class TransactionPage {
       console.log(index);
       this.cleared_transactions[index].void = 1;
     });
+
+    this.event.subscribe('transaction:release', (_data,date) => {
+      this.provider.postData(_data,'notification/transaction-release').then((res:any) => {
+        console.log(res);
+        _data.status = 'releasing';
+        _data.release_at = date;
+        let params = { data : _data, type : 'add-releasing-transaction' };
+        this.socket.emit('transaction', { text: params });
+      });
+    });
   }
 
   get_transaction() {
+    switch (this.tabs) {
+      case "pending":
+        this.pending_transactions = [];
+        break;
+      case "releasing":
+        this.releasing_transactions = [];
+        break;
+      default:
+        this.cleared_transactions = [];
+        break;
+    }
+    
+    this.isBusy = false;
+
     this.provider.getData({ status : this.tabs , date : this.search_date },'transaction').then((res: any) => {
       if(res._data.status)
         switch (this.tabs) {
@@ -89,6 +119,7 @@ export class TransactionPage {
             this.cleared_transactions = res._data.data;
             break;
         }
+      this.isBusy = true;
     });
   }
 
@@ -168,13 +199,10 @@ export class TransactionPage {
       if(res._data.status){
         self.get_transaction();
 
-        _data.status = 'releasing';
-        _data.release_at = date;
-        let params = { data : _data, type : 'add-releasing-transaction' };
+        let params = { data : _data.id, type : 'remove-pending-transaction' };
         self.socket.emit('transaction', { text: params });
 
-        params = { data : _data.id, type : 'remove-pending-transaction' };
-        self.socket.emit('transaction', { text: params });
+        self.event.publish('transaction:release', _data, date);
       }
     })
   }

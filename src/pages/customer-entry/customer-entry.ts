@@ -24,6 +24,8 @@ export class CustomerEntryPage implements OnInit {
   result: any = 0;
   key:any;
 
+  isBusy:any = false;
+
   constructor(
   	public navCtrl: NavController, 
   	public navParams: NavParams,
@@ -32,11 +34,13 @@ export class CustomerEntryPage implements OnInit {
   }
 
   ngOnInit(self = this) {
+    self.isBusy = false;
     self.provider.getData({ search : this.keyword },'customer').then((res: any) => {
         if(res._data.status){
           self.customers = res._data.data;
           self.result = res._data.result;
         }
+        self.isBusy = true;
     })
   }
 

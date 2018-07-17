@@ -24,6 +24,8 @@ export class WarehousePage {
   profile:any;
   releasing_transactions: any = [];
 
+  isBusy:any = false;
+
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams,
@@ -52,9 +54,11 @@ export class WarehousePage {
   }
 
   get_transaction() {
+    this.isBusy = false;
     this.provider.getData({ status : 'releasing' },'transaction').then((res: any) => {
       if(res._data.status)
           this.releasing_transactions = res._data.data;
+      this.isBusy = true;
     });
   }
 
