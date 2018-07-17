@@ -18,7 +18,7 @@
 
 <ion-content>
 
-	<ion-segment [(ngModel)]="tabs" color="dark" (ionChange)="get_transaction()">
+	<ion-segment mode="md" [(ngModel)]="tabs" color="dark" (ionChange)="get_transaction()">
 		<ion-segment-button value="cleared">
 			Cleared 
 		</ion-segment-button>
@@ -31,25 +31,31 @@
 			Pending 
 		</ion-segment-button>
 	</ion-segment>
+	
+	<br>
+
+	<ion-item>
+		<ion-label>
+			<ion-icon name="md-calendar"></ion-icon>
+		</ion-label>
+		<ion-datetime displayFormat="MM/DD/YYYY" [(ngModel)]="search_date" (ionChange)="get_transaction()"></ion-datetime>
+	</ion-item>	
+
+	<br>
 
 	<div [ngSwitch]="tabs" >
 		<div *ngSwitchCase="'cleared'">
-			<br>
-
-			<ion-item>
-				<ion-label>
-					<ion-icon name="md-calendar"></ion-icon>
-				</ion-label>
-				<ion-datetime></ion-datetime>
-			</ion-item>	
-
-			<br>
-
 			<div *ngFor="let transaction of cleared_transactions">
 				<ion-card>
 					<ion-card-header text-capitalize>
 						<p>Owner: {{ transaction.first_name }} {{ transaction.last_name }}</p>
 						<h4>Release Date : {{ transaction.release_at | date : 'MM/dd/yy' }}</h4>
+						<p>Status : 
+							<span>
+								<ion-badge color="secondary" *ngIf="transaction.status == 'cleared'">Cleared</ion-badge>
+								<ion-badge color="danger" [hidden]="!transaction.void">Void</ion-badge>
+							</span>
+						</p>
 					</ion-card-header>
 
 					<ion-list>
@@ -59,29 +65,30 @@
 							<p  padding-left>{{ item.quantity }}x{{ item.price }}</p>
 						</ion-item>
 					</ion-list>
+
+					<ion-item-divider [hidden]="transaction.void">
+						<button ion-button block padding color="danger" (tap)="void_transaction(transaction.id,'cleared');">
+							Void
+						</button>
+					</ion-item-divider>
 				</ion-card>
-			
-				<br>
 			</div>
+
+			<spinner [hidden]="isBusy"></spinner>
 		</div>
 
 		<div *ngSwitchCase="'releasing'">
-			<br>
-			
-			<ion-item>
-				<ion-label>
-					<ion-icon name="md-calendar"></ion-icon>
-				</ion-label>
-				<ion-datetime></ion-datetime>
-			</ion-item>	
-
-			<br>
-
 			<div *ngFor="let transaction of releasing_transactions">
 				<ion-card>
 					<ion-card-header  text-capitalize>
 						<p>Owner : {{ transaction.first_name }} {{ transaction.last_name }}</p>
-						<h4 item-end>Release Date : {{ transaction.release_at | date : 'MM/dd/yy' }}</h4>
+						<h4>Release Date : {{ transaction.release_at | date : 'MM/dd/yy' }}</h4>
+						<p>Status : 
+							<span>
+								<ion-badge color="primary" *ngIf="transaction.status == 'releasing'">Ready for Release</ion-badge>
+								<ion-badge color="danger" [hidden]="!transaction.void">Void</ion-badge>
+							</span>
+						</p>
 					</ion-card-header>
 
 					<ion-list>
@@ -92,38 +99,27 @@
 						</ion-item>
 					</ion-list>
 
-					<ion-card-content>
+					<ion-item-divider>
 						<ion-row>
-							<ion-col>
-								<button ion-button block color="primary">
+							<!-- <ion-col>
+								<button ion-button block color="primary" (tap)="verify_connectivity(transaction);">
 									Print
 								</button>
-							</ion-col>
-							<ion-col>
-								<button ion-button block color="danger" (tap)="void_transaction(transaction.id);">
+							</ion-col> -->
+							<ion-col [hidden]="transaction.void">
+								<button ion-button block color="danger" (tap)="void_transaction(transaction.id,'releasing');">
 									Void
 								</button>
 							</ion-col>
 						</ion-row>
-					</ion-card-content>
+					</ion-item-divider>
 				</ion-card>
-			
-				<br>
 			</div>
+
+			<spinner [hidden]="isBusy"></spinner>
 		</div>
 
 		<div *ngSwitchCase="'pending'">
-			<br>
-			
-			<ion-item>
-				<ion-label>
-					<ion-icon name="md-calendar"></ion-icon>
-				</ion-label>
-				<ion-datetime></ion-datetime>
-			</ion-item>	
-
-			<br>
-
 			<div *ngFor="let transaction of pending_transactions">
 				<ion-card>
 					<ion-card-header  text-capitalize>
@@ -138,26 +134,24 @@
 						</ion-item>
 					</ion-list>
 
-					<ion-card-content>
+					<ion-item-divider>
 						<ion-row>
 							<ion-col>
-								<button ion-button block color="orange">
+								<button ion-button block color="orange" (tap)="show_calendar(transaction)">
 									Ready for Release
 								</button>
 							</ion-col>
-						</ion-row>
-						<ion-row>
 							<ion-col>
-								<button ion-button block color="danger" (tap)="cancel_transaction(transaction.id)">
+								<button ion-button block color="danger" (tap)="cancel_transaction(transaction)">
 									Cancel
 								</button>
 							</ion-col>
 						</ion-row>
-					</ion-card-content>
+					</ion-item-divider>
 				</ion-card>
-			
-				<br>
 			</div>
+
+			<spinner [hidden]="isBusy"></spinner>
 		</div>
 	</div>
 

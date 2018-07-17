@@ -1,5 +1,9 @@
 import { Component } from '@angular/core';
-import { App, IonicPage, NavController, NavParams } from 'ionic-angular';
+import { App,
+         IonicPage, 
+         NavController, 
+         NavParams } from 'ionic-angular';
+import { LoaderComponent } from '../../components/loader/loader';
 
 /**
  * Generated class for the SettingsPage page.
@@ -15,12 +19,14 @@ import { App, IonicPage, NavController, NavParams } from 'ionic-angular';
 })
 export class SettingsPage {
 
+  profile:any;
   constructor(
   	public app: App, 
   	public navCtrl: NavController, 
-  	public navParams: NavParams) {
+  	public navParams: NavParams,
+    public loader: LoaderComponent) {
+    this.profile = JSON.parse(localStorage.getItem('_info'));
   }
-
 
   navigate() {
   	this.navCtrl.push('ChangePasswordPage');
@@ -35,7 +41,11 @@ export class SettingsPage {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad SettingsPage');
+    this.loader.show_loader();
+  }
+
+  ionViewDidEnter() {
+    this.loader.hide_loader();
   }
 
 }

@@ -2,4 +2,22 @@ page-cart {
 	.cart-item {
 		border-top: 1px dotted black;
 	}
+
+	.row , .col {
+		padding: 0;
+		margin: 0;
+
+		.icon {
+			font-size: 2em;
+			font-weight: bolder;
+		}
+	}
+
+	ion-item-sliding:nth-child(even) {
+		background-color: #EEEEEE;
+
+		.item {
+			background-color: #EEEEEE;
+		}
+	}
 }

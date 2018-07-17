@@ -21,8 +21,8 @@
 
 <ion-content>
 
-	<form>
-		<ion-searchbar mode="md" placeholder="search"></ion-searchbar>
+	<form (ngSubmit)="ngOnInit()">
+		<ion-searchbar mode="md" [(ngModel)]="keyword" name="keyword" (ionClear)="reset();" placeholder="search"></ion-searchbar>
 	</form>
 
 	<ion-item no-lines>
@@ -41,5 +41,7 @@
 	  	<p *ngIf="staff.type == 'warehouse_staff'" text-capitalize>Warehouse Staff</p>
 	  </ion-item>
 	</ion-list>
+
+	<spinner [hidden]="isBusy"></spinner>
 	
 </ion-content>

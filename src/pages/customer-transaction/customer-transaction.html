@@ -1,0 +1,48 @@
+<!--
+  Generated template for the CustomerTransactionPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar color="orange">
+    <ion-title>History</ion-title>
+    <ion-buttons end>
+      <cart></cart>
+    </ion-buttons>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content>
+
+	<div *ngFor="let transaction of transactions">
+		<ion-card>
+			<ion-card-header  text-capitalize>
+				<h4>Release Date : 
+					<span *ngIf="transaction.status == 'pending'">N/A</span>
+					<span [hidden]="transaction.status == 'pending'">{{ transaction.release_at | date : 'MM/dd/yy' }}</span>
+				</h4>
+				<p>Status : 
+					<span>
+						<ion-badge color="secondary" *ngIf="(transaction.status == 'cleared') && !transaction.void">Cleared</ion-badge>
+						<ion-badge color="primary" *ngIf="(transaction.status == 'releasing') && !transaction.void">Ready for Release</ion-badge>
+						<ion-badge color="orange" *ngIf="transaction.status == 'pending'">Pending</ion-badge>
+						<ion-badge color="danger" [hidden]="!transaction.void">Void</ion-badge>
+					</span>
+				</p>
+			</ion-card-header>
+
+			<ion-list>
+				<ion-item *ngFor="let item of transaction.orders">
+					<h4>{{ item.class }}</h4>
+					<h4 padding-left>{{ item.size }}({{ item.type }})</h4>
+					<p  padding-left>{{ item.quantity }}x{{ item.price }}</p>
+				</ion-item>
+			</ion-list>
+		</ion-card>
+	</div>
+
+</ion-content>

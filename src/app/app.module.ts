@@ -8,7 +8,14 @@ import { MyApp } from './app.component';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
+import { LoaderComponent } from '../components/loader/loader';
+import { AlertComponent } from '../components/alert/alert';
 import { DataProvider } from '../providers/data-provider';
+import { PrinterProvider } from '../providers/printer';
+import { BluetoothSerial } from '@ionic-native/bluetooth-serial';
+
+import { SocketIoModule, SocketIoConfig } from 'ng-socket-io';
+const socket: SocketIoConfig = { url: 'http://192.168.1.7:3001', options: {} };
 
 var config = {
       backButtonText: '',
@@ -27,6 +34,7 @@ var config = {
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp,config),
+    SocketIoModule.forRoot(socket),
     HttpModule
   ],
   bootstrap: [IonicApp],
@@ -36,7 +44,11 @@ var config = {
   providers: [
     StatusBar,
     SplashScreen,
+    LoaderComponent,
+    AlertComponent,
     DataProvider,
+    PrinterProvider,
+    BluetoothSerial,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

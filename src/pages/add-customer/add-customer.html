@@ -20,21 +20,21 @@
 
 	<form [formGroup]="customer" (ngSubmit)="register()">
 		<ion-item>
-			<ion-label floating>First Name</ion-label>
+			<ion-label stacked>First Name</ion-label>
 			<ion-input type="text" text-center formControlName="first_name"></ion-input>
 		</ion-item>
 
 		<br>
 
 		<ion-item>
-			<ion-label floating>Last Name</ion-label>
+			<ion-label stacked>Last Name</ion-label>
 			<ion-input type="text" text-center formControlName="last_name"></ion-input>
 		</ion-item>
 
 		<br>
 		<br>
 
-		<button ion-button block color="orange">Submit</button>
+		<button ion-button block color="orange">Add Customer</button>
 	</form>
 
 </ion-content>

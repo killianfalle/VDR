@@ -28,4 +28,12 @@ page-order-entry {
 	.text-input[disabled] {
 		opacity: 1 !important;
 	}
+
+	ion-label.custom-label {
+		text-align: right;
+		max-width: none;
+		width: 19vh;
+		font-size: 1.2em;
+		font-weight: bold;
+	}
 }

@@ -38,7 +38,7 @@ export class DataProvider {
 			this.http.post(this.api.src+route, JSON.stringify(data), {headers: headers}).subscribe(res => {
 				resolve(res.json());
 			}, (err) => {        
-				reject(err);
+				reject(this.errorReponseHandler(err));
 			});
 		})
 	}
@@ -101,6 +101,10 @@ export class DataProvider {
 				this.presentToast( 'Unable to connect to the server');
 				break;
 
+			case 406:
+				this.presentToast( JSON.parse(err._body).error.message );
+				break;
+
 			case 0:
 				this.presentToast('Unable to connect to the internet. Please try again later.');
 				break;
@@ -117,7 +121,7 @@ export class DataProvider {
 			this.toastInstance = this.toastCtrl.create({
 				message: msg,
 				duration: duration,
-				position: 'middle',
+				position: 'top',
 				dismissOnPageChange: true,
 				showCloseButton: true,
 				closeButtonText: 'close',

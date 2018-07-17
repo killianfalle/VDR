@@ -4,6 +4,7 @@ import { IonicPage,
 		     NavController, 
 		     NavParams } from 'ionic-angular';
 import { DataProvider } from '../../providers/data-provider';
+import { LoaderComponent } from '../../components/loader/loader';
 /**
  * Generated class for the CustomerEntryPage page.
  *
@@ -19,21 +20,27 @@ import { DataProvider } from '../../providers/data-provider';
 export class CustomerEntryPage implements OnInit {
 
   customers: any = [];
+  keyword: any = '';
   result: any = 0;
   key:any;
+
+  isBusy:any = false;
 
   constructor(
   	public navCtrl: NavController, 
   	public navParams: NavParams,
-  	private provider: DataProvider) {
+  	private provider: DataProvider,
+    public loader: LoaderComponent) {
   }
 
   ngOnInit(self = this) {
-    self.provider.getData('','get_customer').then((res: any) => {
+    self.isBusy = false;
+    self.provider.getData({ search : this.keyword },'customer').then((res: any) => {
         if(res._data.status){
           self.customers = res._data.data;
           self.result = res._data.result;
         }
+        self.isBusy = true;
     })
   }
 
@@ -47,8 +54,17 @@ export class CustomerEntryPage implements OnInit {
     },300)
   }
 
+  reset() {
+    this.keyword = '';
+    this.ngOnInit();
+  }
+
   ionViewDidLoad() {
-    console.log('ionViewDidLoad CustomerEntryPage');
+    this.loader.show_loader();
+  }
+
+  ionViewDidEnter() {
+    this.loader.hide_loader();
   }
 
 }
