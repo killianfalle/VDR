@@ -3,6 +3,7 @@ import { App,
          IonicPage, 
          NavController, 
          NavParams } from 'ionic-angular';
+import { DataProvider } from '../../providers/data-provider';
 import { LoaderComponent } from '../../components/loader/loader';
 
 /**
@@ -20,12 +21,16 @@ import { LoaderComponent } from '../../components/loader/loader';
 export class SettingsPage {
 
   profile:any;
+  device:any;
+
   constructor(
   	public app: App, 
   	public navCtrl: NavController, 
   	public navParams: NavParams,
+    public provider: DataProvider,
     public loader: LoaderComponent) {
     this.profile = JSON.parse(localStorage.getItem('_info'));
+    this.device = localStorage.getItem('_device');
   }
 
   navigate() {
@@ -33,11 +38,10 @@ export class SettingsPage {
   }
 
   logout() {
-    localStorage.clear();
-
-    setTimeout(() => {
+    this.provider.postData({ token : this.device } , 'device/unregister').then((res: any) => {
+      localStorage.clear();
   	  this.app.getRootNav().setRoot('LoginPage');
-    },300);
+    });
   }
 
   ionViewDidLoad() {

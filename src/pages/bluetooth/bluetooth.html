@@ -7,7 +7,7 @@
 <ion-header>
 
   <ion-navbar color="orange">
-    <ion-title>Bluetooth</ion-title>
+    <ion-title>Bluetooth Devices</ion-title>
   </ion-navbar>
 
 </ion-header>
@@ -16,9 +16,6 @@
 <ion-content padding>
 
 	<ion-list>
-	  <ion-list-header color="orange">
-	    Nearby Devices
-	  </ion-list-header>
 	  <ion-item *ngFor="let device of list">
 	  	{{ device.name }}
 	  	<p>{{ device.address }}</p>
