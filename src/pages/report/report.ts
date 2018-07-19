@@ -30,7 +30,7 @@ export class ReportPage implements OnInit {
     fieldSeparator: ',',
     quoteStrings: '"',
     decimalseparator: '.',
-    headers: ['Transaction #','First Name','Last Name','Release Date','Product','Class','Size','Type','Qty','Price','Total'],
+    headers: ['Order #','First Name','Last Name','Release Date','Product','Class','Size','Type','Qty','Price','Total'],
     showTitle: false,
     useBom: true,
     removeNewLines: false
@@ -53,8 +53,18 @@ export class ReportPage implements OnInit {
     });
   }
 
-  exportCSV() {
-    new Angular2Csv(this.reports,'Report', this.options);
+  export() {
+    this.isBusy = false;
+    this.provider.getData({ date : this.search_date },'report/export').then((res: any) => {
+      if(res._data.status){
+       this.generate(res._data.data);
+      }
+      this.isBusy = true;
+    })
+  }
+
+  generate(_data){
+    new Angular2Csv(_data,'Report', this.options);
   }
 
   ionViewDidLoad() {
