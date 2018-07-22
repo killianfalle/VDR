@@ -86,18 +86,20 @@ export class CalendarPage {
               _data.orders[counter].quantity +` x `+_data.orders[counter].price+`\n`;
     }
 
-    await this.printer.onWrite(`
-      \n         Vista del rio         \n   
-      Cagayan De Oro City    
-      \n-------------------------------
-      \nOrder#: `+ _data.order_id +`
-      \nOwner: `+_data.first_name+`  `+_data.last_name +`
-      \nRelease: `+moment(this.date).format('MM/DD/YYYY')+`
-      \n-------------------------------\n`+
-         item + `
-      \n-------------------------------
-      \nTotal : P`+ _data.total_payment +`
-    \n`)
+    for(let count = 0;count < 2;count++){
+      await this.printer.onWrite(`
+        \n         Vista del rio         \n   
+        Cagayan De Oro City    
+        \n-------------------------------
+        \nOrder#: `+ _data.order_id +`
+        \nOwner: `+_data.first_name+`  `+_data.last_name +`
+        \nRelease: `+moment(this.date).format('MM/DD/YYYY')+`
+        \n-------------------------------\n`+
+           item + `
+        \n-------------------------------
+        \nTotal : P`+ _data.total_payment +`
+      \n`)
+    }
 
     this.callback();
   }
