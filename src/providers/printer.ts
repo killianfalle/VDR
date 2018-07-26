@@ -15,6 +15,14 @@ export class PrinterProvider {
 		private bluetoothSerial: BluetoothSerial)
 	{ }
 
+	is_enabled() {
+		return this.bluetoothSerial.isEnabled();
+	}
+
+	set_enable() {
+		return this.bluetoothSerial.enable();
+	}
+
 	connectivity() {
 		return this.bluetoothSerial.isConnected();
 	}

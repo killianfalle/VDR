@@ -3,7 +3,8 @@ import { Component,
          Pipe } from '@angular/core';
 import { IonicPage,
          NavController,
-         NavParams } from 'ionic-angular';
+         NavParams,
+         Events } from 'ionic-angular';
 import { LoaderComponent } from '../../components/loader/loader';
 import { DataProvider } from '../../providers/data-provider';
 
@@ -36,7 +37,8 @@ export class OrderEntryPage implements OnInit {
   	public navCtrl: NavController,
   	public navParams: NavParams,
     private provider: DataProvider,
-    public loader: LoaderComponent
+    public loader: LoaderComponent,
+    private event: Events
   ) {
     this.customer = navParams.get('customer');
     this.user = JSON.parse(localStorage.getItem('_info'));
@@ -102,6 +104,7 @@ export class OrderEntryPage implements OnInit {
 
     this.provider.postData(this.form,'transaction/entry').then((res: any) => {
       if(res._data.status){
+        this.event.publish('notification:badge');
         console.log(res._data.message);
         this.navCtrl.pop();
       }

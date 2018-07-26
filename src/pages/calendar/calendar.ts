@@ -48,12 +48,24 @@ export class CalendarPage {
   	if(submit){
       this.alert.confirm().then((response: any) => {
         if (response) {
-          this.verify_connectivity();
+          this.printer.is_enabled().then((res: any) => {
+            this.verify_connectivity();
+          }).catch((err) => {
+            this.enable_blueetooth();
+          });
         }
       });
   	}else {
   		this.navCtrl.pop();
   	}
+  }
+
+  enable_blueetooth() {
+    this.printer.set_enable().then((res:any) => {
+      this.verify_connectivity();
+    }).catch((err) => {
+      this.enable_blueetooth();
+    });
   }
 
   verify_connectivity() {
@@ -74,14 +86,20 @@ export class CalendarPage {
               _data.orders[counter].quantity +` x `+_data.orders[counter].price+`\n`;
     }
 
-    await this.printer.onWrite(`
-      \nOwner: `+_data.first_name+`  `+_data.last_name +`
-      \nRelease: `+moment(this.date).format('MM/DD/YYYY')+`
-      \n-------------------------------\n`+
-         item + `
-      \n-------------------------------
-      \nTotal : P`+ _data.total_payment +`
-    \n`)
+    for(let count = 0;count < 2;count++){
+      await this.printer.onWrite(`
+        \n         Vista del rio         \n   
+        Cagayan De Oro City    
+        \n-------------------------------
+        \nOrder#: `+ _data.order_id +`
+        \nOwner: `+_data.first_name+`  `+_data.last_name +`
+        \nRelease: `+moment(this.date).format('MM/DD/YYYY')+`
+        \n-------------------------------\n`+
+           item + `
+        \n-------------------------------
+        \nTotal : P`+ _data.total_payment +`
+      \n`)
+    }
 
     this.callback();
   }

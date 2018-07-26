@@ -1,5 +1,8 @@
-import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { Component,
+		 OnInit } from '@angular/core';
+import { NavController,
+		 Events } from 'ionic-angular';
+import { DataProvider } from '../../providers/data-provider';
 
 /**
  * Generated class for the CartComponent component.
@@ -11,10 +14,24 @@ import { NavController } from 'ionic-angular';
   selector: 'cart',
   templateUrl: 'cart.html'
 })
-export class CartComponent {
+export class CartComponent implements OnInit {
 
-  constructor(private navCtrl: NavController) {
-    console.log('Hello CartComponent Component');
+  badge: any = 0;
+
+  constructor(
+  	private navCtrl: NavController,
+  	private event: Events,
+  	private provider: DataProvider) {
+
+    this.event.subscribe('notification:badge', () => {
+    	this.ngOnInit();
+    });
+  }
+
+  ngOnInit() {
+  	this.provider.getData('','notification/total').then((res: any) => {
+  		this.badge = res._data.result;
+  	});
   }
 
   show_cart() {

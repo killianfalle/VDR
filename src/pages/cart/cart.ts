@@ -2,7 +2,8 @@ import { Component,
 		     OnInit } from '@angular/core';
 import { IonicPage,
 		     NavController, 
-		     NavParams } from 'ionic-angular';
+		     NavParams,
+         Events } from 'ionic-angular';
 import { DataProvider } from '../../providers/data-provider';
 import { AlertComponent } from '../../components/alert/alert';
 import { Socket } from 'ng-socket-io';
@@ -32,6 +33,7 @@ export class CartPage implements OnInit {
   	public navParams: NavParams,
     private alert: AlertComponent,
   	private provider: DataProvider,
+    private event: Events,
     private socket: Socket) 
   { 
   	this.user = JSON.parse(localStorage.getItem('_info'));
@@ -74,6 +76,7 @@ export class CartPage implements OnInit {
               if(root > -1){
                 this.cart.splice(root, 1);
               }
+              this.event.publish('notification:badge');
             }
           }
         });  
@@ -117,6 +120,7 @@ export class CartPage implements OnInit {
             _data.status = 'pending';
             let params = { data : _data, type : 'add-pending-transaction' };
             this.socket.emit('transaction', { text: params });
+            this.event.publish('notification:badge');
       		}
       	});
       }

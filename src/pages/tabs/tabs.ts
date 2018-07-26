@@ -28,20 +28,22 @@ export class TabsPage implements OnInit {
   }
 
   ngOnInit(){
-    try {
-      FCMPlugin.getToken((data) => {
-        localStorage.setItem('_device',data);
-        this.registerDevice(data);
-      }, (result) => {
-        console.log(result);
-      })
-    }catch(e) {
-      console.error(e);
+    if(localStorage.getItem('_device')){
+      try {
+        FCMPlugin.getToken((data) => {
+          localStorage.setItem('_device',data);
+          this.registerDevice(data);
+        }, (result) => {
+          console.log(result);
+        })
+      }catch(e) {
+        console.error(e);
+      }
     }
   }
 
   registerDevice(token){
-    this.provider.postData({ token : token }, 'register/device').then((result:any) => {
+    this.provider.postData({ token : token }, 'device/register').then((result:any) => {
       console.log(result);
     }, (err) => {
       console.log(err);

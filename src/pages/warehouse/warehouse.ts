@@ -104,6 +104,22 @@ export class WarehousePage {
     })
   }
 
+  print(_data){
+    this.printer.is_enabled().then((res: any) => {
+      this.verify_connectivity(_data);
+    }).catch((err) => {
+      this.enable_blueetooth(_data);
+    });
+  }
+
+  enable_blueetooth(_data) {
+    this.printer.set_enable().then((res:any) => {
+      this.verify_connectivity(_data);
+    }).catch((err) => {
+      this.enable_blueetooth(_data);
+    });
+  }
+
   verify_connectivity(_data) {
     this.printer.connectivity().then((res: any) => {
       this.ready_print(_data);
@@ -122,6 +138,10 @@ export class WarehousePage {
     }
 
     await this.printer.onWrite(`
+      \n         Vista del rio         \n   
+      Cagayan De Oro City    
+      \n-------------------------------
+      \nOrder#: `+ _data.order_id +`
       \nOwner: `+_data.first_name+`  `+_data.last_name +`
       \nRelease: `+moment(_data.release_at).format('MM/DD/YYYY')+`
       \n-------------------------------\n`+
