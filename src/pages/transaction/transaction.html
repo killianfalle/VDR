@@ -45,6 +45,11 @@
 
 	<div [ngSwitch]="tabs" >
 		<div *ngSwitchCase="'cleared'">
+
+			<ion-item *ngIf="cleared_transactions.length == 0" text-center no-lines>
+				<p>No cleared transaction.</p>
+			</ion-item>
+
 			<div *ngFor="let transaction of cleared_transactions">
 				<ion-card>
 					<ion-card-header text-capitalize>
@@ -67,8 +72,9 @@
 					</ion-list>
 
 					<ion-item [hidden]="transaction.void">
-						<button ion-button block clear color="danger" (tap)="void_transaction(transaction.id,'cleared');">
+						<button ion-button block clear icon-end color="orange" (tap)="void_transaction(transaction.id,'cleared');">
 							Set as Void
+							<ion-icon name="alert"></ion-icon>
 						</button>
 					</ion-item>
 				</ion-card>
@@ -80,10 +86,14 @@
 		</div>
 
 		<div *ngSwitchCase="'releasing'">
+			<ion-item *ngIf="releasing_transactions.length == 0" text-center no-lines>
+				<p>No ready for release transaction.</p>
+			</ion-item>
+
 			<div *ngFor="let transaction of releasing_transactions">
 				<ion-card>
 					<ion-card-header  text-capitalize>
-						<p>Owner : {{ transaction.first_name }} {{ transaction.last_name }}</p>
+						<h4>Owner : {{ transaction.first_name }} {{ transaction.last_name }}</h4>
 						<h4>Release Date : {{ transaction.release_at | date : 'MM/dd/yy' }}</h4>
 						<p>Status : 
 							<span>
@@ -102,8 +112,9 @@
 					</ion-list>
 
 					<ion-item [hidden]="transaction.void">
-						<button ion-button block clear color="danger" (tap)="void_transaction(transaction.id,'releasing');">
+						<button ion-button block clear icon-end color="orange" (tap)="void_transaction(transaction.id,'releasing');">
 							Set as Void
+							<ion-icon name="alert"></ion-icon>
 						</button>
 					</ion-item>
 				</ion-card>
@@ -115,6 +126,10 @@
 		</div>
 
 		<div *ngSwitchCase="'pending'">
+			<ion-item *ngIf="pending_transactions.length == 0" text-center no-lines>
+				<p>No pending transaction.</p>
+			</ion-item>
+
 			<div *ngFor="let transaction of pending_transactions; let row = index">
 				<ion-card>
 					<ion-item-divider  text-capitalize>
@@ -132,8 +147,9 @@
 					</ion-list>
 
 					<ion-item>
-						<button ion-button block clear color="orange" (tap)="show_calendar(transaction)">
+						<button ion-button block clear icon-end color="orange" (tap)="show_calendar(transaction)">
 							Ready for Release
+							<ion-icon name="checkbox-outline"></ion-icon>
 						</button>
 					</ion-item>
 				</ion-card>

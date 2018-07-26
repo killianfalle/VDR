@@ -16,7 +16,7 @@
 </ion-header>
 
 
-<ion-content padding>
+<ion-content>
 
 	<form [formGroup]="customer" (ngSubmit)="register()">
 		<ion-item>
@@ -34,7 +34,9 @@
 		<br>
 		<br>
 
-		<button ion-button block color="orange">Add Customer</button>
+		<div padding>
+			<button ion-button block color="orange">Add Customer</button>
+		</div>
 	</form>
 
 </ion-content>

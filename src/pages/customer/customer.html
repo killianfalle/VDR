@@ -22,18 +22,20 @@
 		<ion-searchbar mode="md" [(ngModel)]="keyword" name="keyword" (ionClear)="reset();" placeholder="search"></ion-searchbar>
 	</form>
 	
-	<ion-item no-lines>
+	<ion-item>
 		<button ion-button outline icon-start padding color="orange" (tap)="navigate('AddCustomerPage','add')" item-end>
 			<ion-icon name="person-add"></ion-icon>
 			Add Customer
 		</button>
 	</ion-item>
 
-	<ion-list>
-	  <ion-item *ngFor="let customer of customers" detail-push (tap)="navigate('CustomerTransactionPage','history',customer.id)">
-	  	<h2 text-capitalize>{{ customer.first_name }} {{ customer.last_name }}</h2>
-	  </ion-item>
-	</ion-list>
+	<ion-item *ngIf="customers.length == 0" text-center no-lines>
+		<p>No customer.</p>
+	</ion-item>
+
+	<ion-item *ngFor="let customer of customers" detail-push (tap)="navigate('CustomerTransactionPage','history',customer.id)">
+		<h2 text-capitalize>{{ customer.first_name }} {{ customer.last_name }}</h2>
+	</ion-item>
 
 	<spinner [hidden]="isBusy"></spinner>
 </ion-content>

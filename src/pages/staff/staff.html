@@ -25,22 +25,23 @@
 		<ion-searchbar mode="md" [(ngModel)]="keyword" name="keyword" (ionClear)="reset();" placeholder="search"></ion-searchbar>
 	</form>
 
-	<ion-item no-lines>
+	<ion-item>
 		<button ion-button outline icon-start padding color="orange" (tap)="navigate()" item-end>
 			<ion-icon name="person-add"></ion-icon>
 			Add Staff
 		</button>
 	</ion-item>
+	<ion-item no-lines text-center *ngIf="staffs.length == 0">
+		<p>No staff.</p>
+	</ion-item>
 
-	<ion-list>
-	  <ion-item *ngFor="let staff of staffs">
-	  	<h2 text-capitalize>{{ staff.first_name }} {{ staff.last_name }}</h2>
-	  	<h3>{{ staff.email }}</h3>
-	  	<p *ngIf="staff.type == 'admin_staff'" text-capitalize>Admin Staff</p>
-	  	<p *ngIf="staff.type == 'sale_staff'" text-capitalize>Sale Staff</p>
-	  	<p *ngIf="staff.type == 'warehouse_staff'" text-capitalize>Warehouse Staff</p>
-	  </ion-item>
-	</ion-list>
+	<ion-item *ngFor="let staff of staffs">
+		<h2 text-capitalize>{{ staff.first_name }} {{ staff.last_name }}</h2>
+		<h3>{{ staff.email }}</h3>
+		<p *ngIf="staff.type == 'admin_staff'" text-capitalize>Admin Staff</p>
+		<p *ngIf="staff.type == 'sale_staff'" text-capitalize>Sale Staff</p>
+		<p *ngIf="staff.type == 'warehouse_staff'" text-capitalize>Warehouse Staff</p>
+	</ion-item>
 
 	<spinner [hidden]="isBusy"></spinner>
 	
