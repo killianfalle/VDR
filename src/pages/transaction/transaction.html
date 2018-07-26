@@ -66,12 +66,14 @@
 						</ion-item>
 					</ion-list>
 
-					<ion-item-divider [hidden]="transaction.void">
-						<button ion-button block padding color="danger" (tap)="void_transaction(transaction.id,'cleared');">
-							Void
+					<ion-item [hidden]="transaction.void">
+						<button ion-button block clear color="danger" (tap)="void_transaction(transaction.id,'cleared');">
+							Set as Void
 						</button>
-					</ion-item-divider>
+					</ion-item>
 				</ion-card>
+
+				<br>
 			</div>
 
 			<spinner [hidden]="isBusy"></spinner>
@@ -99,32 +101,27 @@
 						</ion-item>
 					</ion-list>
 
-					<ion-item-divider>
-						<ion-row>
-							<!-- <ion-col>
-								<button ion-button block color="primary" (tap)="verify_connectivity(transaction);">
-									Print
-								</button>
-							</ion-col> -->
-							<ion-col [hidden]="transaction.void">
-								<button ion-button block color="danger" (tap)="void_transaction(transaction.id,'releasing');">
-									Void
-								</button>
-							</ion-col>
-						</ion-row>
-					</ion-item-divider>
+					<ion-item [hidden]="transaction.void">
+						<button ion-button block clear color="danger" (tap)="void_transaction(transaction.id,'releasing');">
+							Set as Void
+						</button>
+					</ion-item>
 				</ion-card>
+
+				<br>
 			</div>
 
 			<spinner [hidden]="isBusy"></spinner>
 		</div>
 
 		<div *ngSwitchCase="'pending'">
-			<div *ngFor="let transaction of pending_transactions">
+			<div *ngFor="let transaction of pending_transactions; let row = index">
 				<ion-card>
-					<ion-card-header  text-capitalize>
-						<p>Owner: {{ transaction.first_name }} {{ transaction.last_name }}</p>
-					</ion-card-header>
+					<ion-item-divider  text-capitalize>
+						<h4>Owner: {{ transaction.first_name }} {{ transaction.last_name }}</h4>
+						<ion-icon name="undo" color="primary" (tap)="edit_transaction(row,transaction)" item-end></ion-icon>
+						<ion-icon name="remove-circle" color="danger" (tap)="cancel_transaction(transaction)" item-end></ion-icon>
+					</ion-item-divider>
 
 					<ion-list>
 						<ion-item *ngFor="let item of transaction.orders">
@@ -134,21 +131,14 @@
 						</ion-item>
 					</ion-list>
 
-					<ion-item-divider>
-						<ion-row>
-							<ion-col>
-								<button ion-button block color="orange" (tap)="show_calendar(transaction)">
-									Ready for Release
-								</button>
-							</ion-col>
-							<ion-col>
-								<button ion-button block color="danger" (tap)="cancel_transaction(transaction)">
-									Cancel
-								</button>
-							</ion-col>
-						</ion-row>
-					</ion-item-divider>
+					<ion-item>
+						<button ion-button block clear color="orange" (tap)="show_calendar(transaction)">
+							Ready for Release
+						</button>
+					</ion-item>
 				</ion-card>
+
+				<br>
 			</div>
 
 			<spinner [hidden]="isBusy"></spinner>

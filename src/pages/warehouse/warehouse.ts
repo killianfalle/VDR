@@ -21,8 +21,13 @@ import moment from 'moment';
 })
 export class WarehousePage {
 
+  tabs: any = 'cleared';
+
   profile:any;
+  search_date: any = '';
+  
   releasing_transactions: any = [];
+  cleared_transactions: any = [];
 
   isBusy:any = false;
 
@@ -54,10 +59,27 @@ export class WarehousePage {
   }
 
   get_transaction() {
+    switch (this.tabs) {
+      case "releasing":
+        this.releasing_transactions = [];
+        break;
+      default:
+        this.cleared_transactions = [];
+        break;
+    }
+    
     this.isBusy = false;
-    this.provider.getData({ status : 'releasing' },'transaction').then((res: any) => {
+
+    this.provider.getData({ status : this.tabs , date : this.search_date },'transaction').then((res: any) => {
       if(res._data.status)
-          this.releasing_transactions = res._data.data;
+        switch (this.tabs) {
+          case "releasing":
+            this.releasing_transactions = res._data.data;
+            break;
+          default:
+            this.cleared_transactions = res._data.data;
+            break;
+        }
       this.isBusy = true;
     });
   }

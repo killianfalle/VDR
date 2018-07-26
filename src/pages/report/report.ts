@@ -6,6 +6,7 @@ import { IonicPage,
 import { DataProvider } from '../../providers/data-provider';
 import { Angular2Csv } from 'angular2-csv/Angular2-csv';
 import { LoaderComponent } from '../../components/loader/loader';
+import moment from 'moment';
 
 /**
  * Generated class for the ReportPage page.
@@ -22,7 +23,10 @@ import { LoaderComponent } from '../../components/loader/loader';
 export class ReportPage implements OnInit {
 
   reports:any = [];  
-  search_date: any = '';
+  void_reports:any = [];  
+  release_reports:any = [];  
+
+  search_date: any = moment().format('YYYY-MM-DD');
 
   isBusy: any = false;
 
@@ -44,13 +48,18 @@ export class ReportPage implements OnInit {
   }
 
   ngOnInit() {
+    this.void_reports = [];
+    this.release_reports = [];
     this.isBusy = false;
+    /*this.isBusy = false;
     this.provider.getData({ date : this.search_date },'report').then((res: any) => {
       if(res._data.status){
         this.reports = res._data.data;
       }
       this.isBusy = true;
-    });
+    });*/
+    this.void();
+    this.release();
   }
 
   export() {
@@ -65,6 +74,23 @@ export class ReportPage implements OnInit {
 
   generate(_data){
     new Angular2Csv(_data,'Report', this.options);
+  }
+
+  void() {
+    this.provider.getData({ date : this.search_date, status : 'void' },'report/void').then((res:any) => {
+      if(res._data.status){
+        this.void_reports = res._data.data;
+      }
+    });
+  }
+
+  release() {
+    this.provider.getData({ date : this.search_date, status : 'cleared' },'report/release').then((res:any) => {
+      if(res._data.status){
+        this.release_reports = res._data.data;
+      }
+      this.isBusy = true;
+    });
   }
 
   ionViewDidLoad() {

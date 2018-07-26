@@ -84,6 +84,23 @@ export class CartPage implements OnInit {
     });
   }
 
+  discard(row,_id) {
+    this.alert.confirm().then((response: any) => {
+      if(response){
+        this.provider.postData({ transaction : _id, status : 'cancel' },'cart/discard').then((res:any) => {
+          if(res._data.status){
+            let root = this.cart.indexOf(this.cart[row]);
+
+            if(root > -1){
+              this.cart.splice(root, 1);
+            }
+            this.event.publish('notification:badge');
+          }
+        });
+      }
+    });
+  }
+
   quantity(index,subIndex,_add = true){
     if(_add){
       this.cart[index]['orders'][subIndex].quantity = parseInt(this.cart[index]['orders'][subIndex].quantity) + 1;

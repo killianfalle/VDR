@@ -248,6 +248,26 @@ export class TransactionPage {
     });
   }
 
+  edit_transaction(row,_data) {
+    this.alert.confirm().then((response: any) => {
+      if(response){
+        this.provider.postData({ transaction : _data.id, status : 'in_cart' },'transaction/status').then((res:any) => {
+          if(res._data.status){
+            let root = this.pending_transactions.indexOf(this.pending_transactions[row]);
+
+            if(root > -1){
+              this.pending_transactions.splice(root, 1);
+            }
+
+            let params = { data : _data.id, type : 'remove-pending-transaction' };
+            this.socket.emit('transaction', { text: params });
+            this.event.publish('notification:badge');
+          }
+        });
+      }
+    });
+  }
+
   ionViewDidLoad() {
     this.loader.show_loader();
   }
