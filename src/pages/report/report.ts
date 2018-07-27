@@ -6,6 +6,7 @@ import { IonicPage,
 import { DataProvider } from '../../providers/data-provider';
 import { Angular2Csv } from 'angular2-csv/Angular2-csv';
 import { LoaderComponent } from '../../components/loader/loader';
+import { PrinterProvider } from '../../providers/printer';
 import moment from 'moment';
 
 /**
@@ -44,7 +45,8 @@ export class ReportPage implements OnInit {
     public navCtrl: NavController, 
     public navParams: NavParams,
     public provider: DataProvider,
-    public loader: LoaderComponent) {
+    public loader: LoaderComponent,
+    private printer: PrinterProvider) {
   }
 
   ngOnInit() {
@@ -91,6 +93,69 @@ export class ReportPage implements OnInit {
       }
       this.isBusy = true;
     });
+  }
+
+  print(type) {
+    this.printer.is_enabled().then((res: any) => {
+      this.verify_connectivity(type);
+    }).catch((err) => {
+      this.enable_blueetooth(type);
+    });
+  }
+
+  enable_blueetooth(type) {
+    this.printer.set_enable().then((res:any) => {
+      this.verify_connectivity(type);
+    }).catch((err) => {
+      this.enable_blueetooth(type);
+    });
+  }
+
+  verify_connectivity(type) {
+    this.printer.connectivity().then((res: any) => {
+      switch (type) {
+        case "void":
+          this.print_void();
+          break;
+        default:
+          this.print_release();
+          break;
+      }
+    }).catch((err) => {
+      this.navCtrl.push('BluetoothPage');
+    });
+  }
+
+  async print_void(){
+    let separator = '-------------------------------';
+    let header = '';
+    let item = '';
+
+    for(let counter = 0;counter < this.void_reports.length;counter++){
+      item += `\n`+
+              this.void_reports[counter].class +`\n`+
+              this.void_reports[counter].quantity+` x `+this.void_reports[counter].size +` (`+this.void_reports[counter].type+`)\n`;
+    }
+
+    header = '        Vista del rio \n Carmen, Cagayan de Oro City';
+
+    await this.printer.onWrite(header+'\n'+separator+'\nDaily Report (Void)\nDate: '+moment(this.search_date).format("MM/DD/YYYY")+'\n'+separator+'\n'+item+'\n'+separator+'\n\n\n');
+  }
+
+  async print_release(){
+    let separator = '-------------------------------';
+    let header = '';
+    let item = '';
+
+    for(let counter = 0;counter < this.release_reports.length;counter++){
+      item += `\n`+
+              this.release_reports[counter].class +`\n`+
+              this.release_reports[counter].quantity+` x `+this.release_reports[counter].size +` (`+this.release_reports[counter].type+`)\n`;
+    }
+
+    header = '        Vista del rio \n Carmen, Cagayan de Oro City';
+
+    await this.printer.onWrite(header+'\n'+separator+'\nDaily Report (Cleared)\nDate: '+moment(this.search_date).format("MM/DD/YYYY")+'\n'+separator+'\n'+item+'\n'+separator+'\n\n\n');
   }
 
   ionViewDidLoad() {

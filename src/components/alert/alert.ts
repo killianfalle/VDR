@@ -10,7 +10,7 @@ export class AlertComponent {
 		return new Promise((resolve, reject) => {
 			this.alertCtrl.create({
 			    title: '',
-			    message: 'Are you sure you want to continue ?',
+			    message: 'Do you want to continue ?',
 			    buttons: [
 			      {
 			        text: 'No',
@@ -28,6 +28,38 @@ export class AlertComponent {
 			      }
 			    ],
 			    enableBackdropDismiss: false
+		    }).present();
+		});
+	}
+
+	receiver(){
+		return new Promise((resolve, reject) => {
+			this.alertCtrl.create({
+		      title: 'Enter Receiver Name',
+		      inputs: [
+		        {
+		          name: 'received_by',
+		          placeholder: 'Receiver name'
+		        }
+		      ],
+		      buttons: [
+		        {
+		          text: 'Cancel',
+		          role: 'cancel',
+		          handler: data => {
+		            resolve(false);
+		          }
+		        },
+		        {
+		          text: 'Save',
+		          handler: data => {
+		            if(data.received_by != ''){
+		              resolve(data.received_by);
+		            }
+		          }
+		        }
+		      ],
+		      enableBackdropDismiss: false
 		    }).present();
 		});
 	}

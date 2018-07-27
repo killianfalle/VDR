@@ -22,6 +22,8 @@ import moment  from 'moment';
 })
 export class CalendarPage {
 
+  profile: any;
+
   date: any = moment().format('YYYY-MM-DD');
   type: 'string';
   option: CalendarComponentOptions = {
@@ -39,9 +41,12 @@ export class CalendarPage {
     public alert: AlertComponent,
     private printer: PrinterProvider) {
 
-  	this.params = navParams.get('data');
-  	this.self = navParams.get('self');
-  	this._callback = navParams.get('callback');
+    this.profile = JSON.parse(localStorage.getItem('_info'));
+    this.params = navParams.get('data');
+    this.self = navParams.get('self');
+    this._callback = navParams.get('callback');
+    this.params.printed_by = this.profile.first_name+' '+this.profile.last_name;
+    this.params.printed_at = moment().format('MM/DD/YYYY');
   }
 
   action(submit = true) {
@@ -77,28 +82,21 @@ export class CalendarPage {
   }
 
   async ready_print(_data){
+    let separator = '-------------------------------';
+    let header = '';
     let item = '';
 
     for(let counter = 0;counter < _data.orders.length;counter++){
       item += `\n`+
               _data.orders[counter].class +`\n`+
               _data.orders[counter].size +` (`+_data.orders[counter].type+`)\n`+
-              _data.orders[counter].quantity +` x `+_data.orders[counter].price+`\n`;
+              _data.orders[counter].quantity +` x P`+_data.orders[counter].price+`\n`;
     }
 
+    header = '        Vista del rio \n Carmen, Cagayan de Oro City';
+
     for(let count = 0;count < 2;count++){
-      await this.printer.onWrite(`
-        \n         Vista del rio         \n   
-        Cagayan De Oro City    
-        \n-------------------------------
-        \nOrder#: `+ _data.order_id +`
-        \nOwner: `+_data.first_name+`  `+_data.last_name +`
-        \nRelease: `+moment(this.date).format('MM/DD/YYYY')+`
-        \n-------------------------------\n`+
-           item + `
-        \n-------------------------------
-        \nTotal : P`+ _data.total_payment +`
-      \n`)
+      await this.printer.onWrite(header+'\n'+separator+'\nOrder#: '+_data.order_id+'\nPrinted by: '+this.params.printed_by+'\nPrinted on: '+this.params.printed_at+'\n'+separator+'\nOwner: '+_data.first_name+'  '+_data.last_name+'\nRelease: '+moment(this.date).format("MM/DD/YYYY")+'\n'+separator+'\n'+item+'\n'+separator+'\nTotal : P'+_data.total_payment+'\n\n\n');
     }
 
     this.callback();

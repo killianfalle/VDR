@@ -76,7 +76,7 @@
 			<div *ngFor="let transaction of releasing_transactions">
 				<ion-card>
 					<ion-card-header  text-capitalize>
-						<p>Owner : {{ transaction.first_name }} {{ transaction.last_name }}</p>
+						<h4>Owner : {{ transaction.first_name }} {{ transaction.last_name }}</h4>
 						<h4>Release Date : {{ transaction.release_at | date : 'MM/dd/yy' }}</h4>
 						<p>Status : 
 							<span>

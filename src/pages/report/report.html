@@ -64,7 +64,7 @@
 	<ion-item-divider>
 		Void Daily Report
 
-		<button ion-button icon-start clear color="primary" item-end>
+		<button ion-button icon-start clear color="primary" (click)="print('void')" item-end>
 			<ion-icon name="print"></ion-icon>
 			Print
 		</button>
@@ -110,7 +110,7 @@
 	<ion-item-divider>
 		Release Daily Report
 
-		<button ion-button icon-start clear color="primary" item-end>
+		<button ion-button icon-start clear color="primary" (click)="print('release')" item-end>
 			<ion-icon name="print"></ion-icon>
 			Print
 		</button>

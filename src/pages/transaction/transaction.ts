@@ -195,7 +195,7 @@ export class TransactionPage {
   }
 
   releasing_transaction(_data,date,self) {
-    self.provider.postData({ transaction : _data.id, date : date, status : 'releasing' },'transaction/status').then((res:any) => {
+    self.provider.postData({ transaction : _data, date : date , status : 'releasing' },'transaction/status').then((res:any) => {
       if(res._data.status){
         self.get_transaction();
 
@@ -237,7 +237,7 @@ export class TransactionPage {
   cancel_transaction(_data) {
     this.alert.confirm().then((response: any) => {
       if(response){
-        this.provider.postData({ transaction : _data.id, status : 'cancel' },'transaction/status').then((res:any) => {
+        this.provider.postData({ transaction : _data, status : 'cancel' },'transaction/status').then((res:any) => {
           if(res._data.status){
             this.get_transaction();
             let params = { data : _data.id, type : 'remove-pending-transaction' };
@@ -251,7 +251,7 @@ export class TransactionPage {
   edit_transaction(row,_data) {
     this.alert.confirm().then((response: any) => {
       if(response){
-        this.provider.postData({ transaction : _data.id, status : 'in_cart' },'transaction/status').then((res:any) => {
+        this.provider.postData({ transaction : _data, status : 'in_cart' },'transaction/status').then((res:any) => {
           if(res._data.status){
             let root = this.pending_transactions.indexOf(this.pending_transactions[row]);
 
