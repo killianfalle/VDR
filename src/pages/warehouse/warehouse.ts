@@ -132,8 +132,6 @@ export class WarehousePage {
   cleared_transaction(_data) {
     this.provider.postData({ transaction : _data, status : 'cleared' },'transaction/status').then((res:any) => {
       if(res._data.status){
-        this.get_transaction();
-
         let params = { data : _data.id, type : 'remove-releasing-transaction' };
         this.socket.emit('transaction', { text: params });
 

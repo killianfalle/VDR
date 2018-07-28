@@ -71,10 +71,13 @@
 						</ion-item>
 					</ion-list>
 
-					<ion-item [hidden]="transaction.void">
-						<button ion-button block clear icon-end color="orange" (tap)="void_transaction(transaction.id,'cleared');">
+					<ion-item>
+						<button ion-button [hidden]="transaction.void" block clear icon-end color="orange" (tap)="void_transaction(transaction.id,'cleared');">
 							Set as Void
 							<ion-icon name="alert"></ion-icon>
+						</button>
+						<button *ngIf="transaction.void" ion-button block clear icon-end color="orange" (click)="read_reason(transaction.void_reason)">
+							Read Void Reason
 						</button>
 					</ion-item>
 				</ion-card>
@@ -111,10 +114,13 @@
 						</ion-item>
 					</ion-list>
 
-					<ion-item [hidden]="transaction.void">
-						<button ion-button block clear icon-end color="orange" (tap)="void_transaction(transaction.id,'releasing');">
-							Set as Void
+					<ion-item>
+						<button [hidden]="transaction.void" ion-button block clear icon-end color="orange" (tap)="void_transaction(transaction.id,'releasing');">
+							Set Void
 							<ion-icon name="alert"></ion-icon>
+						</button>
+						<button *ngIf="transaction.void" ion-button block clear icon-end color="orange" (click)="read_reason(transaction.void_reason)">
+							Read Void Reason
 						</button>
 					</ion-item>
 				</ion-card>

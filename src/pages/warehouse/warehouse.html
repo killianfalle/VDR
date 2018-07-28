@@ -80,7 +80,7 @@
 						<h4>Release Date : {{ transaction.release_at | date : 'MM/dd/yy' }}</h4>
 						<p>Status : 
 							<span>
-								<ion-badge color="primary" *ngIf="(transaction.status == 'releasing') && !transaction.void">Ready for Release</ion-badge>
+								<ion-badge color="primary" *ngIf="transaction.status == 'releasing'">Ready for Release</ion-badge>
 								<ion-badge color="danger" [hidden]="!transaction.void">Void</ion-badge>
 							</span>
 						</p>

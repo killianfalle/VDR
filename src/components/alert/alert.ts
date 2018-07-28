@@ -64,4 +64,13 @@ export class AlertComponent {
 		});
 	}
 
+	show_dialog(title,msg) {
+	  let alert = this.alertCtrl.create({
+	    title: title,
+	    subTitle: msg,
+	    buttons: ['Dismiss']
+	  });
+	  alert.present();
+	}
+
 }

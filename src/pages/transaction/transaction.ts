@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage,
          NavController, 
+         ModalController, 
          NavParams,
          Events } from 'ionic-angular';
 import { DataProvider } from '../../providers/data-provider';
@@ -37,6 +38,7 @@ export class TransactionPage {
     public navCtrl: NavController, 
     public navParams: NavParams,
     public loader: LoaderComponent,
+    public modalCtrl: ModalController,
     public alert: AlertComponent,
     private provider: DataProvider,
     private event: Events,
@@ -59,8 +61,9 @@ export class TransactionPage {
     });
 
     this.set_void_releasing_transaction().subscribe((_data) => {
-      let index = this.releasing_transactions.map(obj => obj.id).indexOf(_data);
+      let index = this.releasing_transactions.map(obj => obj.id).indexOf(_data.id);
       this.releasing_transactions[index].void = 1;
+      this.releasing_transactions[index].void_reason = _data.reason;
     });
 
     this.remove_releasing_transaction().subscribe((_data) => {
@@ -75,14 +78,15 @@ export class TransactionPage {
     });
 
     this.set_void_cleared_transaction().subscribe((_data) => {
-      let index = this.cleared_transactions.map(obj => obj.id).indexOf(_data);
-      console.log(index);
-      this.cleared_transactions[index].void = 1;
+      let index = this.cleared_transactions.map(obj => obj.id).indexOf(_data.id);
+      if(index > -1){
+        this.cleared_transactions[index].void = 1;
+        this.cleared_transactions[index].void_reason = _data.reason;
+      }  
     });
 
     this.event.subscribe('transaction:release', (_data,date) => {
       this.provider.postData(_data,'notification/transaction-release').then((res:any) => {
-        console.log(res);
         _data.status = 'releasing';
         _data.release_at = date;
         let params = { data : _data, type : 'add-releasing-transaction' };
@@ -162,7 +166,7 @@ export class TransactionPage {
   set_void_releasing_transaction() {
     let observable = new Observable(observer => {
       this.socket.on('set-void-releasing-transaction', (data) => {
-        observer.next(data.data);
+        observer.next({id : data.data, reason : data.reason});
       });
     })
     return observable;
@@ -171,7 +175,7 @@ export class TransactionPage {
   set_void_cleared_transaction() {
     let observable = new Observable(observer => {
       this.socket.on('set-void-cleared-transaction', (data) => {
-        observer.next(data.data);
+        observer.next({id : data.data, reason : data.reason});
       });
     })
     return observable;
@@ -197,8 +201,6 @@ export class TransactionPage {
   releasing_transaction(_data,date,self) {
     self.provider.postData({ transaction : _data, date : date , status : 'releasing' },'transaction/status').then((res:any) => {
       if(res._data.status){
-        self.get_transaction();
-
         let params = { data : _data.id, type : 'remove-pending-transaction' };
         self.socket.emit('transaction', { text: params });
 
@@ -208,30 +210,32 @@ export class TransactionPage {
   }
 
   void_transaction(id,type = 'cleared') {
-    this.alert.confirm().then((response:any) => {
-      if (response) {
-        this.provider.postData({ transaction : id },'transaction/void').then((res:any) => {
-          if(res._data.status){
-            this.get_transaction();
+    let void_form = this.modalCtrl.create('VoidFormPage',{});
 
-            let params = {};
+    void_form.onDidDismiss(data => {
+     if(data != null){
+       this.provider.postData({ transaction : id , reason : data },'transaction/void').then((res:any) => {
+         if(res._data.status){
+           let params = {};
 
-            switch (type) {
-              case "releasing":
-                params = { data : id, type : 'set-void-releasing-transaction' };
-                this.socket.emit('transaction', { text: params });
-                break;
-              case "cleared":
-                params = { data : id, type : 'set-void-cleared-transaction' };
-                this.socket.emit('transaction', { text: params });
-                break;
-              default:
-                break;
-            }
-          }
-        });
-      }
-    });
+           switch (type) {
+             case "releasing":
+               params = { data : id, reason : data, type : 'set-void-releasing-transaction' };
+               this.socket.emit('transaction', { text: params });
+               break;
+             case "cleared":
+               params = { data : id, reason : data, type : 'set-void-cleared-transaction' };
+               this.socket.emit('transaction', { text: params });
+               break;
+             default:
+               break;
+           }
+         }
+       });
+     }
+   });
+
+    void_form.present();
   }
 
   cancel_transaction(_data) {
@@ -239,7 +243,6 @@ export class TransactionPage {
       if(response){
         this.provider.postData({ transaction : _data, status : 'cancel' },'transaction/status').then((res:any) => {
           if(res._data.status){
-            this.get_transaction();
             let params = { data : _data.id, type : 'remove-pending-transaction' };
             this.socket.emit('transaction', { text: params });
           }
@@ -266,6 +269,10 @@ export class TransactionPage {
         });
       }
     });
+  }
+
+  read_reason(msg) {
+    this.alert.show_dialog('Void Reason',msg);
   }
 
   ionViewDidLoad() {
