@@ -26,13 +26,14 @@
 	<br>
 
 	<div margin-top text-wrap>
-		<h4>{{ data.class.name }}</h4>
-		<h4 padding-left>{{ data.size.name }}({{ data.qty_type.name }})</h4>
-		<p  padding-left>{{ data.quantity }}x{{ data.price }}</p>
+		<h4 ion-text color="orange">{{ data.name }}</h4>
+		<h5 padding-left>{{ data.class.name }}</h5>
+		<h5 padding-left>{{ data.size.name }}({{ data.qty_type.name }})</h5>
+		<h6  padding-left>{{ data.quantity }}x&#8369;{{ data.price }}</h6>
 	</div>
 
 	<div class="total" padding-top text-wrap>
-		<h4>Total : <span color="danger">&#8369;{{ data.total }}</span></h4>
+		<h4 ion-text color="danger">Total : <span>&#8369;{{ data.total }}</span></h4>
 	</div>
 
 </ion-content>

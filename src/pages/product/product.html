@@ -1,0 +1,46 @@
+<!--
+  Generated template for the ProductPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar color="orange">
+    <ion-title>Product</ion-title>
+    <ion-buttons end>
+      <cart></cart>
+    </ion-buttons>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content>
+
+	<form (ngSubmit)="search()">
+		<ion-searchbar mode="md" [(ngModel)]="keyword" name="keyword" (ionClear)="reset();" placeholder="search"></ion-searchbar>
+	</form>
+	
+	<ion-item>
+		<button ion-button outline icon-start padding color="orange" (tap)="navigate('AddProductPage')" item-end>
+			<ion-icon name="add"></ion-icon>
+			Add Product
+		</button>
+	</ion-item>
+
+	<ion-item *ngIf="products.length == 0 && keyword == null && isBusy" text-center no-lines>
+		<p>No product.</p>
+	</ion-item>
+
+	<ion-item *ngIf="products.length == 0 && keyword != null && isBusy" text-center no-lines>
+		<p>No result found.</p>
+	</ion-item>
+
+	<ion-item *ngFor="let product of products">
+		<h2 text-capitalize>{{ product.name }}</h2>
+	</ion-item>
+
+	<spinner [hidden]="isBusy"></spinner>
+
+</ion-content>

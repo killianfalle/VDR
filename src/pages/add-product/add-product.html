@@ -1,0 +1,82 @@
+<!--
+  Generated template for the AddProductPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar color="orange">
+    <ion-title>Add Product</ion-title>
+    <ion-buttons end>
+      <cart></cart>
+    </ion-buttons>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content>
+
+	<ion-item-divider>
+		Product
+	</ion-item-divider>
+	<ion-item>
+		<ion-input type="text" text-center [(ngModel)]="product.name"></ion-input>
+	</ion-item>
+
+	<br>
+
+	<ion-item-divider>
+		Class
+		<button ion-button color="dark" clear icon-only (click)="add_class()" item-end>
+			<ion-icon name="add-circle"></ion-icon>
+		</button>
+	</ion-item-divider>
+	<div *ngFor="let class of product.classes; let i = index">
+		<ion-item>
+			<ion-label>{{ (i+1) }}.</ion-label>
+			<ion-icon color="danger" name="remove-circle" (click)="remove_class(i)" [hidden]="i == 0" item-end></ion-icon>
+			<ion-input type="text" text-center [(ngModel)]="class.name"></ion-input>
+		</ion-item>
+
+		<ion-item-divider>
+			 Size
+			<button ion-button color="dark" clear icon-only (click)="add_size(i)" item-start>
+				<ion-icon name="add-circle"></ion-icon>
+			</button>
+		</ion-item-divider>
+		<div *ngFor="let size of class.size; let row = index">
+			<ion-item>
+				<ion-icon color="danger" name="remove-circle" (click)="remove_size(i,row)" [hidden]="row == 0" item-start></ion-icon>
+				<ion-input type="text" text-center [(ngModel)]="size.name"></ion-input>
+			</ion-item>
+		</div>
+
+		<br>
+	</div>
+
+	<br>
+
+	
+
+	<ion-item-divider>
+		Quantity
+		<button ion-button color="dark" clear icon-only (click)="add_quantities()" item-end>
+			<ion-icon name="add-circle"></ion-icon>
+		</button>
+	</ion-item-divider>
+	<div *ngFor="let quantity of product.quantities; let i = index">
+		<ion-item>
+			<ion-icon color="danger" name="remove-circle" (click)="remove_quantities(i)" [hidden]="i == 0" item-end></ion-icon>
+			<ion-input type="text" text-center [(ngModel)]="quantity.name"></ion-input>
+		</ion-item>
+	</div>
+
+	<br>
+
+	<div padding>
+		<button ion-button block color="orange" (click)="submit()">Save Product</button>
+	</div>
+
+</ion-content>

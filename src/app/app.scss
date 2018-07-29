@@ -90,7 +90,7 @@ ion-alert {
     box-shadow: none;
   }
 
-  .alert-sub-title, .alert-title, .alert-message{
+  .alert-sub-title, .alert-title, .alert-message, .alert-button.activated{
     color: color($colors,light) !important;
   }
 
@@ -98,8 +98,12 @@ ion-alert {
     margin-bottom: 16px;
   }
 
+  .alert-button {
+    color: color($colors,orange) !important;
+  }
+
   .alert-button.activated{
-    background-color: color($colors,dark) !important;
+    background-color: color($colors,orange) !important;
   }
 }
 

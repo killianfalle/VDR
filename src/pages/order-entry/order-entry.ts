@@ -27,12 +27,13 @@ export class OrderEntryPage implements OnInit {
   user: any;
   form: any;
 
-  product: any = {};
+  product: any = [];
 
+  classes: any = [];
   sizes: any = [];
   quantities: any = [];
 
-  steps: any = 1;
+  steps: any = 0;
 
   constructor(
   	public navCtrl: NavController,
@@ -50,6 +51,7 @@ export class OrderEntryPage implements OnInit {
   initForm() {
   	this.form = {
       id: null,
+      name: null,
   		class : { id : '', name: ''},
   		size: { id : '', name: ''},
       qty_type: { id : '', name: ''},
@@ -61,16 +63,27 @@ export class OrderEntryPage implements OnInit {
 
   ngOnInit() {
     this.provider.getData('','product').then((res: any) => {
-      this.product = res._data;
-      this.quantities = this.product.quantity;
-      this.form.id = res._data.id;
+      if(res._data.data){
+        this.product = res._data.data;
+      }
     });
   }
 
-  select_class(_class,_size) {
+  select_product(_data) {
+    this.form.id = _data.id;
+    this.form.name = _data.name;
+    this.classes = _data.class;
+    this.quantities = _data.quantity;
+
+    setTimeout(() => {
+      this.onPage();
+    },300)
+  }
+
+  select_class(_class) {
     this.form.class.id = _class.id;
     this.form.class.name = _class.name;
-    this.sizes = _size;
+    this.sizes = _class.size;
 
     setTimeout(() => {
       this.onPage();

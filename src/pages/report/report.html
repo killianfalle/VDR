@@ -56,7 +56,8 @@
 
 					<ion-list>
 						<ion-item *ngFor="let item of report.orders">
-							<h4>{{ item.class }}</h4>
+							<h2 ion-text color="orange">{{ item.product }}</h2>
+							<h4 padding-left>{{ item.class }}</h4>
 							<h4 padding-left>{{ item.size }}({{ item.type }})</h4>
 							<p  padding-left>{{ item.quantity }}x&#8369;{{ item.price }}</p>
 						</ion-item>
