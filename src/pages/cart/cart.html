@@ -19,19 +19,19 @@
 		<p>Carmen, Cagayan de Oro City</p>
 	</div>
 
-	<div *ngIf="cart.length == 0 && isBusy == true">
+	<div *ngIf="cart.length == 0 && isBusy">
 		<hr>
 		<ion-item text-center no-lines>
-			<p>No item</p>
+			<p>No cart item</p>
 		</ion-item>
 	</div>
 
 	<div *ngFor="let items of cart; let row = index">
 		<ion-card>
-			<ion-item-divider	>
-				<h4 text-capitalize>Owner: {{ items.first_name }} {{ items.last_name }}</h4>
+			<ion-item-divider>
+				<h3 text-capitalize>Owner: {{ items.first_name }} {{ items.last_name }}</h3>
 				<h4 ion-text color="primary" (tap)="edit(row,items)" [hidden]="key == row" item-end>Edit</h4>
-			</ion-item-divider	>
+			</ion-item-divider>
 
 			<ion-list>
 				<ion-item-sliding *ngFor="let data of items.orders; let i = index">
@@ -51,7 +51,7 @@
 							</ion-col>
 
 							<ion-col col-2 text-center text-right align-self-center>
-								<h4>P{{ data.price }}</h4>
+								<h4>&#8369;{{ data.price }}</h4>
 							</ion-col>
 						</ion-row>
 					</ion-item>

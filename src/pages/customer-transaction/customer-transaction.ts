@@ -4,6 +4,7 @@ import { IonicPage,
     		 NavParams } from 'ionic-angular';
 import { DataProvider } from '../../providers/data-provider';
 import { LoaderComponent } from '../../components/loader/loader';
+import { AlertComponent } from '../../components/alert/alert';
 
 /**
  * Generated class for the CustomerTransactionPage page.
@@ -26,7 +27,8 @@ export class CustomerTransactionPage {
   	public navCtrl: NavController, 
   	public navParams: NavParams,
   	private provider: DataProvider,
-    public loader: LoaderComponent) {
+    public loader: LoaderComponent,
+    public alert: AlertComponent) {
 
   	this.customer = navParams.get('id');
   	this.get_transactions();
@@ -37,6 +39,10 @@ export class CustomerTransactionPage {
       if(res._data.status)
         this.transactions = res._data.data;
     });
+  }
+
+  read_reason(msg) {
+    this.alert.show_dialog('Reason',msg);
   }
 
   ionViewDidLoad() {

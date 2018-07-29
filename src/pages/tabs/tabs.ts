@@ -1,7 +1,8 @@
 import { Component,
          OnInit } from '@angular/core';
 import { IonicPage,
-         Platform } from 'ionic-angular';
+         Platform,
+         Events } from 'ionic-angular';
 import { DataProvider } from '../../providers/data-provider';
 import { Socket } from 'ng-socket-io';
 
@@ -21,10 +22,12 @@ export class TabsPage implements OnInit {
   constructor(
     private socket: Socket,
     private provider: DataProvider,
+    private event: Events,
     private platform: Platform) {
   	this.profile = JSON.parse(localStorage.getItem('_info'));
   	this.socket.connect();
     this.notification();
+    this.getBadge();
   }
 
   ngOnInit(){
@@ -62,6 +65,13 @@ export class TabsPage implements OnInit {
     }catch(e) {
       console.error(e);
     }
+  }
+  
+  getBadge() {
+    this.provider.getData('','notification/total').then((res: any) => {
+      localStorage.setItem('badge',res._data.result);
+      this.event.publish('notification:badge',null,res._data.result);
+    });
   }
 
 }

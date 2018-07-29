@@ -27,8 +27,8 @@
 				</h4>
 				<p>Status : 
 					<span>
-						<ion-badge color="secondary" *ngIf="(transaction.status == 'cleared') && !transaction.void">Cleared</ion-badge>
-						<ion-badge color="primary" *ngIf="(transaction.status == 'releasing') && !transaction.void">Ready for Release</ion-badge>
+						<ion-badge color="secondary" *ngIf="transaction.status == 'cleared'">Cleared</ion-badge>
+						<ion-badge color="primary" *ngIf="transaction.status == 'releasing'">Ready for Release</ion-badge>
 						<ion-badge color="orange" *ngIf="transaction.status == 'pending'">Pending</ion-badge>
 						<ion-badge color="danger" [hidden]="!transaction.void">Void</ion-badge>
 					</span>
@@ -39,9 +39,15 @@
 				<ion-item *ngFor="let item of transaction.orders">
 					<h4>{{ item.class }}</h4>
 					<h4 padding-left>{{ item.size }}({{ item.type }})</h4>
-					<p  padding-left>{{ item.quantity }}x{{ item.price }}</p>
+					<p  padding-left>{{ item.quantity }}x&#8369;{{ item.price }}</p>
 				</ion-item>
 			</ion-list>
+
+			<ion-item *ngIf="transaction.void">
+				<button ion-button block clear icon-end color="orange" (click)="read_reason(transaction.void_reason)">
+					Read Void Reason
+				</button>
+			</ion-item>
 		</ion-card>
 	</div>
 

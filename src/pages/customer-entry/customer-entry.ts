@@ -59,6 +59,11 @@ export class CustomerEntryPage implements OnInit {
     this.ngOnInit();
   }
 
+  search() {
+    this.customers = [];
+    this.ngOnInit();
+  }
+
   ionViewDidLoad() {
     this.loader.show_loader();
   }

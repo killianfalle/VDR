@@ -37,7 +37,7 @@
 		<ion-label>
 			<ion-icon name="md-calendar"></ion-icon>
 		</ion-label>
-		<ion-datetime></ion-datetime>
+		<ion-datetime displayFormat="MM/DD/YYYY" [(ngModel)]="search_date" (ionChange)="get_transaction()"></ion-datetime>
 	</ion-item>	
 
 	<br>
@@ -61,13 +61,23 @@
 						<ion-item *ngFor="let item of transaction.orders">
 							<h4>{{ item.class }}</h4>
 							<h4 padding-left>{{ item.size }}({{ item.type }})</h4>
-							<p  padding-left>{{ item.quantity }}x{{ item.price }}</p>
+							<p  padding-left>{{ item.quantity }}x&#8369;{{ item.price }}</p>
 						</ion-item>
 					</ion-list>
+
+					<ion-item *ngIf="transaction.void">
+						<button ion-button block clear icon-end color="orange" (click)="read_reason(transaction.void_reason)">
+							Read Void Reason
+						</button>
+					</ion-item>
 				</ion-card>
 
 				<br>
 			</div>
+
+			<ion-item *ngIf="cleared_transactions.length == 0 && isBusy" text-center no-lines>
+				<p>No cleared transaction.</p>
+			</ion-item>
 
 			<spinner [hidden]="isBusy"></spinner>
 		</div>
@@ -90,7 +100,7 @@
 						<ion-item *ngFor="let item of transaction.orders">
 							<h4>{{ item.class }}</h4>
 							<h4 padding-left>{{ item.size }}({{ item.type }})</h4>
-							<p  padding-left>{{ item.quantity }}x{{ item.price }}</p>
+							<p  padding-left>{{ item.quantity }}x&#8369;{{ item.price }}</p>
 						</ion-item>
 					</ion-list>
 
@@ -101,6 +111,10 @@
 					</ion-item-divider>
 				</ion-card>
 			</div>
+
+			<ion-item *ngIf="releasing_transactions.length == 0 && isBusy" text-center no-lines>
+				<p>No transaction for release </p>
+			</ion-item>
 
 			<spinner [hidden]="isBusy"></spinner>
 		</div>

@@ -66,6 +66,12 @@ export class CustomerPage {
 
   reset() {
     this.keyword = '';
+    this.customers = [];
+    this.ngOnInit();
+  }
+
+  search() {
+    this.customers = [];
     this.ngOnInit();
   }
 

@@ -23,15 +23,29 @@ export class CartComponent implements OnInit {
   	private event: Events,
   	private provider: DataProvider) {
 
-    this.event.subscribe('notification:badge', () => {
-    	this.ngOnInit();
+    this.event.subscribe('notification:badge', (action,value = null) => {
+    	switch (action) {
+        case "increment":
+          this.badge = parseInt(this.badge) + 1;
+          break;
+        case "decrement":
+          this.badge = parseInt(this.badge) - 1;
+          break;
+        default:
+          this.badge = value;
+          break;
+      }
+
+      localStorage.setItem('badge',this.badge);
     });
   }
 
   ngOnInit() {
-  	this.provider.getData('','notification/total').then((res: any) => {
-  		this.badge = res._data.result;
-  	});
+    if(localStorage.getItem('badge') != null)
+		  this.badge = localStorage.getItem('badge');
+    else{
+      this.badge = 0;
+    }
   }
 
   show_cart() {

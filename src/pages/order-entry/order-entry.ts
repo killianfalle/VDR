@@ -6,6 +6,7 @@ import { IonicPage,
          NavParams,
          Events } from 'ionic-angular';
 import { LoaderComponent } from '../../components/loader/loader';
+import { AlertComponent } from '../../components/alert/alert';
 import { DataProvider } from '../../providers/data-provider';
 
 /**
@@ -38,6 +39,7 @@ export class OrderEntryPage implements OnInit {
   	public navParams: NavParams,
     private provider: DataProvider,
     public loader: LoaderComponent,
+    public alert: AlertComponent,
     private event: Events
   ) {
     this.customer = navParams.get('customer');
@@ -102,11 +104,15 @@ export class OrderEntryPage implements OnInit {
     this.form.customer = this.customer.id;
     this.form.transacted_by = this.user.id;
 
-    this.provider.postData(this.form,'transaction/entry').then((res: any) => {
-      if(res._data.status){
-        this.event.publish('notification:badge');
-        console.log(res._data.message);
-        this.navCtrl.pop();
+    this.alert.confirm().then(res => {
+      if(res){
+        this.provider.postData(this.form,'transaction/entry').then((res: any) => {
+          if(res._data.status){
+            this.event.publish('notification:badge','increment');
+            console.log(res._data.message);
+            this.navCtrl.pop();
+          }
+        });
       }
     });
   }

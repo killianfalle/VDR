@@ -53,6 +53,12 @@ export class StaffPage implements OnInit{
 
   reset() {
     this.keyword = '';
+    this.result = [];
+    this.ngOnInit();
+  }
+
+  search() {
+    this.result = [];
     this.ngOnInit();
   }
 

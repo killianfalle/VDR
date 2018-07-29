@@ -18,40 +18,18 @@
 
 <ion-content>
 
-	<!-- <ion-item>
-		<ion-label>
-			<ion-icon name="md-calendar"></ion-icon>
-		</ion-label>
-		<ion-datetime displayFormat="MM/DD/YYYY" [(ngModel)]="search_date" (ionChange)="ngOnInit()"></ion-datetime>
-	</ion-item>
+	<ion-segment mode="md" [(ngModel)]="report_tab" color="dark" (ionChange)="ngOnInit()">
+		<ion-segment-button value="daily-report">
+			Daily Report 
+		</ion-segment-button>
 
-	<div padding>
-		<button ion-button block color="orange" (click)="export(); $event.stopPropagation()">Export Result</button>
-	</div>
+		<ion-segment-button value="sales-report">
+			Sales Report 
+		</ion-segment-button>
+	</ion-segment>
 
 	<br>
-
-	<div *ngFor="let report of reports">
-		<ion-card>
-			<ion-card-header text-capitalize>
-				<p>Owner: {{ report.first_name }} {{ report.last_name }}</p>
-				<h4>Release Date : {{ report.release_at | date : 'MM/dd/yy' }}</h4>
-			</ion-card-header>
-
-			<ion-list>
-				<ion-item *ngFor="let item of report.orders">
-					<h4>{{ item.class }}</h4>
-					<h4 padding-left>{{ item.size }}({{ item.type }})</h4>
-					<p  padding-left>{{ item.quantity }}x{{ item.price }}</p>
-				</ion-item>
-			</ion-list>
-		</ion-card>
 	
-		<br>
-	</div>
-
-	<spinner [hidden]="isBusy"></spinner> -->
-
 	<ion-item>
 		<ion-label>
 			<ion-icon name="md-calendar"></ion-icon>
@@ -61,95 +39,130 @@
 
 	<br>
 
-	<ion-item-divider>
-		Void Daily Report
+	<div [ngSwitch]="report_tab" >
+		<div *ngSwitchCase="'daily-report'">
+			<div padding>
+				<button ion-button block color="orange" (click)="export(); $event.stopPropagation()">Export Result</button>
+			</div>
 
-		<button ion-button icon-start clear color="primary" (click)="print('void')" item-end>
-			<ion-icon name="print"></ion-icon>
-			Print
-		</button>
-	</ion-item-divider>
-	<ion-item class="table" no-lines>	
-		<ion-row text-wrap>
-			<ion-col col-4>
-				<h3 ion-text color="orange">Class</h3>
-			</ion-col>
-			<ion-col col-4>
-				<h3 ion-text color="orange">Size</h3>
-			</ion-col>
-			<ion-col col-2>
-				<h3 ion-text color="orange">QTY</h3>
-			</ion-col>
-			<ion-col col-2>
-				<h3 ion-text color="orange">Total</h3>
-			</ion-col>
-		</ion-row>
-		<br>
-		<ion-row text-wrap *ngFor="let void of void_reports">
-			<ion-col col-4>
-				<p>{{ void.class }}</p>
-			</ion-col>
-			<ion-col col-4>
-				<p>{{ void.size }}</p>
-			</ion-col>
-			<ion-col col-2>
-				<p>{{ void.type }}</p>
-			</ion-col>
-			<ion-col col-2 text-center>
-				<p>{{ void.quantity }}</p>
-			</ion-col>
-		</ion-row>
-		<br>
+			<br>
 
-		<p *ngIf="!void_reports.length && isBusy" text-center>No results found.</p>
+			<div *ngFor="let report of reports">
+				<ion-card>
+					<ion-card-header text-capitalize>
+						<p>Owner: {{ report.first_name }} {{ report.last_name }}</p>
+						<h4>Release Date : {{ report.release_at | date : 'MM/dd/yy' }}</h4>
+					</ion-card-header>
 
-		<spinner [hidden]="isBusy"></spinner>
-	</ion-item>
+					<ion-list>
+						<ion-item *ngFor="let item of report.orders">
+							<h4>{{ item.class }}</h4>
+							<h4 padding-left>{{ item.size }}({{ item.type }})</h4>
+							<p  padding-left>{{ item.quantity }}x&#8369;{{ item.price }}</p>
+						</ion-item>
+					</ion-list>
+				</ion-card>
+			
+				<br>
+			</div>
+
+			<p *ngIf="!reports.length && isBusy" text-center>No results found.</p>
+
+			<spinner [hidden]="isBusy"></spinner>
+		</div>
+
+		<div *ngSwitchCase="'sales-report'">
+			<ion-item-divider>
+				Void Daily Sales
+
+				<button ion-button icon-start clear color="primary" (click)="print('void')" item-end>
+					<ion-icon name="print"></ion-icon>
+					Print
+				</button>
+			</ion-item-divider>
+			<ion-item class="table" no-lines>	
+				<ion-row text-wrap>
+					<ion-col col-4>
+						<h3 ion-text color="orange">Class</h3>
+					</ion-col>
+					<ion-col col-4>
+						<h3 ion-text color="orange">Size</h3>
+					</ion-col>
+					<ion-col col-2>
+						<h3 ion-text color="orange">QTY</h3>
+					</ion-col>
+					<ion-col col-2>
+						<h3 ion-text color="orange">Total</h3>
+					</ion-col>
+				</ion-row>
+				<br>
+				<ion-row text-wrap *ngFor="let void of void_reports">
+					<ion-col col-4>
+						<p>{{ void.class }}</p>
+					</ion-col>
+					<ion-col col-4>
+						<p>{{ void.size }}</p>
+					</ion-col>
+					<ion-col col-2>
+						<p>{{ void.type }}</p>
+					</ion-col>
+					<ion-col col-2 text-center>
+						<p>{{ void.quantity }}</p>
+					</ion-col>
+				</ion-row>
+				<br>
+
+				<p *ngIf="!void_reports.length && isBusy" text-center>No results found.</p>
+
+				<spinner [hidden]="isBusy"></spinner>
+			</ion-item>
 
 
-	<ion-item-divider>
-		Release Daily Report
+			<ion-item-divider>
+				Release Daily Sales
 
-		<button ion-button icon-start clear color="primary" (click)="print('release')" item-end>
-			<ion-icon name="print"></ion-icon>
-			Print
-		</button>
-	</ion-item-divider>
-	<ion-item class="table" no-lines>
-		<ion-row  text-wrap>
-			<ion-col col-4>
-				<h3 ion-text color="orange">Class</h3>
-			</ion-col>
-			<ion-col col-4>
-				<h3 ion-text color="orange">Size</h3>
-			</ion-col>
-			<ion-col col-2>
-				<h3 ion-text color="orange">QTY</h3>
-			</ion-col>
-			<ion-col col-2 text-center>
-				<h3 ion-text color="orange">Total</h3>
-			</ion-col>
-		</ion-row>
-		<br>
-		<ion-row  *ngFor="let release of release_reports">
-			<ion-col col-4>
-				<p>{{ release.class }}</p>
-			</ion-col>
-			<ion-col col-4>
-				<p>{{ release.size }}</p>
-			</ion-col>
-			<ion-col col-2>
-				<p>{{ release.type }}</p>
-			</ion-col>
-			<ion-col col-2 text-center>
-				<p>{{ release.quantity }}</p>
-			</ion-col>
-		</ion-row>
-		<br>
+				<button ion-button icon-start clear color="primary" (click)="print('release')" item-end>
+					<ion-icon name="print"></ion-icon>
+					Print
+				</button>
+			</ion-item-divider>
+			<ion-item class="table" no-lines>
+				<ion-row text-wrap>
+					<ion-col col-4>
+						<h3 ion-text color="orange">Class</h3>
+					</ion-col>
+					<ion-col col-4>
+						<h3 ion-text color="orange">Size</h3>
+					</ion-col>
+					<ion-col col-2>
+						<h3 ion-text color="orange">QTY</h3>
+					</ion-col>
+					<ion-col col-2 text-center>
+						<h3 ion-text color="orange">Total</h3>
+					</ion-col>
+				</ion-row>
+				<br>
+				<ion-row text-wrap *ngFor="let release of release_reports">
+					<ion-col col-4>
+						<p>{{ release.class }}</p>
+					</ion-col>
+					<ion-col col-4>
+						<p>{{ release.size }}</p>
+					</ion-col>
+					<ion-col col-2>
+						<p>{{ release.type }}</p>
+					</ion-col>
+					<ion-col col-2 text-center>
+						<p>{{ release.quantity }}</p>
+					</ion-col>
+				</ion-row>
+				<br>
 
-		<p *ngIf="!release_reports.length && isBusy" text-center>No results found.</p>
-		
-		<spinner [hidden]="isBusy"></spinner>
-	</ion-item>
+				<p *ngIf="!release_reports.length && isBusy" text-center>No results found.</p>
+				
+				<spinner [hidden]="isBusy"></spinner>
+			</ion-item>
+		</div>
+	</div>
 
 </ion-content>

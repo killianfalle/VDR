@@ -76,7 +76,7 @@ export class CartPage implements OnInit {
               if(root > -1){
                 this.cart.splice(root, 1);
               }
-              this.event.publish('notification:badge');
+              this.event.publish('notification:badge','decrement');
             }
           }
         });  
@@ -94,7 +94,7 @@ export class CartPage implements OnInit {
             if(root > -1){
               this.cart.splice(root, 1);
             }
-            this.event.publish('notification:badge');
+            this.event.publish('notification:badge','decrement');
           }
         });
       }
@@ -137,7 +137,7 @@ export class CartPage implements OnInit {
             _data.status = 'pending';
             let params = { data : _data, type : 'add-pending-transaction' };
             this.socket.emit('transaction', { text: params });
-            this.event.publish('notification:badge');
+            this.event.publish('notification:badge','decrement');
       		}
       	});
       }

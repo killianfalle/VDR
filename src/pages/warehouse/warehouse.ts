@@ -26,7 +26,7 @@ export class WarehousePage {
 
   profile:any;
   receiver:any;
-  search_date: any = '';
+  search_date: any = moment().format('YYYY-MM-DD');
   
   releasing_transactions: any = [];
   cleared_transactions: any = [];
@@ -49,9 +49,18 @@ export class WarehousePage {
       this.releasing_transactions.push(_data);
     });
 
-    this.set_void_releasing_transaction().subscribe((_data) => {
-      let index = this.releasing_transactions.map(obj => obj.id).indexOf(_data);
+    this.set_void_releasing_transaction().subscribe((_data:any) => {
+      let index = this.releasing_transactions.map(obj => obj.id).indexOf(_data.id);
       this.releasing_transactions[index].void = 1;
+      this.releasing_transactions[index].void_reason = _data.reason;
+    });
+
+    this.set_void_cleared_transaction().subscribe((_data:any) => {
+      let index = this.cleared_transactions.map(obj => obj.id).indexOf(_data.id);
+      if(index > -1){
+        this.cleared_transactions[index].void = 1;
+        this.cleared_transactions[index].void_reason = _data.reason;
+      }  
     });
 
     this.remove_releasing_transaction().subscribe((_data) => {
@@ -106,6 +115,15 @@ export class WarehousePage {
     let observable = new Observable(observer => {
       this.socket.on('set-void-releasing-transaction', (data) => {
         observer.next(data.data);
+      });
+    })
+    return observable;
+  }
+
+  set_void_cleared_transaction() {
+    let observable = new Observable(observer => {
+      this.socket.on('set-void-cleared-transaction', (data) => {
+        observer.next({id : data.data, reason : data.reason});
       });
     })
     return observable;
@@ -199,6 +217,10 @@ export class WarehousePage {
     await this.printer.onWrite(header+'\n'+ separator +'\nOrder#: '+ _data.order_id +'\nReleased by: '+_data.released_by+'\nReceived by: '+_data.received_by+'\n'+ separator +'\nOwner: '+_data.first_name+' '+_data.last_name+'\nRelease: '+moment(_data.release_at).format("MM/DD/YYYY")+'\n-------------------------------\n'+item+'\n-------------------------------\n\n\n');
 
     this.cleared_transaction(_data);
+  }
+
+  read_reason(msg) {
+    this.alert.show_dialog('Reason',msg);
   }
 
   ionViewDidLoad() {

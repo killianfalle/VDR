@@ -34,19 +34,19 @@
 	
 	<br>
 
-	<ion-item>
-		<ion-label>
-			<ion-icon name="md-calendar"></ion-icon>
-		</ion-label>
-		<ion-datetime displayFormat="MM/DD/YYYY" [(ngModel)]="search_date" (ionChange)="get_transaction()"></ion-datetime>
-	</ion-item>	
-
-	<br>
-
 	<div [ngSwitch]="tabs" >
 		<div *ngSwitchCase="'cleared'">
 
-			<ion-item *ngIf="cleared_transactions.length == 0" text-center no-lines>
+			<ion-item>
+				<ion-label>
+					<ion-icon name="md-calendar"></ion-icon>
+				</ion-label>
+				<ion-datetime displayFormat="MM/DD/YYYY" [(ngModel)]="search_date" (ionChange)="get_transaction()"></ion-datetime>
+			</ion-item>	
+
+			<br>
+
+			<ion-item *ngIf="cleared_transactions.length == 0 && isBusy" text-center no-lines>
 				<p>No cleared transaction.</p>
 			</ion-item>
 
@@ -67,7 +67,7 @@
 						<ion-item *ngFor="let item of transaction.orders">
 							<h4>{{ item.class }}</h4>
 							<h4 padding-left>{{ item.size }}({{ item.type }})</h4>
-							<p  padding-left>{{ item.quantity }}x{{ item.price }}</p>
+							<p  padding-left>{{ item.quantity }}x&#8369;{{ item.price }}</p>
 						</ion-item>
 					</ion-list>
 
@@ -89,8 +89,17 @@
 		</div>
 
 		<div *ngSwitchCase="'releasing'">
-			<ion-item *ngIf="releasing_transactions.length == 0" text-center no-lines>
-				<p>No ready for release transaction.</p>
+			<ion-item>
+				<ion-label>
+					<ion-icon name="md-calendar"></ion-icon>
+				</ion-label>
+				<ion-datetime displayFormat="MM/DD/YYYY" [(ngModel)]="search_date" (ionChange)="get_transaction()"></ion-datetime>
+			</ion-item>	
+
+			<br>
+			
+			<ion-item *ngIf="releasing_transactions.length == 0 && isBusy" text-center no-lines>
+				<p>No transaction for release .</p>
 			</ion-item>
 
 			<div *ngFor="let transaction of releasing_transactions">
@@ -110,7 +119,7 @@
 						<ion-item *ngFor="let item of transaction.orders">
 							<h4>{{ item.class }}</h4>
 							<h4 padding-left>{{ item.size }}({{ item.type }})</h4>
-							<p  padding-left>{{ item.quantity }}x{{ item.price }}</p>
+							<p  padding-left>{{ item.quantity }}x&#8369;{{ item.price }}</p>
 						</ion-item>
 					</ion-list>
 
@@ -132,7 +141,7 @@
 		</div>
 
 		<div *ngSwitchCase="'pending'">
-			<ion-item *ngIf="pending_transactions.length == 0" text-center no-lines>
+			<ion-item *ngIf="pending_transactions.length == 0 && isBusy" text-center no-lines>
 				<p>No pending transaction.</p>
 			</ion-item>
 
@@ -148,7 +157,7 @@
 						<ion-item *ngFor="let item of transaction.orders">
 							<h4>{{ item.class }}</h4>
 							<h4 padding-left>{{ item.size }}({{ item.type }})</h4>
-							<p  padding-left>{{ item.quantity }}x{{ item.price }}</p>
+							<p  padding-left>{{ item.quantity }}x&#8369;{{ item.price }}</p>
 						</ion-item>
 					</ion-list>
 

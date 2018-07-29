@@ -18,17 +18,24 @@
 
 <ion-content>
 
-	<form (ngSubmit)="ngOnInit()">
+	<form (ngSubmit)="search()">
     <ion-searchbar mode="md" [(ngModel)]="keyword" name="keyword" (ionClear)="reset();" placeholder="search"></ion-searchbar>
   </form>
 
   <br>
 
-  <ion-item *ngIf="customers.length == 0" text-center no-lines>
+  <ion-item *ngIf="customers.length == 0 && keyword == null && isBusy" text-center no-lines>
     <p>No customer.</p>
   </ion-item>
 
+  <ion-item *ngIf="customers.length == 0 && keyword != null && isBusy" text-center no-lines>
+    <p>No result found.</p>
+  </ion-item>
+
   <ion-item *ngFor="let customer of customers; let i = index" [ngClass]="{'selected' : (i == key)}" (tap)="navigate(customer,i)" detail-push>
+    <ion-avatar item-start>
+      <img src="assets/imgs/avatar.png">
+    </ion-avatar>
   	<h2 text-capitalize>{{ customer.first_name }} {{ customer.last_name }}</h2>
   </ion-item>
 

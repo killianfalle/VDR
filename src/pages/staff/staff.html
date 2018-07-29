@@ -21,7 +21,7 @@
 
 <ion-content>
 
-	<form (ngSubmit)="ngOnInit()">
+	<form (ngSubmit)="search()">
 		<ion-searchbar mode="md" [(ngModel)]="keyword" name="keyword" (ionClear)="reset();" placeholder="search"></ion-searchbar>
 	</form>
 
@@ -31,11 +31,17 @@
 			Add Staff
 		</button>
 	</ion-item>
-	<ion-item no-lines text-center *ngIf="staffs.length == 0">
+	<ion-item no-lines text-center *ngIf="staffs.length == 0 && keyword == null && isBusy">
 		<p>No staff.</p>
+	</ion-item>
+	<ion-item no-lines text-center *ngIf="staffs.length == 0 && keyword != null && isBusy">
+		<p>No result found.</p>
 	</ion-item>
 
 	<ion-item *ngFor="let staff of staffs">
+		<ion-avatar item-start>
+	      <img src="assets/imgs/avatar.png">
+	    </ion-avatar>
 		<h2 text-capitalize>{{ staff.first_name }} {{ staff.last_name }}</h2>
 		<h3>{{ staff.email }}</h3>
 		<p *ngIf="staff.type == 'admin_staff'" text-capitalize>Admin Staff</p>

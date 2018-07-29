@@ -26,7 +26,7 @@ import moment from 'moment';
 export class TransactionPage {
 
   tabs: any = 'cleared';
-  search_date: any = '';
+  search_date: any = moment().format('YYYY-MM-DD');
 
   cleared_transactions: any = [];
   releasing_transactions: any = [];
@@ -60,10 +60,12 @@ export class TransactionPage {
       this.releasing_transactions.push(_data);
     });
 
-    this.set_void_releasing_transaction().subscribe((_data) => {
+    this.set_void_releasing_transaction().subscribe((_data:any) => {
       let index = this.releasing_transactions.map(obj => obj.id).indexOf(_data.id);
-      this.releasing_transactions[index].void = 1;
-      this.releasing_transactions[index].void_reason = _data.reason;
+      if(index > -1){
+        this.releasing_transactions[index].void = 1;
+        this.releasing_transactions[index].void_reason = _data.reason;
+      }
     });
 
     this.remove_releasing_transaction().subscribe((_data) => {
@@ -77,7 +79,7 @@ export class TransactionPage {
       this.cleared_transactions.push(_data);
     });
 
-    this.set_void_cleared_transaction().subscribe((_data) => {
+    this.set_void_cleared_transaction().subscribe((_data:any) => {
       let index = this.cleared_transactions.map(obj => obj.id).indexOf(_data.id);
       if(index > -1){
         this.cleared_transactions[index].void = 1;
@@ -272,7 +274,7 @@ export class TransactionPage {
   }
 
   read_reason(msg) {
-    this.alert.show_dialog('Void Reason',msg);
+    this.alert.show_dialog('Reason',msg);
   }
 
   ionViewDidLoad() {
