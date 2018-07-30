@@ -23,6 +23,8 @@ export class CustomerTransactionPage {
   customer:any;
   transactions: any = [];
 
+  isBusy:any = false;
+
   constructor(
   	public navCtrl: NavController, 
   	public navParams: NavParams,
@@ -35,9 +37,11 @@ export class CustomerTransactionPage {
   }
 
   get_transactions() {
+    this.isBusy = false;
     this.provider.getData({ customer : this.customer },'customer/history').then((res: any) => {
       if(res._data.status)
         this.transactions = res._data.data;
+      this.isBusy = true;
     });
   }
 

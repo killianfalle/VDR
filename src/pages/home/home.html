@@ -25,7 +25,7 @@
     </ion-row>
   </ion-card>
 
-  <ion-card (tap)="navigate('ProductPage')">
+  <ion-card (tap)="navigate('ProductPage')" *ngIf="profile.type == 'admin'">
     <ion-row text-center margin-top>
       <ion-col>
         <ion-icon color="amber" name="cube"></ion-icon>

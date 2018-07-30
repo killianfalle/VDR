@@ -80,33 +80,6 @@ ion-loading.custom {
   }
 }
 
-ion-alert {
-  ion-backdrop {
-    opacity: 0.5 !important;
-  }
-
-  .alert-wrapper {
-    background-color: color($colors,dark) !important;
-    box-shadow: none;
-  }
-
-  .alert-sub-title, .alert-title, .alert-message, .alert-button.activated{
-    color: color($colors,light) !important;
-  }
-
-  .alert-title {
-    margin-bottom: 16px;
-  }
-
-  .alert-button {
-    color: color($colors,orange) !important;
-  }
-
-  .alert-button.activated{
-    background-color: color($colors,orange) !important;
-  }
-}
-
 body.keyboard-is-open .tabbar {
   display: none;
 }

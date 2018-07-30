@@ -52,4 +52,10 @@
 		</ion-card>
 	</div>
 
+	<ion-item *ngIf="transactions.length == 0 && isBusy" text-center no-lines>
+	  <p>No transaction.</p>
+	</ion-item>
+
+	<spinner [hidden]="isBusy"></spinner>
+
 </ion-content>

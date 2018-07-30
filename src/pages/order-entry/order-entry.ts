@@ -108,7 +108,7 @@ export class OrderEntryPage implements OnInit {
 
   setTotal() {
     if(this.form.price != 0 && this.form.quantity != 0)
-      this.form.total = parseFloat(this.form.price) * parseFloat(this.form.quantity);
+      this.form.total = Math.round((parseFloat(this.form.price) * parseFloat(this.form.quantity)) * 100) / 100;
     if(this.form.price == 0 || this.form.quantity == 0)
       this.form.total = null;
   }

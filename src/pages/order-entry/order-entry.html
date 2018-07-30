@@ -22,7 +22,7 @@
 		<h3 text-center>Product</h3>
 
 		<ion-row text-center text-wrap>
-			<ion-col col-6 *ngFor="let prod of product">
+			<ion-col col-12 *ngFor="let prod of product">
 				<ion-card [ngClass]="{'selected' : (form.id == prod.id)}" (click)="select_product(prod)">
 					<ion-item text-center>
 				    	<h1>{{ prod.name }}</h1>
@@ -134,7 +134,8 @@
 
 	<ion-row padding *ngIf="steps == 3">
 		<ion-col>
-			<button ion-button color="orange" block (click)="submit(); $event.stopPropagation()">
+			<button ion-button color="orange" block (click)="submit(); $event.stopPropagation()" 
+			[disabled]="(form.price == null || form.price == '') || (form.quantity == null || form.quantity == '') || form.qty_type.id == ''">
 				Add to Cart
 			</button>
 		</ion-col>

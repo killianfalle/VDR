@@ -22,7 +22,7 @@
 		Product
 	</ion-item-divider>
 	<ion-item>
-		<ion-input type="text" text-center [(ngModel)]="product.name"></ion-input>
+		<ion-input type="text" [(ngModel)]="product.name"></ion-input>
 	</ion-item>
 
 	<br>
@@ -37,7 +37,7 @@
 		<ion-item>
 			<ion-label>{{ (i+1) }}.</ion-label>
 			<ion-icon color="danger" name="remove-circle" (click)="remove_class(i)" [hidden]="i == 0" item-end></ion-icon>
-			<ion-input type="text" text-center [(ngModel)]="class.name"></ion-input>
+			<ion-input type="text" [(ngModel)]="class.name"></ion-input>
 		</ion-item>
 
 		<ion-item-divider>
@@ -48,8 +48,9 @@
 		</ion-item-divider>
 		<div *ngFor="let size of class.size; let row = index">
 			<ion-item>
+				<ion-icon *ngIf="row == 0" item-start></ion-icon>
 				<ion-icon color="danger" name="remove-circle" (click)="remove_size(i,row)" [hidden]="row == 0" item-start></ion-icon>
-				<ion-input type="text" text-center [(ngModel)]="size.name"></ion-input>
+				<ion-input type="text" [(ngModel)]="size.name"></ion-input>
 			</ion-item>
 		</div>
 
@@ -69,7 +70,7 @@
 	<div *ngFor="let quantity of product.quantities; let i = index">
 		<ion-item>
 			<ion-icon color="danger" name="remove-circle" (click)="remove_quantities(i)" [hidden]="i == 0" item-end></ion-icon>
-			<ion-input type="text" text-center [(ngModel)]="quantity.name"></ion-input>
+			<ion-input type="text" [(ngModel)]="quantity.name"></ion-input>
 		</ion-item>
 	</div>
 

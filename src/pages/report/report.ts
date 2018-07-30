@@ -88,7 +88,7 @@ export class ReportPage implements OnInit {
         this.isBusy = true;
       })
     }else {
-      this.alert.show_dialog('Invalid','Can\'t export data. No result found.');
+      this.alert.show_dialog('','Can\'t export data. No result found.');
     }
   }
 
