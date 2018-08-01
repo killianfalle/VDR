@@ -23,6 +23,7 @@
 			<ion-label stacked>First Name</ion-label>
 			<ion-input type="text" text-center formControlName="first_name"></ion-input>
 		</ion-item>
+		<div class="error" *ngIf="error.first_name">{{ error.first_name }}</div>
 
 		<br>
 
@@ -30,6 +31,7 @@
 			<ion-label stacked>Last Name</ion-label>
 			<ion-input type="text" text-center formControlName="last_name"></ion-input>
 		</ion-item>
+		<div class="error" *ngIf="error.last_name">{{ error.last_name }}</div>
 
 		<br>
 		<br>

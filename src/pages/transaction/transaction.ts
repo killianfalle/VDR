@@ -212,7 +212,9 @@ export class TransactionPage {
   }
 
   void_transaction(id,type = 'cleared') {
-    let void_form = this.modalCtrl.create('VoidFormPage',{});
+    let void_form = this.modalCtrl.create('VoidFormPage',{},{
+      enterAnimation : 'modal-md-slide-in'
+    });
 
     void_form.onDidDismiss(data => {
      if(data != null){

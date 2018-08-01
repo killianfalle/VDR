@@ -57,8 +57,6 @@ ion-loading.custom {
   }
 
   .loading-wrapper {
-  	color: color($colors,light);
-    background: color($colors,dark);
     box-shadow: none;
 
     .spinner-dots{

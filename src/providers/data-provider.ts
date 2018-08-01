@@ -38,7 +38,7 @@ export class DataProvider {
 			this.http.post(this.api.src+route, JSON.stringify(data), {headers: headers}).subscribe(res => {
 				resolve(res.json());
 			}, (err) => {        
-				reject(this.errorReponseHandler(err));
+				reject(err);
 			});
 		})
 	}

@@ -43,9 +43,8 @@ export class CartComponent implements OnInit {
   ngOnInit() {
     if(localStorage.getItem('badge') != null)
 		  this.badge = localStorage.getItem('badge');
-    else{
+    else
       this.badge = 0;
-    }
   }
 
   show_cart() {

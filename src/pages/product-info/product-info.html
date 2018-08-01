@@ -1,0 +1,56 @@
+<!--
+  Generated template for the ProductInfoPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar color="orange">
+    <ion-title>Product Info</ion-title>
+    <ion-buttons end>
+      <cart></cart>
+    </ion-buttons>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content>
+
+	<ion-item-divider>
+		Product Name
+	</ion-item-divider>
+	<ion-item no-lines>
+		<p text-capitalize>{{ product.name }}</p>
+	</ion-item>
+
+	<ion-item-divider>
+		Classification
+	</ion-item-divider>
+	<ion-row>
+		<ion-col col-6 *ngFor="let class of product.class; let i = index">
+			<ion-item no-lines>
+				<p text-capitalize>{{ (i+1) }}. {{ class.name }}</p>
+			</ion-item>
+			<ion-item class="size">
+				Size
+			</ion-item>
+			<ion-item *ngFor="let size of class.size" no-lines>
+				<p text-capitalize>{{ size.name }}</p>
+			</ion-item>
+		</ion-col>
+	</ion-row>
+
+	<ion-item-divider>
+		Quantity
+	</ion-item-divider>
+	<ion-row>
+		<ion-col col-6 *ngFor="let quantity of product.quantity;let i = index">
+			<ion-item no-lines>
+				<p text-capitalize>{{ (i+1) }}. {{ quantity.name }}</p>
+			</ion-item>
+		</ion-col>
+	</ion-row>
+
+</ion-content>

@@ -19,6 +19,7 @@ export class AddProductPage {
 
   product:any = {};
   _callback: any;
+  error: any;
 
   constructor(
   	public navCtrl: NavController, 
@@ -81,7 +82,10 @@ export class AddProductPage {
         this._callback(this.navParams.get('self'));
   			this.navCtrl.pop();
   		}
-  	});
+  	}).catch((error) => {
+      console.log(JSON.parse(error._body).error.name);
+      this.error = JSON.parse(error._body).error.name;
+    });
   }
 
   ionViewDidLoad() {

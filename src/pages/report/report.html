@@ -29,28 +29,24 @@
 	</ion-segment>
 
 	<br>
-	
-	<ion-item>
-		<ion-label>
-			<ion-icon name="md-calendar"></ion-icon>
-		</ion-label>
-		<ion-datetime displayFormat="MM/DD/YYYY" [(ngModel)]="search_date" (ionChange)="ngOnInit()"></ion-datetime>
-	</ion-item>
-
-	<br>
 
 	<div [ngSwitch]="report_tab" >
 		<div *ngSwitchCase="'daily-report'">
-			<div padding>
-				<button ion-button block color="orange" (click)="export(); $event.stopPropagation()">Export Result</button>
-			</div>
-
+			<ion-item>
+				<ion-label>
+					<ion-icon name="md-calendar"></ion-icon>
+				</ion-label>
+				<ion-datetime displayFormat="MM/DD/YYYY" [(ngModel)]="daily_report_date" (ionChange)="ngOnInit()"></ion-datetime>
+			</ion-item>
 			<br>
+			<div padding>
+				<button ion-button block color="orange" (click)="show_product(); $event.stopPropagation()">Export</button>
+			</div>
 
 			<div *ngFor="let report of reports">
 				<ion-card>
 					<ion-card-header text-capitalize>
-						<p>Owner: {{ report.first_name }} {{ report.last_name }}</p>
+						<h4>Owner: {{ report.first_name }} {{ report.last_name }}</h4>
 						<h4>Release Date : {{ report.release_at | date : 'MM/dd/yy' }}</h4>
 					</ion-card-header>
 
@@ -73,15 +69,38 @@
 		</div>
 
 		<div *ngSwitchCase="'sales-report'">
-			<ion-item-divider>
-				Void
 
+			<ion-card>
+			  <ion-item>
+			  	<ion-label>Select Product</ion-label>
+			  	<ion-select [(ngModel)]="selected_product" (ionChange)="ngOnInit()" text-right>
+			  		<ion-option *ngFor="let product of products" value="{{ product.id }}">{{ product.name }}</ion-option>
+			  	</ion-select>
+			  </ion-item>
+			  <ion-item>
+			  	<ion-label>
+			  		<ion-icon name="md-calendar"></ion-icon>
+			  	</ion-label>
+			  	<ion-datetime displayFormat="MM/DD/YYYY" [(ngModel)]="sales_report_date" (ionChange)="ngOnInit()"></ion-datetime>
+			  </ion-item>
+			</ion-card>
+
+			
+			<div class="hr-divider">
+			  <div class="hr-line"></div>
+			  <div class="hr-icon">
+			  	<h3>Void</h3>
+			  </div>
+			  <div class="hr-line"></div>
+			</div>
+
+			<ion-item no-lines>
 				<button ion-button icon-start clear color="primary" (click)="print('void')" item-end>
 					<ion-icon name="print"></ion-icon>
 					Print
 				</button>
-			</ion-item-divider>
-			<ion-item class="table" no-lines>	
+			</ion-item>
+			<ion-item-divider class="table" no-lines>	
 				<ion-row text-wrap>
 					<ion-col col-4>
 						<h3 ion-text color="orange">Class</h3>
@@ -116,18 +135,24 @@
 				<p *ngIf="!void_reports.length && isBusy" text-center>No results found.</p>
 
 				<spinner [hidden]="isBusy"></spinner>
-			</ion-item>
+			</ion-item-divider>
 
 
-			<ion-item-divider>
-				Release
+			<div class="hr-divider">
+			  <div class="hr-line"></div>
+			  <div class="hr-icon">
+			  	<h3>Release</h3>
+			  </div>
+			  <div class="hr-line"></div>
+			</div>
 
+			<ion-item no-lines>
 				<button ion-button icon-start clear color="primary" (click)="print('release')" item-end>
 					<ion-icon name="print"></ion-icon>
 					Print
 				</button>
-			</ion-item-divider>
-			<ion-item class="table" no-lines>
+			</ion-item>
+			<ion-item-divider class="table" no-lines>
 				<ion-row text-wrap>
 					<ion-col col-4>
 						<h3 ion-text color="orange">Class</h3>
@@ -162,7 +187,7 @@
 				<p *ngIf="!release_reports.length && isBusy" text-center>No results found.</p>
 				
 				<spinner [hidden]="isBusy"></spinner>
-			</ion-item>
+			</ion-item-divider>
 		</div>
 	</div>
 

@@ -7,6 +7,7 @@ import { Validators,
          FormGroup } from '@angular/forms';
 import { DataProvider } from '../../providers/data-provider';
 import { LoaderComponent } from '../../components/loader/loader';
+import { ToastComponent } from '../../components/toast/toast';
 /**
  * Generated class for the LoginPage page.
  *
@@ -28,6 +29,7 @@ export class LoginPage {
     public navParams: NavParams,
     public provider: DataProvider,
     private form: FormBuilder,
+    public toast: ToastComponent,
     public loader: LoaderComponent) {
     
     this.initForm();
@@ -55,6 +57,7 @@ export class LoginPage {
           this.loader.hide_loader();
         }
     }).catch((error) => {
+      this.toast.presentToast(JSON.parse(error._body).error.message);
       this.loader.hide_loader();
     })
 

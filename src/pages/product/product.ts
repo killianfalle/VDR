@@ -50,6 +50,10 @@ export class ProductPage {
     this.navCtrl.push(page, params );
   }
 
+  view_info(_info) {
+    this.navCtrl.push('ProductInfoPage',{ info : _info });
+  }
+
   reset() {
     this.keyword = null;
     this.products = [];

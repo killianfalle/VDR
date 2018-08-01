@@ -37,7 +37,7 @@
 		<p>No result found.</p>
 	</ion-item>
 
-	<ion-item *ngFor="let product of products">
+	<ion-item *ngFor="let product of products" detail-push (click)="view_info(product)">
 		<h2 text-capitalize>{{ product.name }}</h2>
 	</ion-item>
 

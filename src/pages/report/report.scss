@@ -3,10 +3,6 @@ page-report {
 		background: #EEEEEE;
 	}
 
-	.item-divider {
-		border-top: 1px solid color($colors,orange);
-	}
-
 	.table {
 		padding: 0;
 		margin: 0;
@@ -17,4 +13,29 @@ page-report {
 	}
 
 	p { color: color($colors,dark) !important; }
+
+	.hr-divider {
+	  display: flex;
+	  
+	  .hr-line {
+	    width: 100%;
+	    position: relative;
+	    margin: 15px;
+	    border-bottom: 0.55px solid #c8c7cc;
+	  }
+
+	  .hr-icon {
+	    position: relative;
+	    top: 3px;
+	    color: #c8c7cc
+	  }
+
+	  h3 {
+	  	line-height: 0.8;
+	  }
+	}
+
+	hr {
+		height: 1px !important;
+	}
 }

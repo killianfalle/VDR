@@ -24,6 +24,7 @@ export class AddCustomerPage {
   customer: FormGroup;
   _callback: any;
   origin: any;
+  error:any = {};
 
   constructor(
   	public navCtrl: NavController, 
@@ -51,7 +52,9 @@ export class AddCustomerPage {
         this._callback(this.origin);
         this.navCtrl.pop();
       }
-    });
+    }).catch((error) => {
+      this.error = JSON.parse(error._body).error;
+    });;
   }
 
   ionViewDidLoad() {

@@ -5,6 +5,14 @@ page-order-entry {
 		padding: 0;
 	}
 
+	.item-divider {
+		color: color($colors,dark);
+		font-size: 1.5em;
+		font-weight: bolder;
+		background: color($colors,yellow);
+		text-align: center;
+	}
+
 	.card {
 		position: relative;
 		min-height: 80px;
@@ -12,7 +20,7 @@ page-order-entry {
 		border: 1px solid color($colors,orange);
 	}
 
-	.item {
+	.item-option {
 		color: color($colors,orange);
 		position: absolute;
 	    top: 50%;
@@ -21,8 +29,19 @@ page-order-entry {
 		background: transparent;
 	}
 
+	.last-col {
+		flex: 0 0 100% !important;
+	    width: 100% !important;
+	    max-width: 100% !important;
+	}
+
 	.selected {
-		background: color($colors,yellow);
+		border: 2px solid color($colors,yellow);
+		background: color($colors,orange);
+		.item {
+			font-style: italic;
+			color: color($colors,light) !important;
+		}
 	}
 
 	.text-input[disabled] {
@@ -35,5 +54,30 @@ page-order-entry {
 		width: 19vh;
 		font-size: 1.2em;
 		font-weight: bold;
+	}
+
+	.hr-divider {
+	  display: flex;
+	  
+	  .hr-line {
+	    width: 100%;
+	    position: relative;
+	    margin: 15px;
+	    border-bottom: 0.55px solid #c8c7cc;
+	  }
+
+	  .hr-icon {
+	    position: relative;
+	    top: 3px;
+	    color: #c8c7cc
+	  }
+
+	  .icon {
+	  	font-size: 2.5em;
+	  }
+
+	  h1 {
+	  	line-height: 0.8;
+	  }
 	}
 }

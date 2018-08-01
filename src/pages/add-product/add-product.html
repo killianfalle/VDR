@@ -24,6 +24,7 @@
 	<ion-item>
 		<ion-input type="text" [(ngModel)]="product.name"></ion-input>
 	</ion-item>
+	<div class="error" *ngIf="error">{{ error }}</div>
 
 	<br>
 
@@ -34,11 +35,17 @@
 		</button>
 	</ion-item-divider>
 	<div *ngFor="let class of product.classes; let i = index">
-		<ion-item>
-			<ion-label>{{ (i+1) }}.</ion-label>
-			<ion-icon color="danger" name="remove-circle" (click)="remove_class(i)" [hidden]="i == 0" item-end></ion-icon>
-			<ion-input type="text" [(ngModel)]="class.name"></ion-input>
-		</ion-item>
+		<ion-row>
+			<ion-col>
+				<ion-item>
+					<ion-label>{{ (i+1) }}.</ion-label>
+					<ion-input type="text" [(ngModel)]="class.name"></ion-input>
+				</ion-item>
+			</ion-col>
+			<ion-col col-1 align-self-center text-center>
+				<ion-icon color="danger" name="remove-circle" (click)="remove_class(i)" [hidden]="i == 0" item-end></ion-icon>
+			</ion-col>
+		</ion-row>
 
 		<ion-item-divider>
 			 Size
@@ -47,11 +54,17 @@
 			</button>
 		</ion-item-divider>
 		<div *ngFor="let size of class.size; let row = index">
-			<ion-item>
-				<ion-icon *ngIf="row == 0" item-start></ion-icon>
-				<ion-icon color="danger" name="remove-circle" (click)="remove_size(i,row)" [hidden]="row == 0" item-start></ion-icon>
-				<ion-input type="text" [(ngModel)]="size.name"></ion-input>
-			</ion-item>
+			<ion-row>
+				<ion-col col-1 align-self-center text-center>
+					<ion-icon *ngIf="row == 0" item-start></ion-icon>
+					<ion-icon color="danger" name="remove-circle" (tap)="remove_size(i,row)" [hidden]="row == 0" item-start></ion-icon>
+				</ion-col>
+				<ion-col>
+					<ion-item>
+						<ion-input type="text" [(ngModel)]="size.name"></ion-input>
+					</ion-item>
+				</ion-col>
+			</ion-row>
 		</div>
 
 		<br>
@@ -68,10 +81,16 @@
 		</button>
 	</ion-item-divider>
 	<div *ngFor="let quantity of product.quantities; let i = index">
-		<ion-item>
-			<ion-icon color="danger" name="remove-circle" (click)="remove_quantities(i)" [hidden]="i == 0" item-end></ion-icon>
-			<ion-input type="text" [(ngModel)]="quantity.name"></ion-input>
-		</ion-item>
+		<ion-row>
+			<ion-col>
+				<ion-item>
+					<ion-input type="text" [(ngModel)]="quantity.name"></ion-input>
+				</ion-item>
+			</ion-col>
+			<ion-col col-1 align-self-center text-center>
+				<ion-icon color="danger" name="remove-circle" (click)="remove_quantities(i)" [hidden]="i == 0" item-end></ion-icon>
+			</ion-col>
+		</ion-row>
 	</div>
 
 	<br>

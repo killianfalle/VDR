@@ -26,6 +26,7 @@
 			<ion-label stacked>First Name</ion-label>
 			<ion-input type="text" text-center formControlName="first_name"></ion-input>
 		</ion-item>
+		<div class="error" *ngIf="error.first_name">{{ error.first_name }}</div>
 
 		<br>
 
@@ -33,16 +34,18 @@
 			<ion-label stacked>Last Name</ion-label>
 			<ion-input type="text" text-center formControlName="last_name"></ion-input>
 		</ion-item>
+		<div class="error" *ngIf="error.last_name">{{ error.last_name }}</div>
 
 		<br>
 
 		<ion-item>
-			<ion-label stacked>User type</ion-label>
+			<ion-label stacked>Type</ion-label>
 			<ion-select formControlName="type">
 				<ion-option value="admin_staff">Admin Staff</ion-option>
 				<ion-option value="warehouse_staff">Warehouse Staff</ion-option>
 			</ion-select>
 		</ion-item>
+		<div class="error" *ngIf="error.type">{{ error.type }}</div>
 
 		<br>
 		<br>
@@ -54,6 +57,7 @@
 			<ion-label stacked>Email</ion-label>
 			<ion-input type="text" text-center formControlName="email"></ion-input>
 		</ion-item>
+		<div class="error" *ngIf="error.email">{{ error.email }}</div>
 
 		<br>
 
@@ -61,6 +65,7 @@
 			<ion-label stacked>Password</ion-label>
 			<ion-input type="password" text-center formControlName="password"></ion-input>
 		</ion-item>
+		<div class="error" *ngIf="error.password">{{ error.password }}</div>
 
 		<br>
 
@@ -68,6 +73,7 @@
 			<ion-label stacked>Confirm Password</ion-label>
 			<ion-input type="password" text-center formControlName="confirm_password"></ion-input>
 		</ion-item>
+		<div class="error" *ngIf="error.confirm_password">{{ error.confirm_password }}</div>
 
 		<br>
 		<br>

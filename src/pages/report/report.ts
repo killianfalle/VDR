@@ -2,7 +2,8 @@ import { Component,
          OnInit } from '@angular/core';
 import { IonicPage,
          NavController, 
-         NavParams } from 'ionic-angular';
+         NavParams,
+         AlertController } from 'ionic-angular';
 import { DataProvider } from '../../providers/data-provider';
 import { Angular2Csv } from 'angular2-csv/Angular2-csv';
 import { LoaderComponent } from '../../components/loader/loader';
@@ -29,8 +30,11 @@ export class ReportPage implements OnInit {
   reports:any = [];  
   void_reports:any = [];  
   release_reports:any = [];  
+  products:any = [];  
 
-  search_date: any = moment().format('YYYY-MM-DD');
+  selected_product: any = '';
+  daily_report_date: any = moment().format('YYYY-MM-DD');
+  sales_report_date: any = moment().format('YYYY-MM-DD');
 
   isBusy: any = false;
 
@@ -50,7 +54,9 @@ export class ReportPage implements OnInit {
     public provider: DataProvider,
     public loader: LoaderComponent,
     public alert: AlertComponent,
+    public alertCtrl: AlertController,
     private printer: PrinterProvider) {
+    this.getProduct();
   }
 
   ngOnInit() {
@@ -68,9 +74,49 @@ export class ReportPage implements OnInit {
     }
   }
 
+  getProduct() {
+    this.provider.getData('','product').then((res: any) => {
+      if(res._data.status){
+        this.products = res._data.data;
+      }
+    })
+  }
+
+  async show_product(){
+    if(this.reports.length > 0){
+
+      let product = this.alertCtrl.create();
+
+      product.setTitle('Select Product');
+
+      product.addButton('Cancel');
+      product.addButton({
+        text: 'OK',
+        handler: data => {
+          if(data != undefined){
+            this.export(data);
+          }
+        }
+      });
+
+      for(let index = 0;index < this.products.length;index++){
+          await product.addInput({
+            type: 'radio',
+            label: this.products[index].name,
+            value: this.products[index].id,
+            checked: false
+          });
+      }
+
+      product.present();
+    }else {
+      this.alert.show_dialog('','Can\'t export data. No result found.');
+    }
+  }
+
   get_daily_report() {
     this.isBusy = false;
-    this.provider.getData({ date : this.search_date },'report').then((res: any) => {
+    this.provider.getData({ product : this.selected_product, date : this.daily_report_date },'report').then((res: any) => {
       if(res._data.status){
         this.reports = res._data.data;
       }
@@ -78,18 +124,14 @@ export class ReportPage implements OnInit {
     });
   }
 
-  export() {
-    if(this.reports.length > 0){
-      this.isBusy = false;
-      this.provider.getData({ date : this.search_date },'report/export').then((res: any) => {
-        if(res._data.status){
-         this.generate(res._data.data);
-        }
-        this.isBusy = true;
-      })
-    }else {
-      this.alert.show_dialog('','Can\'t export data. No result found.');
-    }
+  export(_product) {
+    this.isBusy = false;
+    this.provider.getData({ product : _product, date : this.daily_report_date },'report/export').then((res: any) => {
+      if(res._data.status){
+       this.generate(res._data.data);
+      }
+      this.isBusy = true;
+    })
   }
 
   generate(_data){
@@ -97,7 +139,7 @@ export class ReportPage implements OnInit {
   }
 
   void() {
-    this.provider.getData({ date : this.search_date, status : 'void' },'report/void').then((res:any) => {
+    this.provider.getData({ product : this.selected_product, date : this.sales_report_date, status : 'void' },'report/void').then((res:any) => {
       if(res._data.status){
         this.void_reports = res._data.data;
       }
@@ -105,7 +147,7 @@ export class ReportPage implements OnInit {
   }
 
   release() {
-    this.provider.getData({ date : this.search_date, status : 'cleared' },'report/release').then((res:any) => {
+    this.provider.getData({ product : this.selected_product, date : this.sales_report_date, status : 'cleared' },'report/release').then((res:any) => {
       if(res._data.status){
         this.release_reports = res._data.data;
       }
@@ -117,15 +159,15 @@ export class ReportPage implements OnInit {
     this.printer.is_enabled().then((res: any) => {
       this.verify_connectivity(type);
     }).catch((err) => {
-      this.enable_blueetooth(type);
+      this.enable_bluetooth(type);
     });
   }
 
-  enable_blueetooth(type) {
+  enable_bluetooth(type) {
     this.printer.set_enable().then((res:any) => {
       this.verify_connectivity(type);
     }).catch((err) => {
-      this.enable_blueetooth(type);
+      this.enable_bluetooth(type);
     });
   }
 
@@ -157,7 +199,7 @@ export class ReportPage implements OnInit {
 
     header = '        Vista del rio \n Carmen, Cagayan de Oro City';
 
-    await this.printer.onWrite(header+'\n'+separator+'\nDaily Report (Void)\nDate: '+moment(this.search_date).format("MM/DD/YYYY")+'\n'+separator+'\n'+item+'\n'+separator+'\n\n\n');
+    await this.printer.onWrite(header+'\n'+separator+'\nDaily Report (Void)\nDate: '+moment(this.sales_report_date).format("MM/DD/YYYY")+'\n'+separator+'\n'+item+'\n'+separator+'\n\n\n');
   }
 
   async print_release(){
@@ -173,7 +215,7 @@ export class ReportPage implements OnInit {
 
     header = '        Vista del rio \n Carmen, Cagayan de Oro City';
 
-    await this.printer.onWrite(header+'\n'+separator+'\nDaily Report (Cleared)\nDate: '+moment(this.search_date).format("MM/DD/YYYY")+'\n'+separator+'\n'+item+'\n'+separator+'\n\n\n');
+    await this.printer.onWrite(header+'\n'+separator+'\nDaily Report (Cleared)\nDate: '+moment(this.sales_report_date).format("MM/DD/YYYY")+'\n'+separator+'\n'+item+'\n'+separator+'\n\n\n');
   }
 
   ionViewDidLoad() {

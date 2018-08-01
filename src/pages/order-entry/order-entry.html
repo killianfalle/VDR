@@ -19,13 +19,19 @@
 <ion-content>
 
 	<div [hidden]="steps != 0">
-		<h3 text-center>Product</h3>
+		<div class="hr-divider">
+		  <div class="hr-line"></div>
+		  <div class="hr-icon">
+		  	<h1>Product</h1>
+		  </div>
+		  <div class="hr-line"></div>
+		</div>
 
 		<ion-row text-center text-wrap>
-			<ion-col col-12 *ngFor="let prod of product">
+			<ion-col col-6 *ngFor="let prod of product; let i = index" [ngClass]="{'last-col' : ((product.length % 2) == 1 && (product.length - 1) == i )}">
 				<ion-card [ngClass]="{'selected' : (form.id == prod.id)}" (click)="select_product(prod)">
-					<ion-item text-center>
-				    	<h1>{{ prod.name }}</h1>
+					<ion-item class="item-option" text-center>
+				    	<h1 text-capitalize>{{ prod.name }}</h1>
 					</ion-item>
 				</ion-card>
 			</ion-col>
@@ -35,13 +41,19 @@
 
 	<div *ngIf="steps > 0">
 		<div [hidden]="steps != 1">
-			<h3 text-center>Classification</h3>
+			<div class="hr-divider">
+			  <div class="hr-line"></div>
+			  <div class="hr-icon">
+			  	<h1>Classification</h1>
+			  </div>
+			  <div class="hr-line"></div>
+			</div>
 
 			<ion-row text-center text-wrap>
-				<ion-col col-6 *ngFor="let class of classes">
+				<ion-col col-6 *ngFor="let class of classes; let i = index" [ngClass]="{'last-col' : ((classes.length % 2) == 1 && (classes.length - 1) == i )}">
 					<ion-card [ngClass]="{'selected' : (form.class.name == class.name)}" (click)="select_class(class)">
-						<ion-item text-center>
-					    	<h1>{{ class.name }}</h1>
+						<ion-item class="item-option" text-center>
+					    	<h1 text-capitalize>{{ class.name }}</h1>
 						</ion-item>
 					</ion-card>
 				</ion-col>
@@ -49,13 +61,19 @@
 		</div>
 
 		<div [hidden]="steps != 2">
-			<h3 text-center>Size</h3>
+			<div class="hr-divider">
+			  <div class="hr-line"></div>
+			  <div class="hr-icon">
+			  	<h1>Size</h1>
+			  </div>
+			  <div class="hr-line"></div>
+			</div>
 
 			<ion-row text-center text-wrap>
-				<ion-col col-6 *ngFor="let size of sizes">
+				<ion-col col-6 *ngFor="let size of sizes; let i = index" [ngClass]="{'last-col' : ((sizes.length % 2) == 1 && (sizes.length - 1) == i )}">
 					<ion-card [ngClass]="{'selected' : (form.size.name == size.name)}" (click)="select_size(size)">
-						<ion-item text-center>
-					    	<h1>{{ size.name }}</h1>
+						<ion-item class="item-option" text-center>
+					    	<h1 text-capitalize>{{ size.name }}</h1>
 						</ion-item>
 					</ion-card>
 				</ion-col>
@@ -63,28 +81,39 @@
 		</div>
 
 		<div [hidden]="steps != 3">
-
-			<h3 text-center>Type</h3>
+			<div class="hr-divider">
+			  <div class="hr-line"></div>
+			  <div class="hr-icon">
+			  	<h1>Type</h1>
+			  </div>
+			  <div class="hr-line"></div>
+			</div>
 
 			<ion-row text-center>
-				<ion-col col-6 col-md *ngFor="let qty of quantities">
+				<ion-col col-6 col-md *ngFor="let qty of quantities; let i = index" [ngClass]="{'last-col' : ((quantities.length % 2) == 1 && (quantities.length - 1) == i )}">
 					<ion-card [ngClass]="{'selected' : (form.qty_type.name == qty.name)}" (click)="select_qty(qty)">
-						<ion-item text-center>
-					    	<h1>{{ qty.name }}</h1>
+						<ion-item class="item-option" text-center>
+					    	<h1 text-capitalize>{{ qty.name }}</h1>
 						</ion-item>
 					</ion-card>
 				</ion-col>
 			</ion-row>
 
-			<hr>
+			<div class="hr-divider">
+			  <div class="hr-line"></div>
+			  <div class="hr-icon">
+			  	<ion-icon name="calculator"></ion-icon>
+			  </div>
+			  <div class="hr-line"></div>
+			</div>
 
 			<ion-row>
 				<ion-col>
 					<ion-card>
-						<ion-item>
+						<ion-item class="item-option">
 							<ion-label>QTY :</ion-label>
-							<ion-label class="custom-label">{{ form.qty_type.name }}</ion-label>
-							<ion-input type="number" [ngStyle]="{'color': '#222'}" [(ngModel)]="form.quantity" (input)="setTotal()" text-right>TEST</ion-input>
+							<ion-label class="custom-label" text-capitalize>{{ form.qty_type.name }}</ion-label>
+							<ion-input type="number" [ngStyle]="{'color': '#222'}" [(ngModel)]="form.quantity" (input)="setTotal()" text-right></ion-input>
 						</ion-item>
 					</ion-card>
 				</ion-col>
@@ -93,7 +122,7 @@
 			<ion-row>
 				<ion-col>
 					<ion-card>
-						<ion-item>
+						<ion-item class="item-option">
 							<ion-label>Price :</ion-label>
 							<ion-input type="number" [ngStyle]="{'color': '#222'}" [(ngModel)]="form.price" (input)="setTotal()" text-right></ion-input>
 						</ion-item>
@@ -104,7 +133,7 @@
 			<ion-row>
 				<ion-col>
 					<ion-card>
-						<ion-item>
+						<ion-item class="item-option">
 							<ion-label>Total :</ion-label>
 							<ion-input type="number" [ngStyle]="{'color': '#222'}" [(ngModel)]="form.total" text-right disabled></ion-input>
 						</ion-item>
