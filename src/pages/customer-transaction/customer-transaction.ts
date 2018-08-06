@@ -1,7 +1,9 @@
-import { Component } from '@angular/core';
+import { Component,
+         ViewChild } from '@angular/core';
 import { IonicPage,
     		 NavController, 
-    		 NavParams } from 'ionic-angular';
+    		 NavParams,
+         InfiniteScroll } from 'ionic-angular';
 import { DataProvider } from '../../providers/data-provider';
 import { LoaderComponent } from '../../components/loader/loader';
 import { AlertComponent } from '../../components/alert/alert';
@@ -20,8 +22,13 @@ import { AlertComponent } from '../../components/alert/alert';
 })
 export class CustomerTransactionPage {
 
+  @ViewChild(InfiniteScroll) infinite: InfiniteScroll;
+
   customer:any;
   transactions: any = [];
+
+  offset:any = 0;
+  limit:any = 10;
 
   isBusy:any = false;
 
@@ -38,11 +45,35 @@ export class CustomerTransactionPage {
 
   get_transactions() {
     this.isBusy = false;
-    this.provider.getData({ customer : this.customer },'customer/history').then((res: any) => {
-      if(res._data.status)
-        this.transactions = res._data.data;
+    this.provider.getData({ customer : this.customer, offset : this.offset, limit : this.limit },'customer/history').then((res: any) => {
+      if(res._data.status){
+        if(res._data.result > 0){
+          this.offset += res._data.result;
+          this.loadData(res._data.data);
+        }else {
+          this.stopInfinite();
+        }
+      }
       this.isBusy = true;
     });
+  }
+
+  loadData(_transaction) {
+    _transaction.map(data => {
+      this.transactions.push(data);
+    });
+  }
+
+  doInfinite(infiniteScroll) {
+    setTimeout(() => {
+      this.get_transactions();
+
+      infiniteScroll.complete();
+    }, 500);
+  }
+
+  stopInfinite(){
+    this.infinite.enable(false);
   }
 
   read_reason(msg) {

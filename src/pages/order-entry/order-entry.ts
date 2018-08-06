@@ -57,8 +57,13 @@ export class OrderEntryPage implements OnInit {
       qty_type: { id : '', name: ''},
       quantity: null,
       price: null,
-      total: null
+      total: null,
+      customer: null,
+      transacted_by: null
   	}
+
+    this.form.customer = this.customer.id;
+    this.form.transacted_by = this.user.id;
   }
 
   ngOnInit() {
@@ -114,9 +119,6 @@ export class OrderEntryPage implements OnInit {
   }
 
   submit() {
-    this.form.customer = this.customer.id;
-    this.form.transacted_by = this.user.id;
-
     this.alert.confirm().then(res => {
       if(res){
         this.provider.postData(this.form,'transaction/entry').then((res: any) => {
@@ -137,7 +139,7 @@ export class OrderEntryPage implements OnInit {
   }
 
   preview(){
-    this.navCtrl.push('ReviewEntryPage', { data : this.form });
+    this.navCtrl.push('ReviewEntryPage', { data : this.form, customer : this.customer });
   }
 
   ionViewDidLoad() {

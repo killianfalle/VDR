@@ -13,14 +13,16 @@
     </ion-buttons>
   </ion-navbar>
 
+  <ion-toolbar>
+    <form (ngSubmit)="search()">
+      <ion-searchbar mode="md" [(ngModel)]="keyword" name="keyword" (ionClear)="reset();" placeholder="search"></ion-searchbar>
+    </form>
+  </ion-toolbar>
+
 </ion-header>
 
 
 <ion-content>
-
-	<form (ngSubmit)="search()">
-    <ion-searchbar mode="md" [(ngModel)]="keyword" name="keyword" (ionClear)="reset();" placeholder="search"></ion-searchbar>
-  </form>
 
   <br>
 
@@ -32,13 +34,18 @@
     <p>No result found.</p>
   </ion-item>
 
-  <ion-item *ngFor="let customer of customers; let i = index" [ngClass]="{'selected' : (i == key)}" (tap)="navigate(customer,i)" detail-push>
+  <ion-item *ngFor="let customer of customers; let i = index" [ngClass]="{'selected' : (i == key)}" (click)="navigate(customer,i)" detail-push>
     <ion-avatar item-start>
       <img src="assets/imgs/avatar.png">
     </ion-avatar>
   	<h2 text-capitalize>{{ customer.first_name }} {{ customer.last_name }}</h2>
   </ion-item>
 
-  <spinner [hidden]="isBusy"></spinner>
+  <spinner *ngIf="!isBusy && offset == 0"></spinner>
+
+  <ion-infinite-scroll #infinite (ionInfinite)="doInfinite($event)" threshold="100px">
+    <ion-infinite-scroll-content>
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
 
 </ion-content>

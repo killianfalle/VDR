@@ -13,31 +13,45 @@
     </ion-buttons>
   </ion-navbar>
 
+  <ion-toolbar>
+  	<ion-segment mode="md" [(ngModel)]="report_tab" color="dark" (ionChange)="ngOnInit()">
+  		<ion-segment-button value="csv-report">
+  			CSV Report 
+  		</ion-segment-button>
+
+  		<ion-segment-button value="daily-report">
+  			Daily Report 
+  		</ion-segment-button>
+  	</ion-segment>
+  </ion-toolbar>
+
 </ion-header>
 
 
 <ion-content>
 
-	<ion-segment mode="md" [(ngModel)]="report_tab" color="dark" (ionChange)="ngOnInit()">
-		<ion-segment-button value="daily-report">
-			Daily Report 
-		</ion-segment-button>
-
-		<ion-segment-button value="sales-report">
-			Sales Report 
-		</ion-segment-button>
-	</ion-segment>
-
 	<br>
 
 	<div [ngSwitch]="report_tab" >
-		<div *ngSwitchCase="'daily-report'">
-			<ion-item>
-				<ion-label>
-					<ion-icon name="md-calendar"></ion-icon>
-				</ion-label>
-				<ion-datetime displayFormat="MM/DD/YYYY" [(ngModel)]="daily_report_date" (ionChange)="ngOnInit()"></ion-datetime>
-			</ion-item>
+		<div *ngSwitchCase="'csv-report'">
+			<ion-row>
+				<ion-col>
+					<ion-item>
+						<ion-label stacked> From
+							<ion-icon name="md-calendar"></ion-icon>
+						</ion-label>
+						<ion-datetime displayFormat="MM/DD/YYYY" [(ngModel)]="daily_report_from" (ionChange)="ngOnInit()"></ion-datetime>
+					</ion-item>
+				</ion-col>
+				<ion-col>
+					<ion-item>
+						<ion-label stacked> To
+							<ion-icon name="md-calendar"></ion-icon>
+						</ion-label>
+						<ion-datetime displayFormat="MM/DD/YYYY" [(ngModel)]="daily_report_to" (ionChange)="ngOnInit()"></ion-datetime>
+					</ion-item>
+				</ion-col>
+			</ion-row>
 			<br>
 			<div padding>
 				<button ion-button block color="orange" (click)="show_product(); $event.stopPropagation()">Export</button>
@@ -45,19 +59,25 @@
 
 			<div *ngFor="let report of reports">
 				<ion-card>
-					<ion-card-header text-capitalize>
+					<ion-item-divider text-capitalize>
 						<h4>Owner: {{ report.first_name }} {{ report.last_name }}</h4>
 						<h4>Release Date : {{ report.release_at | date : 'MM/dd/yy' }}</h4>
-					</ion-card-header>
+					</ion-item-divider>
 
 					<ion-list>
 						<ion-item *ngFor="let item of report.orders">
 							<h2 ion-text color="orange">{{ item.product }}</h2>
 							<h4 padding-left>{{ item.class }}</h4>
-							<h4 padding-left>{{ item.size }}({{ item.type }})</h4>
-							<p  padding-left>{{ item.quantity }}x&#8369;{{ item.price }}</p>
+							<h4 padding-left>{{ item.size }}
+								<span [hidden]="!item.type">({{ item.type }})</span>
+							</h4>
+							<p  padding-left>{{ item.quantity }} x &#8369;{{ item.price }}</p>
 						</ion-item>
 					</ion-list>
+
+					<ion-item>
+						<h3 ion-text color="danger" item-end>Total : &#8369;{{ report.total_payment }}</h3>
+					</ion-item>
 				</ion-card>
 			
 				<br>
@@ -68,7 +88,7 @@
 			<spinner [hidden]="isBusy"></spinner>
 		</div>
 
-		<div *ngSwitchCase="'sales-report'">
+		<div *ngSwitchCase="'daily-report'">
 
 			<ion-card>
 			  <ion-item>
@@ -84,59 +104,6 @@
 			  	<ion-datetime displayFormat="MM/DD/YYYY" [(ngModel)]="sales_report_date" (ionChange)="ngOnInit()"></ion-datetime>
 			  </ion-item>
 			</ion-card>
-
-			
-			<div class="hr-divider">
-			  <div class="hr-line"></div>
-			  <div class="hr-icon">
-			  	<h3>Void</h3>
-			  </div>
-			  <div class="hr-line"></div>
-			</div>
-
-			<ion-item no-lines>
-				<button ion-button icon-start clear color="primary" (click)="print('void')" item-end>
-					<ion-icon name="print"></ion-icon>
-					Print
-				</button>
-			</ion-item>
-			<ion-item-divider class="table" no-lines>	
-				<ion-row text-wrap>
-					<ion-col col-4>
-						<h3 ion-text color="orange">Class</h3>
-					</ion-col>
-					<ion-col col-4>
-						<h3 ion-text color="orange">Size</h3>
-					</ion-col>
-					<ion-col col-2>
-						<h3 ion-text color="orange">QTY</h3>
-					</ion-col>
-					<ion-col col-2>
-						<h3 ion-text color="orange">Total</h3>
-					</ion-col>
-				</ion-row>
-				<br>
-				<ion-row text-wrap *ngFor="let void of void_reports">
-					<ion-col col-4>
-						<p>{{ void.class }}</p>
-					</ion-col>
-					<ion-col col-4>
-						<p>{{ void.size }}</p>
-					</ion-col>
-					<ion-col col-2>
-						<p>{{ void.type }}</p>
-					</ion-col>
-					<ion-col col-2 text-center>
-						<p>{{ void.quantity }}</p>
-					</ion-col>
-				</ion-row>
-				<br>
-
-				<p *ngIf="!void_reports.length && isBusy" text-center>No results found.</p>
-
-				<spinner [hidden]="isBusy"></spinner>
-			</ion-item-divider>
-
 
 			<div class="hr-divider">
 			  <div class="hr-line"></div>

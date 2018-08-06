@@ -19,7 +19,7 @@
 	  <ion-item *ngFor="let device of list">
 	  	{{ device.name }}
 	  	<p>{{ device.address }}</p>
-	  	<button ion-button item-end color="secondary" (tap)="connect_device(device.address,device.class)">Connect</button>
+	  	<button ion-button item-end color="secondary" (click)="connect_device(device.address,device.class)">Connect</button>
 	  </ion-item>
 	</ion-list>
 

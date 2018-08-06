@@ -51,6 +51,11 @@
 				<p text-capitalize>{{ (i+1) }}. {{ quantity.name }}</p>
 			</ion-item>
 		</ion-col>
+		<ion-col col-12 *ngIf="product.quantity.length == 0">
+			<ion-item no-lines>
+				<p text-capitalize text-center>No quantity</p>
+			</ion-item>
+		</ion-col>
 	</ion-row>
 
 </ion-content>

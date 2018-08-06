@@ -57,10 +57,11 @@ export class CartPage implements OnInit {
   cancel_edit() {
     this.cart[this.key] = JSON.parse(localStorage.getItem('cart_item'));
     this.key = null;
+    localStorage.removeItem('cart_item');
   }
 
   delete(row,i,_data) {
-    this.alert.confirm().then((response: any) => {
+    this.alert.confirm('Remove Order').then((response: any) => {
       if(response){
         this.provider.postData({ root_id : this.cart[row].id, item_id : _data.id },'cart/delete').then((res:any) => {
           if(res._data.status){
@@ -85,7 +86,7 @@ export class CartPage implements OnInit {
   }
 
   discard(row,_id) {
-    this.alert.confirm().then((response: any) => {
+    this.alert.confirm('Discard Order').then((response: any) => {
       if(response){
         this.provider.postData({ transaction : _id, status : 'cancel' },'cart/discard').then((res:any) => {
           if(res._data.status){
@@ -117,11 +118,12 @@ export class CartPage implements OnInit {
   }
 
   update(_data) {
-    this.alert.confirm().then((response:any) => {
+    this.alert.confirm('Save Changes').then((response:any) => {
       if(response){
         this.provider.postData({ data : _data },'cart/update').then((res:any) => {
           if(res._data.status){
             this.key = null;
+            localStorage.removeItem('cart_item');
           }
         });
       }
@@ -129,7 +131,7 @@ export class CartPage implements OnInit {
   }
 
   check_out(_data) {
-    this.alert.confirm().then((response:any) => {
+    this.alert.confirm('CheckOut').then((response:any) => {
       if(response){
       	this.provider.postData({ transaction : _data.id, status : 'pending' },'cart/status').then((res:any) => {
       		if(res._data.status){

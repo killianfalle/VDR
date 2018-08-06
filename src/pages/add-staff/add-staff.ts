@@ -39,7 +39,7 @@ export class AddStaffPage {
   	this.info = this.form.group({
       first_name: ['', Validators.required],
       last_name: ['', Validators.required],
-      type: ['', Validators.required],
+      user_role: ['', Validators.required],
       email: ['', Validators.required],
       password: ['', Validators.required],
       confirm_password: ['', Validators.required]

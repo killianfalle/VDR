@@ -1,8 +1,10 @@
 import { Component,
-		     OnInit } from '@angular/core';
+		     OnInit,
+         ViewChild } from '@angular/core';
 import { IonicPage, 
     		 NavController, 
-    		 NavParams } from 'ionic-angular';
+    		 NavParams,
+         InfiniteScroll } from 'ionic-angular';
 import { DataProvider } from '../../providers/data-provider';
 import { LoaderComponent } from '../../components/loader/loader';
 
@@ -20,11 +22,14 @@ import { LoaderComponent } from '../../components/loader/loader';
 })
 export class CustomerPage {
 
+  @ViewChild(InfiniteScroll) infinite: InfiniteScroll;
+
   customers: any = [];
 
   keyword: any = '';
 
-  result: any = 0;
+  offset:any = 0;
+  limit:any = 20;
 
   isBusy: any = false;
 
@@ -37,13 +42,35 @@ export class CustomerPage {
 
   ngOnInit(self = this) {
     self.isBusy = false;
-    self.provider.getData({ search : self.keyword },'customer').then((res: any) => {
+    self.provider.getData({ search : self.keyword, offset : self.offset, limit : self.limit },'customer').then((res: any) => {
         if(res._data.status){
-          self.customers = res._data.data;
-          self.result = res._data.result;
+          if(res._data.result > 0){
+            self.offset += res._data.result;
+            self.loadData(res._data.data);
+          }else {
+            self.stopInfinite(self);
+          }
         }
         self.isBusy = true;
     })
+  }
+
+  loadData(_customer) {
+    _customer.map(data => {
+      this.customers.push({ id: data.id, first_name : data.first_name, last_name : data.last_name });
+    });
+  }
+
+  doInfinite(infiniteScroll) {
+    setTimeout(() => {
+      this.ngOnInit();
+
+      infiniteScroll.complete();
+    }, 500);
+  }
+
+  stopInfinite(_self){
+    _self.infinite.enable(false);
   }
 
   navigate(page,type = null,_params = null) {
@@ -51,7 +78,7 @@ export class CustomerPage {
 
     switch (type) {
       case "add":
-        params = { self : this, callback : this.ngOnInit };
+        params = { self : this, callback : this.on_add };
         this.navCtrl.push(page, params );
         break;
       case "history":
@@ -61,16 +88,27 @@ export class CustomerPage {
       default:
         break;
     }
+  }
 
+  on_add(self = this, reload = false) {
+    if(!reload){
+      self.ngOnInit(self);
+    }else {
+      self.offset = 0;
+      self.customers = [];
+      self.ngOnInit(self);
+    }
   }
 
   reset() {
     this.keyword = '';
+    this.offset = 0;
     this.customers = [];
     this.ngOnInit();
   }
 
   search() {
+    this.offset = 0;
     this.customers = [];
     this.ngOnInit();
   }

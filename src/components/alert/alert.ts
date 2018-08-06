@@ -6,10 +6,10 @@ export class AlertComponent {
 
 	constructor(private alertCtrl: AlertController) { }
 
-	confirm(){
+	confirm(title = ''){
 		return new Promise((resolve, reject) => {
 			this.alertCtrl.create({
-			    title: '',
+			    title: title,
 			    message: 'Do you want to continue ?',
 			    buttons: [
 			      {
@@ -32,34 +32,21 @@ export class AlertComponent {
 		});
 	}
 
-	receiver(){
+	confirm_print(){
 		return new Promise((resolve, reject) => {
 			this.alertCtrl.create({
-		      title: 'Enter Receiver Name',
-		      inputs: [
-		        {
-		          name: 'received_by',
-		          placeholder: 'Receiver name'
-		        }
-		      ],
-		      buttons: [
-		        {
-		          text: 'Cancel',
-		          role: 'cancel',
-		          handler: data => {
-		            resolve(false);
-		          }
-		        },
-		        {
-		          text: 'Save',
-		          handler: data => {
-		            if(data.received_by != ''){
-		              resolve(data.received_by);
-		            }
-		          }
-		        }
-		      ],
-		      enableBackdropDismiss: false
+			    title: '',
+			    message: 'Continue to print ?',
+			    buttons: [
+			      {
+			        text: 'Continue',
+			        role: 'yes',
+			        handler: () => {
+			        	resolve(true);
+			        }
+			      }
+			    ],
+			    enableBackdropDismiss: false
 		    }).present();
 		});
 	}

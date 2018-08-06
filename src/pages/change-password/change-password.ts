@@ -23,6 +23,7 @@ export class ChangePasswordPage {
 
   profile: any;
   user: FormGroup;
+  error: any = {};
 
   constructor(
     public navCtrl: NavController, 
@@ -34,7 +35,7 @@ export class ChangePasswordPage {
     this.profile = JSON.parse(localStorage.getItem('_info'));
 
   	this.user = this.form.group({
-      current: ['', Validators.required],
+      current_password: ['', Validators.required],
       password: ['', Validators.required],
       confirm_password: ['', Validators.required]
     });
@@ -46,7 +47,12 @@ export class ChangePasswordPage {
   			console.log(this.user.value);
   			this.navCtrl.pop();
   		}
-  	});
+  	}).catch((error) => {
+      console.log(error);
+      let response = JSON.parse(error._body);
+      console.log(response);
+      this.error = response.error;
+    });
   }
 
   ionViewDidLoad() {

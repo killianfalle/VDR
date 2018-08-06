@@ -81,7 +81,7 @@
 		</div>
 
 		<div [hidden]="steps != 3">
-			<div class="hr-divider">
+			<div class="hr-divider" *ngIf="quantities.length > 0">
 			  <div class="hr-line"></div>
 			  <div class="hr-icon">
 			  	<h1>Type</h1>
@@ -164,7 +164,7 @@
 	<ion-row padding *ngIf="steps == 3">
 		<ion-col>
 			<button ion-button color="orange" block (click)="submit(); $event.stopPropagation()" 
-			[disabled]="(form.price == null || form.price == '') || (form.quantity == null || form.quantity == '') || form.qty_type.id == ''">
+			[disabled]="(form.price == null || form.price == '') || (form.quantity == null || form.quantity == '')">
 				Add to Cart
 			</button>
 		</ion-col>

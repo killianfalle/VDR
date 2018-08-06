@@ -13,17 +13,19 @@
     </ion-buttons>
   </ion-navbar>
 
+  <ion-toolbar>
+  	<form (ngSubmit)="search()">
+  		<ion-searchbar mode="md" [(ngModel)]="keyword" name="keyword" (ionClear)="reset();" placeholder="search"></ion-searchbar>
+  	</form>
+  </ion-toolbar>
+
 </ion-header>
 
 
 <ion-content>
 	
-	<form (ngSubmit)="search()">
-		<ion-searchbar mode="md" [(ngModel)]="keyword" name="keyword" (ionClear)="reset();" placeholder="search"></ion-searchbar>
-	</form>
-	
 	<ion-item>
-		<button ion-button outline icon-start padding color="orange" (tap)="navigate('AddCustomerPage','add')" item-end>
+		<button ion-button outline icon-start padding color="orange" (click)="navigate('AddCustomerPage','add')" item-end>
 			<ion-icon name="person-add"></ion-icon>
 			Add Customer
 		</button>
@@ -37,12 +39,17 @@
 		<p>No result found.</p>
 	</ion-item>
 
-	<ion-item *ngFor="let customer of customers" detail-push (tap)="navigate('CustomerTransactionPage','history',customer.id)">
+	<ion-item *ngFor="let customer of customers" detail-push (click)="navigate('CustomerTransactionPage','history',customer.id)">
 		<ion-avatar item-start>
 	      <img src="assets/imgs/avatar.png">
 	    </ion-avatar>
 		<h2 text-capitalize>{{ customer.first_name }} {{ customer.last_name }}</h2>
 	</ion-item>
 
-	<spinner [hidden]="isBusy"></spinner>
+	<spinner *ngIf="!isBusy && offset == 0"></spinner>
+
+	<ion-infinite-scroll #infinite (ionInfinite)="doInfinite($event)" threshold="100px">
+	  <ion-infinite-scroll-content>
+	  </ion-infinite-scroll-content>
+	</ion-infinite-scroll>
 </ion-content>

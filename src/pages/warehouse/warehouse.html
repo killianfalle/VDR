@@ -16,20 +16,22 @@
     </ion-buttons>
   </ion-navbar>
 
+  <ion-toolbar>
+  	<ion-segment mode="md" [(ngModel)]="tabs" color="dark" (ionChange)="get_transaction()">
+  		<ion-segment-button value="cleared">
+  			Cleared (<span ion-text color="secondary">{{ cleared_result }}</span>)
+  		</ion-segment-button>
+
+  		<ion-segment-button value="releasing">
+  			Ready for Release (<span ion-text color="secondary">{{ releasing_result }}</span>)
+  		</ion-segment-button>
+  	</ion-segment>
+  </ion-toolbar>
+
 </ion-header>
 
 
 <ion-content>
-
-	<ion-segment mode="md" [(ngModel)]="tabs" color="dark" (ionChange)="get_transaction()">
-		<ion-segment-button value="cleared">
-			Cleared 
-		</ion-segment-button>
-
-		<ion-segment-button value="releasing">
-			Ready for Release 
-		</ion-segment-button>
-	</ion-segment>
 
 	<br>
 
@@ -46,31 +48,35 @@
 		<div *ngSwitchCase="'cleared'">
 			<div *ngFor="let transaction of cleared_transactions">
 				<ion-card>
-					<ion-card-header text-capitalize>
-						<p>Owner: {{ transaction.first_name }} {{ transaction.last_name }}</p>
-						<h4>Release Date : {{ transaction.release_at | date : 'MM/dd/yy' }}</h4>
-						<p>Status : 
+					<ion-item-divider text-capitalize>
+						<h4 ion-text text-wrap>Owner: {{ transaction.first_name }} {{ transaction.last_name }}</h4>
+						<h4 ion-text text-wrap>Release Date : {{ transaction.release_at | date : 'MM/dd/yy' }}</h4>
+						<h4 ion-text text-wrap>Status : 
 							<span>
 								<ion-badge color="secondary" *ngIf="transaction.status == 'cleared'">Cleared</ion-badge>
 								<ion-badge color="danger" [hidden]="!transaction.void">Void</ion-badge>
 							</span>
-						</p>
-					</ion-card-header>
+						</h4>
+					</ion-item-divider>
 
 					<ion-list>
 						<ion-item *ngFor="let item of transaction.orders">
 							<h2 ion-text color="orange">{{ item.product }}</h2>
 							<h4 padding-left>{{ item.class }}</h4>
-							<h4 padding-left>{{ item.size }}({{ item.type }})</h4>
-							<p  padding-left>{{ item.quantity }}x&#8369;{{ item.price }}</p>
+							<p  padding-left>
+								{{ item.quantity }} x {{ item.size }}
+								<span [hidden]="!item.type">({{ item.type }})</span>
+							</p>
 						</ion-item>
 					</ion-list>
 
-					<ion-item *ngIf="transaction.void">
-						<button ion-button block clear icon-end color="orange" (click)="read_reason(transaction.void_reason)">
+					<ion-row *ngIf="transaction.void">
+						<ion-col text-center>
+							<button ion-button small clear icon-end color="orange" (click)="read_reason(transaction.void_reason)">
 							Read Void Reason
-						</button>
-					</ion-item>
+							</button>
+						</ion-col>
+					</ion-row>
 				</ion-card>
 
 				<br>
@@ -86,31 +92,39 @@
 		<div *ngSwitchCase="'releasing'">
 			<div *ngFor="let transaction of releasing_transactions">
 				<ion-card>
-					<ion-card-header  text-capitalize>
-						<h4>Owner : {{ transaction.first_name }} {{ transaction.last_name }}</h4>
-						<h4>Release Date : {{ transaction.release_at | date : 'MM/dd/yy' }}</h4>
-						<p>Status : 
+					<ion-item-divider  text-capitalize>
+						<h4 ion-text text-wrap>Printed By : {{ transaction.printed_by }}</h4>
+						<h4 ion-text text-wrap>Printed Date : {{ transaction.printed_at | date : 'MM/dd/yy' }}</h4>
+						<hr>
+						<h4 ion-text text-wrap>Owner : {{ transaction.first_name }} {{ transaction.last_name }}</h4>
+						<h4 ion-text text-wrap>Release Date : {{ transaction.release_at | date : 'MM/dd/yy' }}</h4>
+						<h4 ion-text text-wrap>Status : 
 							<span>
 								<ion-badge color="primary" *ngIf="transaction.status == 'releasing'">Ready for Release</ion-badge>
 								<ion-badge color="danger" [hidden]="!transaction.void">Void</ion-badge>
 							</span>
-						</p>
-					</ion-card-header>
+						</h4>
+					</ion-item-divider>
 
 					<ion-list>
 						<ion-item *ngFor="let item of transaction.orders">
 							<h2 ion-text color="orange">{{ item.product }}</h2>
 							<h4 padding-left>{{ item.class }}</h4>
-							<h4 padding-left>{{ item.size }}({{ item.type }})</h4>
-							<p  padding-left>{{ item.quantity }}x&#8369;{{ item.price }}</p>
+							<p  padding-left>
+								{{ item.quantity }} x {{ item.size }}
+								<span [hidden]="!item.type">({{ item.type }})</span>
+							</p>
 						</ion-item>
 					</ion-list>
 
-					<ion-item-divider>
-						<button ion-button block padding color="primary" (tap)="print(transaction);">
-							Print
-						</button>
-					</ion-item-divider>
+					<ion-row>
+						<ion-col text-center>
+							<button ion-button small clear icon-end padding color="primary" (click)="print(transaction);">
+								Release & Print
+								<ion-icon name="print"></ion-icon>
+							</button>
+						</ion-col>
+					</ion-row>
 				</ion-card>
 			</div>
 

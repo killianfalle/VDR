@@ -40,7 +40,7 @@ export class SettingsPage {
   logout() {
     this.provider.postData({ token : this.device } , 'device/unregister').then((res: any) => {
       localStorage.clear();
-  	  this.app.getRootNav().setRoot('LoginPage');
+  	  this.app.getRootNav().setRoot('LoginPage', { logout : true, email : this.profile.email });
     });
   }
 

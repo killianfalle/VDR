@@ -30,7 +30,7 @@
 		<ion-card>
 			<ion-item-divider>
 				<h3 text-capitalize>Owner: {{ items.first_name }} {{ items.last_name }}</h3>
-				<h4 ion-text color="primary" (tap)="edit(row,items)" [hidden]="key == row" item-end>Edit</h4>
+				<h4 ion-text color="primary" (click)="edit(row,items)" [hidden]="key == row" item-end>Edit</h4>
 			</ion-item-divider>
 
 			<ion-list>
@@ -40,14 +40,16 @@
 							<ion-col col-6 align-self-center>
 								<h2 ion-text color="orange">{{ data.product }}</h2>
 								<h5>{{ data.class }}</h5>
-								<h5>{{ data.size }}({{ data.type }})</h5>
+								<h5>{{ data.size }}
+									<span *ngIf="data.type != null">({{ data.type }})</span>
+								</h5>
 							</ion-col>
 
 							<ion-col text-center align-self-center col-4 padding>
 								<h3>
-									<ion-icon class="qty-icon" color="orange" name='add' *ngIf="key == row" (tap)="quantity(row,i)"></ion-icon>
+									<ion-icon class="qty-icon" color="orange" name='add' *ngIf="key == row" (click)="quantity(row,i)"></ion-icon>
 									<span>{{ data.quantity }}</span>
-									<ion-icon class="qty-icon" color="orange" name='remove' *ngIf="key == row" (tap)="quantity(row,i,false)"></ion-icon>
+									<ion-icon class="qty-icon" color="orange" name='remove' *ngIf="key == row" (click)="quantity(row,i,false)"></ion-icon>
 								</h3>
 							</ion-col>
 
@@ -58,7 +60,7 @@
 					</ion-item>
 
 					<ion-item-options side="right">
-				      <button ion-button icon-only color="danger" (tap)="delete(row,i,data)">
+				      <button ion-button icon-only color="danger" (click)="delete(row,i,data)">
 				      	<ion-icon name="trash"></ion-icon>
 				      </button>
 				    </ion-item-options>
@@ -66,19 +68,19 @@
 			</ion-list>
 
 			<ion-card-content>
-				<h4 ion-text color="danger" text-right>Total : P{{ items.total_payment }}</h4>
+				<h4 ion-text color="danger" text-right>Total : &#8369;{{ items.total_payment }}</h4>
 			</ion-card-content>
 		</ion-card>
 
 		<ion-row *ngIf="key == row">
 			<ion-col>
-				<button ion-button outline block color="danger" (tap)="cancel_edit();">
+				<button ion-button outline block color="danger" (click)="cancel_edit();">
 					Cancel
 				</button>
 			</ion-col>
 			&nbsp;
 			<ion-col>
-				<button ion-button outline block color="orange" (tap)="update(items);">
+				<button ion-button outline block color="orange" (click)="update(items);">
 					Save
 				</button>
 			</ion-col>
@@ -86,13 +88,13 @@
 
 		<ion-row [hidden]="key == row">
 			<ion-col>
-				<button  ion-button outline block color="danger" (tap)="discard(row,items.id);">
+				<button  ion-button outline block color="danger" (click)="discard(row,items.id);">
 					Discard
 				</button>
 			</ion-col>
 			&nbsp;
 			<ion-col>
-				<button  ion-button outline block color="orange" (tap)="check_out(items);">
+				<button  ion-button outline block color="orange" (click)="check_out(items);">
 					CheckOut
 				</button>
 			</ion-col>

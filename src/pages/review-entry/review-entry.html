@@ -7,7 +7,7 @@
 <ion-header>
 
   <ion-navbar color="orange">
-    <ion-title>Review</ion-title>
+    <ion-title>Review Order</ion-title>
     <ion-buttons end>
       <cart></cart>
     </ion-buttons>
@@ -18,9 +18,10 @@
 
 <ion-content padding>
 
-	<div class="company" text-center>
-		<h4>Vista del rio</h4>
-		<p>Carmen Cagayan de Oro City</p>
+	<div class="customer">
+		<h5 ion-text color="orange" text-capitalize>Name : 
+			<span ion-text color="dark">{{ customer.first_name }} {{ customer.last_name }}</span>
+		</h5>
 	</div>
 
 	<br>
@@ -28,7 +29,9 @@
 	<div margin-top text-wrap>
 		<h4 ion-text color="orange">{{ data.name }}</h4>
 		<h5 padding-left>{{ data.class.name }}</h5>
-		<h5 padding-left>{{ data.size.name }}({{ data.qty_type.name }})</h5>
+		<h5 padding-left>{{ data.size.name }}
+			<span [hidden]="!data.qty_type.name">({{ data.qty_type.name }})</span>
+		</h5>
 		<h6  padding-left>{{ data.quantity }}x&#8369;{{ data.price }}</h6>
 	</div>
 

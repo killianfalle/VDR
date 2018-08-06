@@ -12,7 +12,7 @@
 
 <ion-content>
 
-  <ion-card (tap)="navigate('CustomerEntryPage')">
+  <ion-card (click)="navigate('CustomerEntryPage')">
     <ion-row text-center margin-top>
       <ion-col>
         <ion-icon color="amber" name="add-circle"></ion-icon>
@@ -25,7 +25,7 @@
     </ion-row>
   </ion-card>
 
-  <ion-card (tap)="navigate('ProductPage')" *ngIf="profile.type == 'admin'">
+  <ion-card (click)="navigate('ProductPage')" *ngIf="profile.type == 'admin'">
     <ion-row text-center margin-top>
       <ion-col>
         <ion-icon color="amber" name="cube"></ion-icon>
@@ -38,7 +38,7 @@
     </ion-row>
   </ion-card>
 
-  <ion-card (tap)="navigate('CustomerPage')">
+  <ion-card (click)="navigate('CustomerPage')">
     <ion-row text-center margin-top>
       <ion-col>
         <ion-icon color="amber" name="person"></ion-icon>
@@ -51,7 +51,7 @@
     </ion-row>
   </ion-card>
 
-  <ion-card (tap)="navigate('TransactionPage')">
+  <ion-card (click)="navigate('TransactionPage')">
     <ion-row text-center margin-top>
       <ion-col>
         <ion-icon color="amber" name="filing"></ion-icon>
@@ -64,7 +64,7 @@
     </ion-row>
   </ion-card>
 
-  <ion-card (tap)="navigate('ReportPage')">
+  <ion-card (click)="navigate('ReportPage')">
     <ion-row text-center margin-top>
       <ion-col>
         <ion-icon color="amber" name="list-box"></ion-icon>

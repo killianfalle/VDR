@@ -25,15 +25,16 @@ import moment from 'moment';
 })
 export class ReportPage implements OnInit {
 
-  report_tab: any = 'daily-report';
+  report_tab: any = 'csv-report';
 
   reports:any = [];  
-  void_reports:any = [];  
   release_reports:any = [];  
   products:any = [];  
 
   selected_product: any = '';
-  daily_report_date: any = moment().format('YYYY-MM-DD');
+  daily_report_from: any = moment().format('YYYY-MM-DD');
+  daily_report_to: any = moment().format('YYYY-MM-DD');
+
   sales_report_date: any = moment().format('YYYY-MM-DD');
 
   isBusy: any = false;
@@ -42,7 +43,7 @@ export class ReportPage implements OnInit {
     fieldSeparator: ',',
     quoteStrings: '"',
     decimalseparator: '.',
-    headers: ['Order #','First Name','Last Name','Release Date','Product','Class','Size','Qty_Type','Qty','Price','Total'],
+    headers: ['Order #','First Name','Last Name','Void','Product','Class','Size','Qty_Type','Qty','Price','Total','Release Date'],
     showTitle: false,
     useBom: true,
     removeNewLines: false
@@ -61,11 +62,9 @@ export class ReportPage implements OnInit {
 
   ngOnInit() {
     switch (this.report_tab) {
-      case "sales-report":
-        this.void_reports = [];
+      case "daily-report":
         this.release_reports = [];
         this.isBusy = false;
-        this.void();
         this.release();
         break;
       default:
@@ -83,40 +82,35 @@ export class ReportPage implements OnInit {
   }
 
   async show_product(){
-    if(this.reports.length > 0){
+    let product = this.alertCtrl.create();
 
-      let product = this.alertCtrl.create();
+    product.setTitle('Select Product');
 
-      product.setTitle('Select Product');
-
-      product.addButton('Cancel');
-      product.addButton({
-        text: 'OK',
-        handler: data => {
-          if(data != undefined){
-            this.export(data);
-          }
+    product.addButton('Cancel');
+    product.addButton({
+      text: 'OK',
+      handler: data => {
+        if(data != undefined){
+          this.export(data);
         }
-      });
-
-      for(let index = 0;index < this.products.length;index++){
-          await product.addInput({
-            type: 'radio',
-            label: this.products[index].name,
-            value: this.products[index].id,
-            checked: false
-          });
       }
+    });
 
-      product.present();
-    }else {
-      this.alert.show_dialog('','Can\'t export data. No result found.');
+    for(let index = 0;index < this.products.length;index++){
+        await product.addInput({
+          type: 'radio',
+          label: this.products[index].name,
+          value: this.products[index].id,
+          checked: false
+        });
     }
+
+    product.present();
   }
 
   get_daily_report() {
     this.isBusy = false;
-    this.provider.getData({ product : this.selected_product, date : this.daily_report_date },'report').then((res: any) => {
+    this.provider.getData({ product : this.selected_product, from : this.daily_report_from, to : this.daily_report_to },'report').then((res: any) => {
       if(res._data.status){
         this.reports = res._data.data;
       }
@@ -126,7 +120,7 @@ export class ReportPage implements OnInit {
 
   export(_product) {
     this.isBusy = false;
-    this.provider.getData({ product : _product, date : this.daily_report_date },'report/export').then((res: any) => {
+    this.provider.getData({ product : _product, from : this.daily_report_from, to : this.daily_report_to },'report/export').then((res: any) => {
       if(res._data.status){
        this.generate(res._data.data);
       }
@@ -137,15 +131,7 @@ export class ReportPage implements OnInit {
   generate(_data){
     new Angular2Csv(_data,'Report', this.options);
   }
-
-  void() {
-    this.provider.getData({ product : this.selected_product, date : this.sales_report_date, status : 'void' },'report/void').then((res:any) => {
-      if(res._data.status){
-        this.void_reports = res._data.data;
-      }
-    });
-  }
-
+  
   release() {
     this.provider.getData({ product : this.selected_product, date : this.sales_report_date, status : 'cleared' },'report/release').then((res:any) => {
       if(res._data.status){
@@ -173,33 +159,10 @@ export class ReportPage implements OnInit {
 
   verify_connectivity(type) {
     this.printer.connectivity().then((res: any) => {
-      switch (type) {
-        case "void":
-          this.print_void();
-          break;
-        default:
-          this.print_release();
-          break;
-      }
+      this.print_release();
     }).catch((err) => {
       this.navCtrl.push('BluetoothPage');
     });
-  }
-
-  async print_void(){
-    let separator = '-------------------------------';
-    let header = '';
-    let item = '';
-
-    for(let counter = 0;counter < this.void_reports.length;counter++){
-      item += `\n`+
-              this.void_reports[counter].class +`\n`+
-              this.void_reports[counter].quantity+` x `+this.void_reports[counter].size +` (`+this.void_reports[counter].type+`)\n`;
-    }
-
-    header = '        Vista del rio \n Carmen, Cagayan de Oro City';
-
-    await this.printer.onWrite(header+'\n'+separator+'\nDaily Report (Void)\nDate: '+moment(this.sales_report_date).format("MM/DD/YYYY")+'\n'+separator+'\n'+item+'\n'+separator+'\n\n\n');
   }
 
   async print_release(){

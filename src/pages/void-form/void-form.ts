@@ -30,7 +30,7 @@ export class VoidFormPage {
 
   save() {
   	if(this.reason != null){
-  		this.alert.confirm().then((response:any) => {
+  		this.alert.confirm('Set Void').then((response:any) => {
   			if(response){
   				this.dismiss(this.reason);
   			}else {

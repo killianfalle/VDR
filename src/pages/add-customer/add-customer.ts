@@ -49,7 +49,7 @@ export class AddCustomerPage {
     this.provider.postData(this.customer.value,'customer/register').then((res: any) => {
       if(res._data.status){
         console.log(res._data.message);
-        this._callback(this.origin);
+        this._callback(this.origin,true);
         this.navCtrl.pop();
       }
     }).catch((error) => {

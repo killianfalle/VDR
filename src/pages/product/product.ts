@@ -21,7 +21,7 @@ export class ProductPage {
 
   products: any = [];
 
-  keyword: any = null;
+  keyword: any = '';
 
   result: any = 0;
 
@@ -55,7 +55,7 @@ export class ProductPage {
   }
 
   reset() {
-    this.keyword = null;
+    this.keyword = '';
     this.products = [];
     this.ngOnInit();
   }

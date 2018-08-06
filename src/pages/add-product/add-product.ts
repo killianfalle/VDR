@@ -33,7 +33,7 @@ export class AddProductPage {
 
   initForm() {
   	this.product = {
-      name: null,
+      product: null,
       classes: [{name : '' , size : [{name: ''}]}],
       quantities: [{name : ''}],
     };
@@ -83,8 +83,8 @@ export class AddProductPage {
   			this.navCtrl.pop();
   		}
   	}).catch((error) => {
-      console.log(JSON.parse(error._body).error.name);
-      this.error = JSON.parse(error._body).error.name;
+      console.log(JSON.parse(error._body).error.product);
+      this.error = JSON.parse(error._body).error.product;
     });
   }
 

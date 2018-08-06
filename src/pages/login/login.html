@@ -17,7 +17,7 @@
 	        <ion-label>
 	        	<ion-icon name="person"></ion-icon>
 	        </ion-label>
-	        <ion-input type="text" placeholder="email" formControlName="email"></ion-input>
+	        <ion-input type="text" placeholder="email" formControlName="email" (ionChange)="checkRememberUser()" autocomplete="on"></ion-input>
 	      </ion-item>
 
 	      <br>
@@ -33,7 +33,7 @@
 
 	      <ion-item class="remember-me" no-lines>
 	      	<ion-label>Remember me</ion-label>
-	      	<ion-checkbox color="yellow"></ion-checkbox>
+	      	<ion-checkbox formControlName="remember" color="yellow"></ion-checkbox>
 	      </ion-item>
 
 	      <br>

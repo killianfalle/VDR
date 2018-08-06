@@ -1,12 +1,15 @@
-import { Component } from '@angular/core';
+import { Component,
+         ViewChild } from '@angular/core';
 import { IonicPage,
          NavController, 
          ModalController, 
          NavParams,
-         Events } from 'ionic-angular';
+         Events,
+         InfiniteScroll } from 'ionic-angular';
 import { DataProvider } from '../../providers/data-provider';
 import { LoaderComponent } from '../../components/loader/loader';
 import { AlertComponent } from '../../components/alert/alert';
+import { PrinterProvider } from '../../providers/printer';
 import { Socket } from 'ng-socket-io';
 import { Observable } from 'rxjs/Observable';
 import moment from 'moment';
@@ -25,12 +28,23 @@ import moment from 'moment';
 })
 export class TransactionPage {
 
+  @ViewChild(InfiniteScroll) infinite: InfiniteScroll;
+
   tabs: any = 'cleared';
   search_date: any = moment().format('YYYY-MM-DD');
 
   cleared_transactions: any = [];
   releasing_transactions: any = [];
   pending_transactions: any = [];
+
+  cleared_result = 0;
+  releasing_result = 0;
+  pending_result = 0;
+
+  offset:any = 0;
+  limit:any = 10;
+
+  keyword:any = '';
 
   isBusy:any = false;
 
@@ -42,22 +56,30 @@ export class TransactionPage {
     public alert: AlertComponent,
     private provider: DataProvider,
     private event: Events,
+    private printer: PrinterProvider,
     private socket: Socket) {
   	this.get_transaction();
 
     this.add_pending_transaction().subscribe((_data) => {
-      this.pending_transactions.push(_data);
+      this.pending_result += 1;
+      if(this.keyword == ''){
+        this.pending_transactions.push(_data);
+      }
     });
 
     this.remove_pending_transaction().subscribe((_data) => {
       let index = this.pending_transactions.map(obj => obj.id).indexOf(_data);
       if(index > -1){
         this.pending_transactions.splice(index, 1);
+        this.pending_result -= 1;
       }  
     });
 
-    this.add_releasing_transaction().subscribe((_data) => {
-      this.releasing_transactions.push(_data);
+    this.add_releasing_transaction().subscribe((_data:any) => {
+      this.releasing_result += 1;
+      if(this.search_date == _data.release_at){
+        this.releasing_transactions.push(_data);
+      }
     });
 
     this.set_void_releasing_transaction().subscribe((_data:any) => {
@@ -72,11 +94,15 @@ export class TransactionPage {
       let index = this.releasing_transactions.map(obj => obj.id).indexOf(_data);
       if(index > -1){
         this.releasing_transactions.splice(index, 1);
+        this.releasing_result -= 1;
       }  
     });
 
-    this.add_cleared_transaction().subscribe((_data) => {
-      this.cleared_transactions.push(_data);
+    this.add_cleared_transaction().subscribe((_data:any) => {
+      this.cleared_result += 1;
+      if(this.search_date == _data.release_at){
+        this.cleared_transactions.push(_data);
+      }
     });
 
     this.set_void_cleared_transaction().subscribe((_data:any) => {
@@ -89,44 +115,72 @@ export class TransactionPage {
 
     this.event.subscribe('transaction:release', (_data,date) => {
       this.provider.postData(_data,'notification/transaction-release').then((res:any) => {
-        _data.status = 'releasing';
-        _data.release_at = date;
-        let params = { data : _data, type : 'add-releasing-transaction' };
-        this.socket.emit('transaction', { text: params });
+        console.log(res);
       });
     });
   }
 
   get_transaction() {
     switch (this.tabs) {
-      case "pending":
+      case "cleared":
+        this.offset = 0;
         this.pending_transactions = [];
+        this.cleared_transactions = [];
         break;
       case "releasing":
+        this.offset = 0;
+        this.pending_transactions = [];
         this.releasing_transactions = [];
         break;
       default:
-        this.cleared_transactions = [];
         break;
     }
     
     this.isBusy = false;
 
-    this.provider.getData({ status : this.tabs , date : this.search_date },'transaction').then((res: any) => {
-      if(res._data.status)
+    this.provider.getData({ status : this.tabs , date : this.search_date, search: this.keyword, offset : this.offset, limit : this.limit },'transaction').then((res: any) => {
+      if(res._data.status){
         switch (this.tabs) {
           case "pending":
-            this.pending_transactions = res._data.data;
+            if(res._data.status){
+              if(res._data.result > 0){
+                this.offset += res._data.result;
+                this.loadData(res._data.data);
+              }else {
+                this.stopInfinite();
+              }
+            }
             break;
           case "releasing":
             this.releasing_transactions = res._data.data;
+            this.releasing_result = res._data.result;
             break;
           default:
             this.cleared_transactions = res._data.data;
+            this.cleared_result = res._data.result;
             break;
         }
+      }
       this.isBusy = true;
     });
+  }
+
+  loadData(_transaction) {
+    _transaction.map(data => {
+      this.pending_transactions.push(data);
+    });
+  }
+
+  doInfinite(infiniteScroll) {
+    setTimeout(() => {
+      this.get_transaction();
+
+      infiniteScroll.complete();
+    }, 500);
+  }
+
+  stopInfinite(){
+    this.infinite.enable(false);
   }
 
   add_cleared_transaction() {
@@ -203,18 +257,27 @@ export class TransactionPage {
   releasing_transaction(_data,date,self) {
     self.provider.postData({ transaction : _data, date : date , status : 'releasing' },'transaction/status').then((res:any) => {
       if(res._data.status){
-        let params = { data : _data.id, type : 'remove-pending-transaction' };
-        self.socket.emit('transaction', { text: params });
-
+        self.remove_pending(_data,date,self);
+        self.add_releasing(_data,date,self);
         self.event.publish('transaction:release', _data, date);
       }
     })
   }
 
+  remove_pending(_data,date,self){
+    let params = { data : _data.id, type : 'remove-pending-transaction' };
+    self.socket.emit('transaction', { text: params });
+  }
+
+  add_releasing(_data,date,self){
+    _data.status = 'releasing';
+    _data.release_at = date;
+    let params = { data : _data, type : 'add-releasing-transaction' };
+    self.socket.emit('transaction', { text: params });
+  }
+
   void_transaction(id,type = 'cleared') {
-    let void_form = this.modalCtrl.create('VoidFormPage',{},{
-      enterAnimation : 'modal-md-slide-in'
-    });
+    let void_form = this.modalCtrl.create('VoidFormPage',{});
 
     void_form.onDidDismiss(data => {
      if(data != null){
@@ -243,7 +306,7 @@ export class TransactionPage {
   }
 
   cancel_transaction(_data) {
-    this.alert.confirm().then((response: any) => {
+    this.alert.confirm('Cancel Transaction').then((response: any) => {
       if(response){
         this.provider.postData({ transaction : _data, status : 'cancel' },'transaction/status').then((res:any) => {
           if(res._data.status){
@@ -256,7 +319,7 @@ export class TransactionPage {
   }
 
   edit_transaction(row,_data) {
-    this.alert.confirm().then((response: any) => {
+    this.alert.confirm('Edit Transaction').then((response: any) => {
       if(response){
         this.provider.postData({ transaction : _data, status : 'in_cart' },'transaction/status').then((res:any) => {
           if(res._data.status){
@@ -268,11 +331,60 @@ export class TransactionPage {
 
             let params = { data : _data.id, type : 'remove-pending-transaction' };
             this.socket.emit('transaction', { text: params });
-            this.event.publish('notification:badge');
+            this.event.publish('notification:badge','increment');
           }
         });
       }
     });
+  }
+
+  reprint(_data){
+    let separator = '-------------------------------\n';
+    let header = '';
+    let item = '';
+
+    for(let counter = 0;counter < _data.orders.length;counter++){
+      item += _data.orders[counter].class +'\n'+_data.orders[counter].size; 
+
+      if(_data.orders[counter].type == null){
+        item += ' / '+_data.orders[counter].quantity +'xP'+_data.orders[counter].price+'\n';
+      }else{
+        item += '('+_data.orders[counter].type+') / '+_data.orders[counter].quantity +'xP'+_data.orders[counter].price+'\n';
+      }
+
+      if((counter+1) < _data.orders.length){
+        item += '\n';
+      }
+    }
+
+    header = '        Vista del rio \n Carmen, Cagayan de Oro City';
+
+    let content = header+'\n'+separator+'Order#: '+_data.order_id+'\nPrinted by: '+_data.printed_by+'\nPrinted on: '+_data.printed_at+'\n'+separator+'Owner: '+_data.first_name+'  '+_data.last_name+'\nRelease: '+moment(_data.release_at).format("MM/DD/YYYY")+'\n'+separator+item+separator+'Total : P'+_data.total_payment+'\n\n\n';
+
+    this.print_for_release(content);
+
+    this.alert.confirm_print().then((res:any) => {
+      if(res){
+        this.print_for_release(content);
+      }
+    })
+  }
+
+  async print_for_release(_data) {
+    await this.printer.onWrite(_data);
+  }
+
+  reset() {
+    this.keyword = '';
+    this.offset = 0;
+    this.pending_transactions = [];
+    this.get_transaction();
+  }
+
+  search() {
+    this.offset = 0;
+    this.pending_transactions = [];
+    this.get_transaction();
   }
 
   read_reason(msg) {
@@ -285,6 +397,16 @@ export class TransactionPage {
 
   ionViewDidEnter() {
     this.loader.hide_loader();
+  }
+
+  ionViewCanEnter() {
+    this.provider.getData({ date : this.search_date },'transaction/badge').then((res:any) => {
+      if(res._data.status){
+        this.cleared_result = res._data.result.cleared;
+        this.releasing_result = res._data.result.releasing;
+        this.pending_result = res._data.result.pending;
+      }
+    })
   }
 
 }

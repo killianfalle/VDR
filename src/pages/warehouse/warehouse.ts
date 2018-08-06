@@ -31,6 +31,9 @@ export class WarehousePage {
   releasing_transactions: any = [];
   cleared_transactions: any = [];
 
+  releasing_result: any = 0;
+  cleared_result: any = 0;
+
   isBusy:any = false;
 
   constructor(
@@ -45,8 +48,11 @@ export class WarehousePage {
 
     this.get_transaction();
 
-    this.add_releasing_transaction().subscribe((_data) => {
-      this.releasing_transactions.push(_data);
+    this.add_releasing_transaction().subscribe((_data:any) => {
+      this.releasing_result += 1;
+      if(this.search_date == _data.release_at){
+        this.releasing_transactions.push(_data);
+      }
     });
 
     this.set_void_releasing_transaction().subscribe((_data:any) => {
@@ -67,11 +73,15 @@ export class WarehousePage {
       let index = this.releasing_transactions.map(obj => obj.id).indexOf(_data);
       if(index > -1){
         this.releasing_transactions.splice(index, 1);
+        this.releasing_result -= 1;
       }  
     });
 
-    this.add_cleared_transaction().subscribe((_data) => {
-      this.cleared_transactions.push(_data);
+    this.add_cleared_transaction().subscribe((_data:any) => {
+      this.cleared_result += 1;
+      if(this.search_date == _data.release_at){
+        this.cleared_transactions.push(_data);
+      }
     });
   }
 
@@ -93,9 +103,11 @@ export class WarehousePage {
         switch (this.tabs) {
           case "releasing":
             this.releasing_transactions = res._data.data;
+            this.releasing_result = res._data.result;
             break;
           default:
             this.cleared_transactions = res._data.data;
+            this.cleared_result = res._data.result;
             break;
         }
       this.isBusy = true;
@@ -114,7 +126,7 @@ export class WarehousePage {
   set_void_releasing_transaction() {
     let observable = new Observable(observer => {
       this.socket.on('set-void-releasing-transaction', (data) => {
-        observer.next(data.data);
+        observer.next({id : data.data, reason : data.reason});
       });
     })
     return observable;
@@ -161,20 +173,11 @@ export class WarehousePage {
   }
 
   print(_data){
-    if(this.receiver == null || this.receiver == false){
-      this.alert.receiver().then((res:any) => {
-        if(res != null && res != false){
-          this.receiver = res;
-          _data.released_by = this.profile.first_name+' '+this.profile.last_name;
-          _data.received_by = this.receiver;
-          this.do_print(_data);
-        }
-      });
-    }else {
-      _data.released_by = this.profile.first_name+' '+this.profile.last_name;
-      _data.received_by = this.receiver;
-      this.do_print(_data);
-    }
+    this.alert.confirm('Release & Print').then((res:any) => {
+      if(res){
+        this.do_print(_data);
+      }
+    });
   }
 
   do_print(_data){
@@ -202,25 +205,44 @@ export class WarehousePage {
   }
 
   async ready_print(_data){
-    let separator = '-------------------------------';
+    console.log(_data);
+    let separator = '-------------------------------\n';
     let header = '';
     let item = '';
 
     for(let counter = 0;counter < _data.orders.length;counter++){
-      item += `\n`+
-              _data.orders[counter].class +`\n`+
-              _data.orders[counter].quantity +` x ` +_data.orders[counter].size +` (`+_data.orders[counter].type+`)\n`;
+      item += _data.orders[counter].class +'\n'+ _data.orders[counter].quantity;
+
+      if (_data.orders[counter].type != null) {
+       item += ' x ' +_data.orders[counter].size +'('+_data.orders[counter].type+') \n';
+      }else {
+        item += ' x ' +_data.orders[counter].size+'\n';
+      }
+
+      if((counter+1) < _data.orders.length){
+        item += '\n';
+      }
     }
 
     header = '        Vista del rio \n       Zayas Warehouse,\n     Cagayan de Oro City';
 
-    await this.printer.onWrite(header+'\n'+ separator +'\nOrder#: '+ _data.order_id +'\nReleased by: '+_data.released_by+'\nReceived by: '+_data.received_by+'\n'+ separator +'\nOwner: '+_data.first_name+' '+_data.last_name+'\nRelease: '+moment(_data.release_at).format("MM/DD/YYYY")+'\n-------------------------------\n'+item+'\n-------------------------------\n\n\n');
-
+    let content = header+'\n'+ separator +'Order#: '+ _data.order_id +'\nReleased by: '+this.profile.first_name+' '+this.profile.last_name+'\n'+ separator +'Owner: '+_data.first_name+' '+_data.last_name+'\nRelease: '+moment(_data.release_at).format("MM/DD/YYYY")+'\n'+separator+item+separator+'\nReleased by:___________________\nReceived by:___________________\n\n\n\n';
+    
+    await this.printer.onWrite(content);
     this.cleared_transaction(_data);
   }
 
   read_reason(msg) {
     this.alert.show_dialog('Reason',msg);
+  }
+
+  ionViewCanEnter() {
+    this.provider.getData({ date : this.search_date },'transaction/badge').then((res:any) => {
+      if(res._data.status){
+        this.cleared_result = res._data.result.cleared;
+        this.releasing_result = res._data.result.releasing;
+      }
+    })
   }
 
   ionViewDidLoad() {
