@@ -5,7 +5,6 @@ import { IonicPage,
          NavParams,
          AlertController } from 'ionic-angular';
 import { DataProvider } from '../../providers/data-provider';
-import { Angular2Csv } from 'angular2-csv/Angular2-csv';
 import { LoaderComponent } from '../../components/loader/loader';
 import { AlertComponent } from '../../components/alert/alert';
 import { PrinterProvider } from '../../providers/printer';
@@ -38,16 +37,6 @@ export class ReportPage implements OnInit {
   sales_report_date: any = moment().format('YYYY-MM-DD');
 
   isBusy: any = false;
-
-  public options = { 
-    fieldSeparator: ',',
-    quoteStrings: '"',
-    decimalseparator: '.',
-    headers: ['Order #','First Name','Last Name','Void','Product','Class','Size','Qty_Type','Qty','Price','Total','Release Date'],
-    showTitle: false,
-    useBom: true,
-    removeNewLines: false
-  };
 
   constructor(
     public navCtrl: NavController, 
@@ -129,7 +118,6 @@ export class ReportPage implements OnInit {
   }
 
   generate(_data){
-    new Angular2Csv(_data,'Report', this.options);
   }
   
   release() {

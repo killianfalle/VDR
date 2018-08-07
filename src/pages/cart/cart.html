@@ -14,10 +14,7 @@
 
 <ion-content>
 
-	<div text-center>
-		<h4>Vista del rio</h4>
-		<p>Carmen, Cagayan de Oro City</p>
-	</div>
+	<br>
 
 	<div *ngIf="cart.length == 0 && isBusy">
 		<hr>
@@ -95,7 +92,7 @@
 			&nbsp;
 			<ion-col>
 				<button  ion-button outline block color="orange" (click)="check_out(items);">
-					CheckOut
+					Checkout
 				</button>
 			</ion-col>
 		</ion-row>

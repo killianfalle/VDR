@@ -7,6 +7,7 @@ import { Validators,
          FormGroup } from '@angular/forms';
 import { DataProvider } from '../../providers/data-provider';
 import { LoaderComponent } from '../../components/loader/loader';
+import { ToastComponent } from '../../components/toast/toast';
 /**
  * Generated class for the AddCustomerPage page.
  *
@@ -30,6 +31,7 @@ export class AddCustomerPage {
   	public navCtrl: NavController, 
   	public navParams: NavParams,
     public loader: LoaderComponent,
+    public toast: ToastComponent,
   	private provider: DataProvider,
     private form: FormBuilder) {
 
@@ -49,6 +51,7 @@ export class AddCustomerPage {
     this.provider.postData(this.customer.value,'customer/register').then((res: any) => {
       if(res._data.status){
         console.log(res._data.message);
+        this.toast.presentToast(res._data.message);
         this._callback(this.origin,true);
         this.navCtrl.pop();
       }

@@ -78,7 +78,7 @@
 
 					<ion-row>
 						<ion-col text-center>
-							<button ion-button [hidden]="transaction.void" small clear icon-end color="orange" (click)="void_transaction(transaction.id,'cleared');">
+							<button ion-button [hidden]="transaction.void" small clear icon-end color="danger" (click)="void_transaction(transaction.id,'cleared');">
 								Set Void
 								<ion-icon name="alert"></ion-icon>
 							</button>
@@ -140,11 +140,11 @@
 
 					<ion-row>
 						<ion-col text-center>
-							<button [hidden]="transaction.void" small clear ion-button icon-end color="orange" (click)="void_transaction(transaction.id,'releasing');" item-start>
+							<button [hidden]="transaction.void" small clear ion-button icon-end color="danger" (click)="void_transaction(transaction.id,'releasing');" item-start>
 								Set Void
 								<ion-icon name="alert"></ion-icon>
 							</button>
-							<button *ngIf="transaction.void" small clear ion-button icon-end color="dark" (click)="read_reason(transaction.void_reason)">
+							<button *ngIf="transaction.void" small clear ion-button icon-end color="orange" (click)="read_reason(transaction.void_reason)">
 								Read Reason
 							</button>
 						</ion-col>
@@ -180,7 +180,7 @@
 					<ion-item-divider  text-capitalize>
 						<h4>Owner: {{ transaction.first_name }} {{ transaction.last_name }}</h4>
 						<h4>Order #: {{ transaction.order_id }}</h4>
-						<button ion-button clear item-end (click)="edit_transaction(row,transaction)">Edit</button>
+						<button ion-button clear item-end (click)="edit_transaction(row,transaction)" [hidden]="profile.id != transaction.transacted_by">Edit</button>
 						<button ion-button clear item-end color="danger" (click)="cancel_transaction(transaction)">Cancel</button>
 					</ion-item-divider>
 

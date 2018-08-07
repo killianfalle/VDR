@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { DataProvider } from '../../providers/data-provider';
 import { LoaderComponent } from '../../components/loader/loader';
+import { ToastComponent } from '../../components/toast/toast';
 
 /**
  * Generated class for the AddProductPage page.
@@ -25,6 +26,7 @@ export class AddProductPage {
   	public navCtrl: NavController, 
   	public navParams: NavParams,
     public loader: LoaderComponent,
+    public toast: ToastComponent,
   	public provider: DataProvider
   ) {
     this._callback = navParams.get('callback');
@@ -78,7 +80,7 @@ export class AddProductPage {
   submit() {
   	this.provider.postData(this.product,'product/add').then((res: any) => {
   		if(res._data.status){
-  			console.log(res._data.message);
+        this.toast.presentToast(res._data.message);
         this._callback(this.navParams.get('self'));
   			this.navCtrl.pop();
   		}

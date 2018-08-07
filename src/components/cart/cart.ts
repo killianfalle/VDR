@@ -16,7 +16,7 @@ import { DataProvider } from '../../providers/data-provider';
 })
 export class CartComponent implements OnInit {
 
-  badge: any = 0;
+  badge: any;
 
   constructor(
   	private navCtrl: NavController,
@@ -41,10 +41,16 @@ export class CartComponent implements OnInit {
   }
 
   ngOnInit() {
-    if(localStorage.getItem('badge') != null)
+    if(localStorage.getItem('badge') != null){
 		  this.badge = localStorage.getItem('badge');
-    else
+    }else if(this.badge == undefined){
+      this.provider.getData('','notification/badge').then((res:any) => {
+        localStorage.setItem('badge',res._data.result);
+        this.badge = parseInt(res._data.result); 
+      })
+    }else{
       this.badge = 0;
+    }
   }
 
   show_cart() {

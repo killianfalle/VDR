@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { LoaderComponent } from '../../components/loader/loader';
 import { AlertComponent } from '../../components/alert/alert';
+import { ToastComponent } from '../../components/toast/toast';
 import { DataProvider } from '../../providers/data-provider';
 import { PrinterProvider } from '../../providers/printer';
 import { Socket } from 'ng-socket-io';
@@ -41,6 +42,7 @@ export class WarehousePage {
     public navParams: NavParams,
     public loader: LoaderComponent,
     public alert: AlertComponent,
+    public toast: ToastComponent,
     private provider: DataProvider,
     private printer: PrinterProvider,
     private socket: Socket) {
@@ -70,10 +72,10 @@ export class WarehousePage {
     });
 
     this.remove_releasing_transaction().subscribe((_data) => {
+      this.releasing_result -= 1;
       let index = this.releasing_transactions.map(obj => obj.id).indexOf(_data);
       if(index > -1){
         this.releasing_transactions.splice(index, 1);
-        this.releasing_result -= 1;
       }  
     });
 
@@ -168,44 +170,49 @@ export class WarehousePage {
         _data.status = 'cleared';
         params = { data : _data, type : 'add-cleared-transaction' };
         this.socket.emit('transaction', { text: params });
+
+        this.toast.presentToast('Successfully released transaction');
       }
     })
   }
 
-  print(_data){
-    this.alert.confirm('Release & Print').then((res:any) => {
+  print(title,_data,reprint = false){
+    this.alert.confirm(title).then((res:any) => {
       if(res){
-        this.do_print(_data);
+        this.do_print(_data,reprint);
       }
     });
   }
 
-  do_print(_data){
+  do_print(_data,_reprint){
     this.printer.is_enabled().then((res: any) => {
-      this.verify_connectivity(_data);
+      this.verify_connectivity(_data,_reprint);
     }).catch((err) => {
-      this.enable_blueetooth(_data);
+      this.enable_blueetooth(_data,_reprint);
     });
   }
 
-  enable_blueetooth(_data) {
+  enable_blueetooth(_data,_reprint) {
     this.printer.set_enable().then((res:any) => {
-      this.verify_connectivity(_data);
+      this.verify_connectivity(_data,_reprint);
     }).catch((err) => {
-      this.enable_blueetooth(_data);
+      this.enable_blueetooth(_data,_reprint);
     });
   }
 
-  verify_connectivity(_data) {
+  verify_connectivity(_data,_reprint) {
     this.printer.connectivity().then((res: any) => {
-      this.ready_print(_data);
+      if(!_reprint){
+        this.ready_print(_data);
+      }else{
+        this.reprint(_data);
+      }
     }).catch((err) => {
       this.navCtrl.push('BluetoothPage');
     });
   }
 
   async ready_print(_data){
-    console.log(_data);
     let separator = '-------------------------------\n';
     let header = '';
     let item = '';
@@ -230,6 +237,32 @@ export class WarehousePage {
     
     await this.printer.onWrite(content);
     this.cleared_transaction(_data);
+  }
+
+  async reprint(_data){
+    let separator = '-------------------------------\n';
+    let header = '';
+    let item = '';
+
+    for(let counter = 0;counter < _data.orders.length;counter++){
+      item += _data.orders[counter].class +'\n'+ _data.orders[counter].quantity;
+
+      if (_data.orders[counter].type != null) {
+       item += ' x ' +_data.orders[counter].size +'('+_data.orders[counter].type+') \n';
+      }else {
+        item += ' x ' +_data.orders[counter].size+'\n';
+      }
+
+      if((counter+1) < _data.orders.length){
+        item += '\n';
+      }
+    }
+
+    header = '        Vista del rio \n       Zayas Warehouse,\n     Cagayan de Oro City';
+
+    let content = header+'\n'+ separator +'Order#: '+ _data.order_id +'\nReleased by: '+this.profile.first_name+' '+this.profile.last_name+'\n'+ separator +'Owner: '+_data.first_name+' '+_data.last_name+'\nRelease: '+moment(_data.release_at).format("MM/DD/YYYY")+'\n'+separator+item+separator+'\nReleased by:___________________\nReceived by:___________________\n\n\n\n';
+    
+    await this.printer.onWrite(content);
   }
 
   read_reason(msg) {

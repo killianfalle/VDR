@@ -70,10 +70,16 @@
 						</ion-item>
 					</ion-list>
 
-					<ion-row *ngIf="transaction.void">
-						<ion-col text-center>
+					<ion-row>
+						<ion-col text-center *ngIf="transaction.void">
 							<button ion-button small clear icon-end color="orange" (click)="read_reason(transaction.void_reason)">
 							Read Void Reason
+							</button>
+						</ion-col>
+						<ion-col text-center>
+							<button ion-button small clear icon-end padding color="primary" (click)="print('Re-Print',transaction,true);">
+								RePrint
+								<ion-icon name="print"></ion-icon>
 							</button>
 						</ion-col>
 					</ion-row>
@@ -118,8 +124,13 @@
 					</ion-list>
 
 					<ion-row>
+						<ion-col text-center *ngIf="transaction.void">
+							<button ion-button small clear icon-end color="orange" (click)="read_reason(transaction.void_reason)">
+							Read Void Reason
+							</button>
+						</ion-col>
 						<ion-col text-center>
-							<button ion-button small clear icon-end padding color="primary" (click)="print(transaction);">
+							<button ion-button small clear icon-end padding color="primary" (click)="print('Release & Print',transaction);">
 								Release & Print
 								<ion-icon name="print"></ion-icon>
 							</button>

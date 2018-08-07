@@ -9,6 +9,7 @@ import { IonicPage,
 import { DataProvider } from '../../providers/data-provider';
 import { LoaderComponent } from '../../components/loader/loader';
 import { AlertComponent } from '../../components/alert/alert';
+import { ToastComponent } from '../../components/toast/toast';
 import { PrinterProvider } from '../../providers/printer';
 import { Socket } from 'ng-socket-io';
 import { Observable } from 'rxjs/Observable';
@@ -29,6 +30,8 @@ import moment from 'moment';
 export class TransactionPage {
 
   @ViewChild(InfiniteScroll) infinite: InfiniteScroll;
+
+  profile: any;
 
   tabs: any = 'cleared';
   search_date: any = moment().format('YYYY-MM-DD');
@@ -54,10 +57,13 @@ export class TransactionPage {
     public loader: LoaderComponent,
     public modalCtrl: ModalController,
     public alert: AlertComponent,
+    public toast: ToastComponent,
     private provider: DataProvider,
     private event: Events,
     private printer: PrinterProvider,
     private socket: Socket) {
+    this.profile = JSON.parse(localStorage.getItem('_info'));
+
   	this.get_transaction();
 
     this.add_pending_transaction().subscribe((_data) => {
@@ -68,10 +74,10 @@ export class TransactionPage {
     });
 
     this.remove_pending_transaction().subscribe((_data) => {
+      this.pending_result -= 1;
       let index = this.pending_transactions.map(obj => obj.id).indexOf(_data);
       if(index > -1){
         this.pending_transactions.splice(index, 1);
-        this.pending_result -= 1;
       }  
     });
 
@@ -91,10 +97,10 @@ export class TransactionPage {
     });
 
     this.remove_releasing_transaction().subscribe((_data) => {
+      this.releasing_result -= 1;
       let index = this.releasing_transactions.map(obj => obj.id).indexOf(_data);
       if(index > -1){
         this.releasing_transactions.splice(index, 1);
-        this.releasing_result -= 1;
       }  
     });
 
@@ -257,14 +263,15 @@ export class TransactionPage {
   releasing_transaction(_data,date,self) {
     self.provider.postData({ transaction : _data, date : date , status : 'releasing' },'transaction/status').then((res:any) => {
       if(res._data.status){
-        self.remove_pending(_data,date,self);
+        self.remove_pending(_data,self);
         self.add_releasing(_data,date,self);
         self.event.publish('transaction:release', _data, date);
+        self.toast.presentToast(res._data.message);
       }
     })
   }
 
-  remove_pending(_data,date,self){
+  remove_pending(_data,self){
     let params = { data : _data.id, type : 'remove-pending-transaction' };
     self.socket.emit('transaction', { text: params });
   }
@@ -310,8 +317,8 @@ export class TransactionPage {
       if(response){
         this.provider.postData({ transaction : _data, status : 'cancel' },'transaction/status').then((res:any) => {
           if(res._data.status){
-            let params = { data : _data.id, type : 'remove-pending-transaction' };
-            this.socket.emit('transaction', { text: params });
+            this.remove_pending(_data,this);
+            this.toast.presentToast('Successfully cancelled transaction');
           }
         });
       }
@@ -327,18 +334,45 @@ export class TransactionPage {
 
             if(root > -1){
               this.pending_transactions.splice(root, 1);
+              this.remove_pending(_data,this);
+              this.event.publish('notification:badge','increment');
+              this.pending_result -= 1;
             }
-
-            let params = { data : _data.id, type : 'remove-pending-transaction' };
-            this.socket.emit('transaction', { text: params });
-            this.event.publish('notification:badge','increment');
           }
         });
       }
     });
   }
 
-  reprint(_data){
+  reprint(_data) {
+    this.alert.confirm('Re-print').then((response: any) => {
+      if (response) {
+        this.printer.is_enabled().then((res: any) => {
+          this.verify_connectivity(_data);
+        }).catch((err) => {
+          this.enable_blueetooth(_data);
+        });
+      }
+    });
+  }
+
+  enable_blueetooth(_data) {
+    this.printer.set_enable().then((res:any) => {
+      this.verify_connectivity(_data);
+    }).catch((err) => {
+      this.enable_blueetooth(_data);
+    });
+  }
+
+  verify_connectivity(_data) {
+    this.printer.connectivity().then((res: any) => {
+      this.do_reprint(_data);
+    }).catch((err) => {
+      this.navCtrl.push('BluetoothPage');
+    });
+  }
+
+  do_reprint(_data){
     let separator = '-------------------------------\n';
     let header = '';
     let item = '';

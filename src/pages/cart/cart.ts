@@ -6,6 +6,7 @@ import { IonicPage,
          Events } from 'ionic-angular';
 import { DataProvider } from '../../providers/data-provider';
 import { AlertComponent } from '../../components/alert/alert';
+import { ToastComponent } from '../../components/toast/toast';
 import { Socket } from 'ng-socket-io';
 
 /**
@@ -32,6 +33,7 @@ export class CartPage implements OnInit {
   	public navCtrl: NavController, 
   	public navParams: NavParams,
     private alert: AlertComponent,
+    private toast: ToastComponent,
   	private provider: DataProvider,
     private event: Events,
     private socket: Socket) 
@@ -94,8 +96,9 @@ export class CartPage implements OnInit {
 
             if(root > -1){
               this.cart.splice(root, 1);
+              this.toast.presentToast('Order successfully discarded');
+              this.event.publish('notification:badge','decrement');
             }
-            this.event.publish('notification:badge','decrement');
           }
         });
       }
@@ -124,6 +127,7 @@ export class CartPage implements OnInit {
           if(res._data.status){
             this.key = null;
             localStorage.removeItem('cart_item');
+            this.toast.presentToast(res._data.message);
           }
         });
       }
@@ -131,7 +135,7 @@ export class CartPage implements OnInit {
   }
 
   check_out(_data) {
-    this.alert.confirm('CheckOut').then((response:any) => {
+    this.alert.confirm('Checkout').then((response:any) => {
       if(response){
       	this.provider.postData({ transaction : _data.id, status : 'pending' },'cart/status').then((res:any) => {
       		if(res._data.status){
@@ -140,6 +144,7 @@ export class CartPage implements OnInit {
             let params = { data : _data, type : 'add-pending-transaction' };
             this.socket.emit('transaction', { text: params });
             this.event.publish('notification:badge','decrement');
+            this.toast.presentToast('Successfully checkout');
       		}
       	});
       }

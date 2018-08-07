@@ -17,7 +17,7 @@ import { BluetoothSerial } from '@ionic-native/bluetooth-serial';
 import { SQLite } from '@ionic-native/sqlite';
 
 import { SocketIoModule, SocketIoConfig } from 'ng-socket-io';
-const socket: SocketIoConfig = { url: 'http://192.168.1.8:3001', options: {} };
+const socket: SocketIoConfig = { url: 'http://192.168.1.4:3001', options: {} };
 
 var config = {
       backButtonText: '',
