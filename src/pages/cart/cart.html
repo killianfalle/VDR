@@ -26,7 +26,7 @@
 	<div *ngFor="let items of cart; let row = index">
 		<ion-card>
 			<ion-item-divider>
-				<h3 text-capitalize>Owner: {{ items.first_name }} {{ items.last_name }}</h3>
+				<h4 text-capitalize>Owner: {{ items.first_name }} {{ items.last_name }}</h4>
 				<h4 ion-text color="primary" (click)="edit(row,items)" [hidden]="key == row" item-end>Edit</h4>
 			</ion-item-divider>
 
@@ -52,6 +52,7 @@
 
 							<ion-col col-2 text-center text-right align-self-center>
 								<h4>&#8369;{{ data.price }}</h4>
+								<h4 ion-text color="danger">&#8369;{{ data.total }}</h4>
 							</ion-col>
 						</ion-row>
 					</ion-item>

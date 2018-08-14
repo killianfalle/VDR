@@ -15,9 +15,11 @@ import { DataProvider } from '../providers/data-provider';
 import { PrinterProvider } from '../providers/printer';
 import { BluetoothSerial } from '@ionic-native/bluetooth-serial';
 import { SQLite } from '@ionic-native/sqlite';
+import { Keyboard } from '@ionic-native/keyboard';
+import { File } from '@ionic-native/file';
 
 import { SocketIoModule, SocketIoConfig } from 'ng-socket-io';
-const socket: SocketIoConfig = { url: 'http://192.168.1.4:3001', options: {} };
+const socket: SocketIoConfig = { url: 'http://159.89.194.81:3001', options: {} };
 
 var config = {
       backButtonText: '',
@@ -53,6 +55,8 @@ var config = {
     PrinterProvider,
     BluetoothSerial,
     SQLite,
+    Keyboard,
+    File,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

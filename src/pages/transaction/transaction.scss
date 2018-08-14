@@ -25,4 +25,8 @@ page-transaction {
 		margin: 0;
 		padding-right: 5px;
 	}
+
+	p {
+		color: color($colors,dark) !important;
+	}
 }

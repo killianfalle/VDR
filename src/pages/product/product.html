@@ -39,8 +39,14 @@
 		<p>No result found.</p>
 	</ion-item>
 
-	<ion-item *ngFor="let product of products" detail-push (click)="view_info(product)">
+	<ion-item *ngFor="let product of products" (click)="view_info(product); $event.stopPropagation();">
 		<h2 text-capitalize>{{ product.name }}</h2>
+
+		<p item-end>
+			<span ion-text color="primary" (click)="on_edit(product); $event.stopPropagation();">Edit</span>
+			&nbsp;
+			<span ion-text color="danger" (click)="remove(product); $event.stopPropagation();">Delete</span>
+		</p>
 	</ion-item>
 
 	<spinner [hidden]="isBusy"></spinner>

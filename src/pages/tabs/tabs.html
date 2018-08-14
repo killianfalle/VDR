@@ -1,4 +1,4 @@
-<ion-tabs color="orange">
+<ion-tabs #userTabs color="orange">
   <ion-tab [show]="profile.type == 'admin' || profile.type == 'admin_staff'" [root]="tab1Root" tabTitle="Home" tabIcon="home"></ion-tab>
   <ion-tab [show]="profile.type == 'admin'" [root]="tab2Root" tabTitle="Staff" tabIcon="person"></ion-tab>
   <ion-tab [show]="profile.type == 'warehouse_staff'" [root]="tab3Root" tabTitle="Transaction" tabIcon="filing"></ion-tab>

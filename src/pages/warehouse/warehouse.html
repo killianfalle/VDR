@@ -35,17 +35,17 @@
 
 	<br>
 
-	<ion-item>
-		<ion-label>
-			<ion-icon name="md-calendar"></ion-icon>
-		</ion-label>
-		<ion-datetime displayFormat="MM/DD/YYYY" [(ngModel)]="search_date" (ionChange)="get_transaction()"></ion-datetime>
-	</ion-item>	
-
-	<br>
-
 	<div [ngSwitch]="tabs" >
 		<div *ngSwitchCase="'cleared'">
+			<ion-item>
+				<ion-label>
+					<ion-icon name="md-calendar"></ion-icon>
+				</ion-label>
+				<ion-datetime displayFormat="MM/DD/YYYY" [(ngModel)]="search_date" (ionChange)="get_transaction()"></ion-datetime>
+			</ion-item>	
+
+			<br>
+
 			<div *ngFor="let transaction of cleared_transactions">
 				<ion-card>
 					<ion-item-divider text-capitalize>
@@ -96,6 +96,12 @@
 		</div>
 
 		<div *ngSwitchCase="'releasing'">
+			<form (ngSubmit)="search()">
+				<ion-searchbar mode="md" [(ngModel)]="keyword" name="keyword" (ionClear)="reset();" placeholder="search"></ion-searchbar>
+			</form>
+
+			<br>
+
 			<div *ngFor="let transaction of releasing_transactions">
 				<ion-card>
 					<ion-item-divider  text-capitalize>
@@ -143,7 +149,12 @@
 				<p>No transaction for release </p>
 			</ion-item>
 
-			<spinner [hidden]="isBusy"></spinner>
+			<spinner *ngIf="!isBusy && offset == 0"></spinner>
+
+			<ion-infinite-scroll #infinite (ionInfinite)="doInfinite($event)" threshold="100px">
+			  <ion-infinite-scroll-content>
+			  </ion-infinite-scroll-content>
+			</ion-infinite-scroll>
 		</div>
 	</div>
 	

@@ -5,6 +5,12 @@ page-cart {
 		width: 100% !important;
 	}
 
+	.item-divider {
+		h4 {
+			font-weight: bolder;
+		}
+	}
+
 	.cart-item {
 		border-top: 1px dotted black;
 	}

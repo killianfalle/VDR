@@ -3,10 +3,13 @@ import { Component,
          ViewChild } from '@angular/core';
 import { IonicPage, 
     		 NavController, 
-    		 NavParams,
+         NavParams,
+    		 Keyboard,
          InfiniteScroll } from 'ionic-angular';
 import { DataProvider } from '../../providers/data-provider';
 import { LoaderComponent } from '../../components/loader/loader';
+import { ToastComponent } from '../../components/toast/toast';
+import { AlertComponent } from '../../components/alert/alert';
 
 /**
  * Generated class for the CustomerPage page.
@@ -35,9 +38,13 @@ export class CustomerPage {
 
   constructor(
   	public navCtrl: NavController, 
-  	public navParams: NavParams,
+    public navParams: NavParams,
+  	private keyboard: Keyboard,
   	private provider: DataProvider,
-    public loader: LoaderComponent) 
+    public loader: LoaderComponent,
+    public alert: AlertComponent,
+    public toast: ToastComponent,
+  ) 
   { }
 
   ngOnInit(self = this) {
@@ -78,7 +85,7 @@ export class CustomerPage {
 
     switch (type) {
       case "add":
-        params = { self : this, callback : this.on_add };
+        params = { self : this, callback : this.refresh };
         this.navCtrl.push(page, params );
         break;
       case "history":
@@ -90,7 +97,7 @@ export class CustomerPage {
     }
   }
 
-  on_add(self = this, reload = false) {
+  refresh(self = this, reload = false) {
     if(!reload){
       self.ngOnInit(self);
     }else {
@@ -98,6 +105,26 @@ export class CustomerPage {
       self.customers = [];
       self.ngOnInit(self);
     }
+  }
+
+  on_edit(_data) {
+    let params = { self : this, callback : this.refresh, data : _data };
+    this.navCtrl.push('EditCustomerPage', params );
+  }
+
+  remove(_data) {
+    this.alert.confirm('Delete Customer').then((response:any) => {
+      if(response){
+        this.loader.show_loader('processing');
+        this.provider.postData({ id : _data.id },'customer/remove').then((res:any) => {
+          if(res._data.status){
+            this.loader.hide_loader();
+            this.toast.presentToast(res._data.message);
+            this.refresh(this,true);
+          }
+        })
+      }
+    })
   }
 
   reset() {
@@ -108,6 +135,7 @@ export class CustomerPage {
   }
 
   search() {
+    this.keyboard.close();
     this.offset = 0;
     this.customers = [];
     this.ngOnInit();

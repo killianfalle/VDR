@@ -1,5 +1,10 @@
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { Component,
+         ViewChild } from '@angular/core';
+import { IonicPage,
+         NavController, 
+         NavParams,
+         Keyboard,
+         InfiniteScroll } from 'ionic-angular';
 import { LoaderComponent } from '../../components/loader/loader';
 import { AlertComponent } from '../../components/alert/alert';
 import { ToastComponent } from '../../components/toast/toast';
@@ -23,10 +28,11 @@ import moment from 'moment';
 })
 export class WarehousePage {
 
+  @ViewChild(InfiniteScroll) infinite: InfiniteScroll;
+
   tabs: any = 'cleared';
 
   profile:any;
-  receiver:any;
   search_date: any = moment().format('YYYY-MM-DD');
   
   releasing_transactions: any = [];
@@ -35,11 +41,17 @@ export class WarehousePage {
   releasing_result: any = 0;
   cleared_result: any = 0;
 
+  offset:any = 0;
+  limit:any = 10;
+
+  keyword:any = '';
+
   isBusy:any = false;
 
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams,
+    public keyboard: Keyboard,
     public loader: LoaderComponent,
     public alert: AlertComponent,
     public toast: ToastComponent,
@@ -72,10 +84,14 @@ export class WarehousePage {
     });
 
     this.remove_releasing_transaction().subscribe((_data) => {
-      this.releasing_result -= 1;
+      if(this.releasing_result != 0)
+        this.releasing_result -= 1;
+
       let index = this.releasing_transactions.map(obj => obj.id).indexOf(_data);
       if(index > -1){
         this.releasing_transactions.splice(index, 1);
+        if(this.offset != 0)
+          this.offset -= 1;
       }  
     });
 
@@ -87,25 +103,30 @@ export class WarehousePage {
     });
   }
 
-  get_transaction() {
+  async get_transaction() {
     switch (this.tabs) {
-      case "releasing":
+      case "cleared":
+        this.offset = 0;
+        this.cleared_transactions = [];
         this.releasing_transactions = [];
         break;
       default:
-        this.receiver = null;
-        this.cleared_transactions = [];
         break;
     }
     
     this.isBusy = false;
 
-    this.provider.getData({ status : this.tabs , date : this.search_date },'transaction').then((res: any) => {
+    await this.provider.getData({ status : this.tabs , date : this.search_date, search: this.keyword, offset : this.offset, limit : this.limit },'transaction').then((res: any) => {
       if(res._data.status)
         switch (this.tabs) {
           case "releasing":
-            this.releasing_transactions = res._data.data;
-            this.releasing_result = res._data.result;
+            if(res._data.result > 0){
+              this.offset += res._data.result;
+              this.releasing_result = this.offset;
+              this.loadData(res._data.data);
+            }else {
+              this.stopInfinite();
+            }
             break;
           default:
             this.cleared_transactions = res._data.data;
@@ -114,6 +135,24 @@ export class WarehousePage {
         }
       this.isBusy = true;
     });
+  }
+
+  loadData(_transaction) {
+    _transaction.map(data => {
+      this.releasing_transactions.push(data);
+    });
+  }
+
+  doInfinite(infiniteScroll) {
+    setTimeout(() => {
+      this.get_transaction();
+
+      infiniteScroll.complete();
+    }, 500);
+  }
+
+  stopInfinite() {
+    this.infinite.enable(false);
   }
 
   add_releasing_transaction() {
@@ -243,6 +282,7 @@ export class WarehousePage {
     let separator = '-------------------------------\n';
     let header = '';
     let item = '';
+    let content = '';
 
     for(let counter = 0;counter < _data.orders.length;counter++){
       item += _data.orders[counter].class +'\n'+ _data.orders[counter].quantity;
@@ -260,13 +300,33 @@ export class WarehousePage {
 
     header = '        Vista del rio \n       Zayas Warehouse,\n     Cagayan de Oro City';
 
-    let content = header+'\n'+ separator +'Order#: '+ _data.order_id +'\nReleased by: '+this.profile.first_name+' '+this.profile.last_name+'\n'+ separator +'Owner: '+_data.first_name+' '+_data.last_name+'\nRelease: '+moment(_data.release_at).format("MM/DD/YYYY")+'\n'+separator+item+separator+'\nReleased by:___________________\nReceived by:___________________\n\n\n\n';
-    
+    if(_data.void){
+      content = header+'\n'+ separator +'Order#: '+ _data.order_id +'\nReleased by: '+this.profile.first_name+' '+this.profile.last_name+'\n'+ separator +'Owner: '+_data.first_name+' '+_data.last_name+'\nRelease: '+moment(_data.release_at).format("MM/DD/YYYY")+'\nRemarks: Void\n'+separator+item+separator+'\nReleased by:___________________\nReceived by:___________________\n\n\n\n';
+    }else {
+      content = header+'\n'+ separator +'Order#: '+ _data.order_id +'\nReleased by: '+this.profile.first_name+' '+this.profile.last_name+'\n'+ separator +'Owner: '+_data.first_name+' '+_data.last_name+'\nRelease: '+moment(_data.release_at).format("MM/DD/YYYY")+'\n'+separator+item+separator+'\nReleased by:___________________\nReceived by:___________________\n\n\n\n';
+    }
+
     await this.printer.onWrite(content);
   }
 
   read_reason(msg) {
     this.alert.show_dialog('Reason',msg);
+  }
+
+  reset() {
+    this.keyword = '';
+    this.offset = 0;
+    this.releasing_transactions = [];
+    this.infinite.enable(true);
+    this.get_transaction();
+  }
+
+  search() {
+    this.keyboard.close();
+    this.offset = 0;
+    this.releasing_transactions = [];
+    this.infinite.enable(true);
+    this.get_transaction();
   }
 
   ionViewCanEnter() {

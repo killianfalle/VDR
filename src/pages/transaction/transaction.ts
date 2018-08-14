@@ -5,6 +5,7 @@ import { IonicPage,
          ModalController, 
          NavParams,
          Events,
+         Keyboard,
          InfiniteScroll } from 'ionic-angular';
 import { DataProvider } from '../../providers/data-provider';
 import { LoaderComponent } from '../../components/loader/loader';
@@ -29,7 +30,8 @@ import moment from 'moment';
 })
 export class TransactionPage {
 
-  @ViewChild(InfiniteScroll) infinite: InfiniteScroll;
+  @ViewChild(InfiniteScroll) infinite_releasing: InfiniteScroll;
+  @ViewChild(InfiniteScroll) infinite_pending: InfiniteScroll;
 
   profile: any;
 
@@ -45,6 +47,8 @@ export class TransactionPage {
   pending_result = 0;
 
   offset:any = 0;
+  offset_pending:any = 0;
+  offset_releasing:any = 0;
   limit:any = 10;
 
   keyword:any = '';
@@ -60,6 +64,7 @@ export class TransactionPage {
     public toast: ToastComponent,
     private provider: DataProvider,
     private event: Events,
+    private keyboard: Keyboard,
     private printer: PrinterProvider,
     private socket: Socket) {
     this.profile = JSON.parse(localStorage.getItem('_info'));
@@ -69,22 +74,28 @@ export class TransactionPage {
     this.add_pending_transaction().subscribe((_data) => {
       this.pending_result += 1;
       if(this.keyword == ''){
-        this.pending_transactions.push(_data);
+        this.pending_transactions.unshift(_data);
+        this.offset_pending += 1;
       }
     });
 
     this.remove_pending_transaction().subscribe((_data) => {
-      this.pending_result -= 1;
+      if(this.pending_result != 0)
+        this.pending_result -= 1;
+
       let index = this.pending_transactions.map(obj => obj.id).indexOf(_data);
       if(index > -1){
         this.pending_transactions.splice(index, 1);
+        if(this.offset_pending != 0)
+          this.offset_pending -= 1;
       }  
     });
 
     this.add_releasing_transaction().subscribe((_data:any) => {
       this.releasing_result += 1;
-      if(this.search_date == _data.release_at){
+      if(this.keyword == ''){
         this.releasing_transactions.push(_data);
+        this.offset_releasing += 1;
       }
     });
 
@@ -97,10 +108,14 @@ export class TransactionPage {
     });
 
     this.remove_releasing_transaction().subscribe((_data) => {
-      this.releasing_result -= 1;
+      if(this.releasing_result != 0)
+        this.releasing_result -= 1;
+
       let index = this.releasing_transactions.map(obj => obj.id).indexOf(_data);
       if(index > -1){
         this.releasing_transactions.splice(index, 1);
+        if(this.offset_releasing != 0)
+          this.offset_releasing -= 1;
       }  
     });
 
@@ -130,13 +145,17 @@ export class TransactionPage {
     switch (this.tabs) {
       case "cleared":
         this.offset = 0;
+        this.offset_releasing = 0;
+        this.offset_pending = 0;
         this.pending_transactions = [];
+        this.releasing_transactions = [];
         this.cleared_transactions = [];
         break;
       case "releasing":
-        this.offset = 0;
-        this.pending_transactions = [];
-        this.releasing_transactions = [];
+        this.offset = this.offset_releasing;
+        break;
+      case "pending":
+        this.offset = this.offset_pending;
         break;
       default:
         break;
@@ -150,16 +169,22 @@ export class TransactionPage {
           case "pending":
             if(res._data.status){
               if(res._data.result > 0){
-                this.offset += res._data.result;
-                this.loadData(res._data.data);
+                this.offset_pending += res._data.result;
+                this.loadData_pending(res._data.data);
               }else {
                 this.stopInfinite();
               }
             }
             break;
           case "releasing":
-            this.releasing_transactions = res._data.data;
-            this.releasing_result = res._data.result;
+            if(res._data.status){
+              if(res._data.result > 0){
+                this.offset_releasing += res._data.result;
+                this.loadData_releasing(res._data.data);
+              }else {
+                this.stopInfinite();
+              }
+            }
             break;
           default:
             this.cleared_transactions = res._data.data;
@@ -171,9 +196,15 @@ export class TransactionPage {
     });
   }
 
-  loadData(_transaction) {
+  loadData_pending(_transaction) {
     _transaction.map(data => {
       this.pending_transactions.push(data);
+    });
+  }
+
+  loadData_releasing(_transaction) {
+    _transaction.map(data => {
+      this.releasing_transactions.push(data);
     });
   }
 
@@ -186,7 +217,25 @@ export class TransactionPage {
   }
 
   stopInfinite(){
-    this.infinite.enable(false);
+    switch (this.tabs) {
+      case "releasing":
+        this.infinite_releasing.enable(false);
+        break;
+      default:
+        this.infinite_pending.enable(false);
+        break;
+    }
+  }
+
+  enableInfinite() {
+    switch (this.tabs) {
+      case "releasing":
+        this.infinite_releasing.enable(true);
+        break;
+      default:
+        this.infinite_pending.enable(true);
+        break;
+    }
   }
 
   add_cleared_transaction() {
@@ -328,6 +377,7 @@ export class TransactionPage {
   edit_transaction(row,_data) {
     this.alert.confirm('Edit Transaction').then((response: any) => {
       if(response){
+        this.loader.show_loader('processing');
         this.provider.postData({ transaction : _data, status : 'in_cart' },'transaction/status').then((res:any) => {
           if(res._data.status){
             let root = this.pending_transactions.indexOf(this.pending_transactions[row]);
@@ -338,6 +388,7 @@ export class TransactionPage {
               this.event.publish('notification:badge','increment');
               this.pending_result -= 1;
             }
+            this.loader.hide_loader();
           }
         });
       }
@@ -372,18 +423,19 @@ export class TransactionPage {
     });
   }
 
-  do_reprint(_data){
+  async do_reprint(_data){
     let separator = '-------------------------------\n';
     let header = '';
     let item = '';
+    let content = '';
 
     for(let counter = 0;counter < _data.orders.length;counter++){
       item += _data.orders[counter].class +'\n'+_data.orders[counter].size; 
 
       if(_data.orders[counter].type == null){
-        item += ' / '+_data.orders[counter].quantity +'xP'+_data.orders[counter].price+'\n';
+        item += '\n'+_data.orders[counter].quantity +' x P'+_data.orders[counter].price+' = P'+_data.orders[counter].total+'\n';
       }else{
-        item += '('+_data.orders[counter].type+') / '+_data.orders[counter].quantity +'xP'+_data.orders[counter].price+'\n';
+        item += '('+_data.orders[counter].type+')\n'+_data.orders[counter].quantity +' x P'+_data.orders[counter].price+' = P'+_data.orders[counter].total+'\n';
       }
 
       if((counter+1) < _data.orders.length){
@@ -393,31 +445,32 @@ export class TransactionPage {
 
     header = '        Vista del rio \n Carmen, Cagayan de Oro City';
 
-    let content = header+'\n'+separator+'Order#: '+_data.order_id+'\nPrinted by: '+_data.printed_by+'\nPrinted on: '+_data.printed_at+'\n'+separator+'Owner: '+_data.first_name+'  '+_data.last_name+'\nRelease: '+moment(_data.release_at).format("MM/DD/YYYY")+'\n'+separator+item+separator+'Total : P'+_data.total_payment+'\n\n\n';
+    if(_data.void){
+      content = header+'\n'+separator+'Order#: '+_data.order_id+'\nPrinted by: '+_data.printed_by+'\nPrinted on: '+_data.printed_at+'\n'+separator+'Owner: '+_data.first_name+'  '+_data.last_name+'\nRelease: '+moment(_data.release_at).format("MM/DD/YYYY")+'\nRemarks: Void\n'+separator+item+separator+'Total : P'+_data.total_payment+'\n\n\n';
+    }else {
+      content = header+'\n'+separator+'Order#: '+_data.order_id+'\nPrinted by: '+_data.printed_by+'\nPrinted on: '+_data.printed_at+'\n'+separator+'Owner: '+_data.first_name+'  '+_data.last_name+'\nRelease: '+moment(_data.release_at).format("MM/DD/YYYY")+'\n'+separator+item+separator+'Total : P'+_data.total_payment+'\n\n\n';
+    }
 
-    this.print_for_release(content);
-
-    this.alert.confirm_print().then((res:any) => {
-      if(res){
-        this.print_for_release(content);
-      }
-    })
-  }
-
-  async print_for_release(_data) {
-    await this.printer.onWrite(_data);
+    await this.printer.onWrite(content);
   }
 
   reset() {
     this.keyword = '';
-    this.offset = 0;
+    this.offset_pending = 0;
+    this.offset_releasing = 0;
     this.pending_transactions = [];
+    this.releasing_transactions = [];
+    this.enableInfinite();
     this.get_transaction();
   }
 
   search() {
-    this.offset = 0;
+    this.keyboard.close();
+    this.offset_pending = 0;
+    this.offset_releasing = 0;
     this.pending_transactions = [];
+    this.releasing_transactions = [];
+    this.enableInfinite();
     this.get_transaction();
   }
 

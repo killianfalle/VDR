@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage,
+         NavController, 
+         NavParams } from 'ionic-angular';
 import { DataProvider } from '../../providers/data-provider';
 import { LoaderComponent } from '../../components/loader/loader';
 import { ToastComponent } from '../../components/toast/toast';
@@ -20,7 +22,7 @@ export class AddProductPage {
 
   product:any = {};
   _callback: any;
-  error: any;
+  error: any = {};
 
   constructor(
   	public navCtrl: NavController, 
@@ -35,9 +37,9 @@ export class AddProductPage {
 
   initForm() {
   	this.product = {
-      product: null,
-      classes: [{name : '' , size : [{name: ''}]}],
-      quantities: [{name : ''}],
+      name: null,
+      classes: [],
+      quantities: [],
     };
   }
 
@@ -85,8 +87,8 @@ export class AddProductPage {
   			this.navCtrl.pop();
   		}
   	}).catch((error) => {
-      console.log(JSON.parse(error._body).error.product);
-      this.error = JSON.parse(error._body).error.product;
+      console.log(JSON.parse(error._body).error);
+      this.error = JSON.parse(error._body).error;
     });
   }
 

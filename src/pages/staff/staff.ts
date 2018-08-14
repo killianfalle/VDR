@@ -2,6 +2,7 @@ import { Component,
          OnInit } from '@angular/core';
 import { IonicPage,
          NavController, 
+         Keyboard, 
          NavParams } from 'ionic-angular';
 import { DataProvider } from '../../providers/data-provider';
 import { LoaderComponent } from '../../components/loader/loader';
@@ -29,6 +30,7 @@ export class StaffPage implements OnInit{
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams,
+    public keyboard: Keyboard,
     public provider: DataProvider,
     public loader: LoaderComponent) {
   }
@@ -58,6 +60,7 @@ export class StaffPage implements OnInit{
   }
 
   search() {
+    this.keyboard.close();
     this.result = [];
     this.ngOnInit();
   }

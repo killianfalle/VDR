@@ -90,9 +90,9 @@ export class CalendarPage {
       item += _data.orders[counter].class +'\n'+_data.orders[counter].size; 
 
       if(_data.orders[counter].type == null){
-        item += ' / '+_data.orders[counter].quantity +'xP'+_data.orders[counter].price+'\n';
+        item += '\n'+_data.orders[counter].quantity +' x P'+_data.orders[counter].price+' = P'+ _data.orders[counter].total+'\n';
       }else{
-        item += '('+_data.orders[counter].type+') / '+_data.orders[counter].quantity +'xP'+_data.orders[counter].price+'\n';
+        item += '('+_data.orders[counter].type+')\n'+_data.orders[counter].quantity +' x P'+_data.orders[counter].price+' = P'+ _data.orders[counter].total+'\n';
       }
 
       if((counter+1) < _data.orders.length){

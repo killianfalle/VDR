@@ -3,7 +3,7 @@
     <ion-buttons start>
       <logo></logo>
     </ion-buttons>
-    <ion-title>Vista del rio</ion-title>
+    <ion-title>Vista del Rio</ion-title>
     <ion-buttons end>
       <cart></cart>
     </ion-buttons>
@@ -12,69 +12,61 @@
 
 <ion-content>
 
-  <ion-card (click)="navigate('CustomerEntryPage')">
-    <ion-row text-center margin-top>
-      <ion-col>
-        <ion-icon color="amber" name="add-circle"></ion-icon>
-      </ion-col>
-    </ion-row>
-    <ion-row text-center margin-bottom>
-      <ion-col>
-        Order Entry
-      </ion-col>
-    </ion-row>
-  </ion-card>
+  <ion-row>
+    <ion-col col-6>
+      <ion-card (click)="navigate('CustomerEntryPage')" color="primary">
+        <ion-card-header text-wrap>
+          Order Entry
+        </ion-card-header>
+        <ion-card-content text-right>
+          <ion-icon color="light" name="add-circle"></ion-icon>
+        </ion-card-content>
+      </ion-card>
+    </ion-col>
 
-  <ion-card (click)="navigate('ProductPage')" *ngIf="profile.type == 'admin'">
-    <ion-row text-center margin-top>
-      <ion-col>
-        <ion-icon color="amber" name="cube"></ion-icon>
-      </ion-col>
-    </ion-row>
-    <ion-row text-center margin-bottom>
-      <ion-col>
-        Product
-      </ion-col>
-    </ion-row>
-  </ion-card>
+    <ion-col col-6 *ngIf="profile.type === 'admin'">
+      <ion-card (click)="navigate('ProductPage')" color="secondary">
+        <ion-card-header text-wrap>
+          Product
+        </ion-card-header>
+        <ion-card-content text-right>
+          <ion-icon color="light" name="cube"></ion-icon>
+        </ion-card-content>
+      </ion-card>
+    </ion-col>
 
-  <ion-card (click)="navigate('CustomerPage')">
-    <ion-row text-center margin-top>
-      <ion-col>
-        <ion-icon color="amber" name="person"></ion-icon>
-      </ion-col>
-    </ion-row>
-    <ion-row text-center margin-bottom>
-      <ion-col>
-        Customer
-      </ion-col>
-    </ion-row>
-  </ion-card>
+    <ion-col  col-6>
+      <ion-card (click)="navigate('CustomerPage')" color="teal">
+        <ion-card-header text-wrap>
+          Customer
+        </ion-card-header>
+        <ion-card-content text-right>
+          <ion-icon color="light" name="person"></ion-icon>
+        </ion-card-content>
+      </ion-card>
+    </ion-col>
 
-  <ion-card (click)="navigate('TransactionPage')">
-    <ion-row text-center margin-top>
-      <ion-col>
-        <ion-icon color="amber" name="filing"></ion-icon>
-      </ion-col>
-    </ion-row>
-    <ion-row text-center margin-bottom>
-      <ion-col>
-        Transaction
-      </ion-col>
-    </ion-row>
-  </ion-card>
+    <ion-col  col-6>
+      <ion-card (click)="navigate('TransactionPage')" color="indigo">
+        <ion-card-header text-wrap>
+          Transaction
+        </ion-card-header>
+        <ion-card-content text-right>
+            <ion-icon color="light" name="filing"></ion-icon>
+        </ion-card-content>
+      </ion-card>
+    </ion-col>
 
-  <ion-card (click)="navigate('ReportPage')">
-    <ion-row text-center margin-top>
-      <ion-col>
-        <ion-icon color="amber" name="list-box"></ion-icon>
-      </ion-col>
-    </ion-row>
-    <ion-row text-center margin-bottom>
-      <ion-col>
-        Report
-      </ion-col>
-    </ion-row>
-  </ion-card>
+    <ion-col col-6>
+      <ion-card (click)="navigate('ReportPage')" color="danger">
+        <ion-card-header text-wrap>
+          Report
+        </ion-card-header>
+        <ion-card-content text-right>
+          <ion-icon color="light" name="list-box"></ion-icon>
+        </ion-card-content>
+      </ion-card>
+    </ion-col>
+  </ion-row>
 
 </ion-content>

@@ -3,7 +3,8 @@ import { Component,
          ViewChild } from '@angular/core';
 import { IonicPage, 
 		     NavController, 
-		     NavParams,
+         NavParams,
+		     Keyboard,
          InfiniteScroll } from 'ionic-angular';
 import { DataProvider } from '../../providers/data-provider';
 import { LoaderComponent } from '../../components/loader/loader';
@@ -34,7 +35,8 @@ export class CustomerEntryPage implements OnInit {
 
   constructor(
   	public navCtrl: NavController, 
-  	public navParams: NavParams,
+    public navParams: NavParams,
+  	public keyboard: Keyboard,
   	private provider: DataProvider,
     public loader: LoaderComponent) {
   }
@@ -90,6 +92,7 @@ export class CustomerEntryPage implements OnInit {
   }
 
   search() {
+    this.keyboard.close();
     this.offset = 0;
     this.customers = [];
     this.ngOnInit();

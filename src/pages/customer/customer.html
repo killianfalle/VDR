@@ -39,11 +39,17 @@
 		<p>No result found.</p>
 	</ion-item>
 
-	<ion-item *ngFor="let customer of customers" detail-push (click)="navigate('CustomerTransactionPage','history',customer.id)">
+	<ion-item *ngFor="let customer of customers" (click)="navigate('CustomerTransactionPage','history',customer.id); $event.stopPropagation();">
 		<ion-avatar item-start>
 	      <img src="assets/imgs/avatar.png">
 	    </ion-avatar>
-		<h2 text-capitalize>{{ customer.first_name }} {{ customer.last_name }}</h2>
+		<h2 ion-text text-wrap text-capitalize>{{ customer.first_name }} {{ customer.last_name }}</h2>
+
+		<p item-end>
+			<span ion-text color="primary" (click)="on_edit(customer); $event.stopPropagation();">Edit</span>
+			&nbsp;
+			<span ion-text color="danger" (click)="remove(customer); $event.stopPropagation();">Delete</span>
+		</p>
 	</ion-item>
 
 	<spinner *ngIf="!isBusy && offset == 0"></spinner>

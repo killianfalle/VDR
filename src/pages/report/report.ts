@@ -7,7 +7,9 @@ import { IonicPage,
 import { DataProvider } from '../../providers/data-provider';
 import { LoaderComponent } from '../../components/loader/loader';
 import { AlertComponent } from '../../components/alert/alert';
+import { ToastComponent } from '../../components/toast/toast';
 import { PrinterProvider } from '../../providers/printer';
+import { File } from '@ionic-native/file';
 import moment from 'moment';
 
 /**
@@ -44,7 +46,9 @@ export class ReportPage implements OnInit {
     public provider: DataProvider,
     public loader: LoaderComponent,
     public alert: AlertComponent,
+    public toast: ToastComponent,
     public alertCtrl: AlertController,
+    private file: File,
     private printer: PrinterProvider) {
     this.getProduct();
   }
@@ -118,6 +122,50 @@ export class ReportPage implements OnInit {
   }
 
   generate(_data){
+    let csv: any = this.convertToCSV(_data)
+      let fileName: any = "report.csv"
+      this.file.writeFile(this.file.externalRootDirectory, fileName, csv, {})
+        .then(
+        _ => {
+          this.toast.presentToast('Successfully Exported');
+          }
+        )
+        .catch(
+        err => {
+          this.file.writeExistingFile(this.file.externalRootDirectory, fileName, csv)
+          .then(
+            _ => {
+                this.toast.presentToast('Successfully Exported');
+            }).catch(
+              err => {
+                this.toast.presentToast('Export Failed !');
+              }
+            )
+       }
+    )
+  }
+
+  convertToCSV(_data) {
+    let csv: any = '';
+    let header: any = '';
+
+    let headers = Object.keys(_data[0]);
+    for (let i = 0; i < headers.length; i++) {
+      if (header != '') header += ';'
+      header += headers[i];
+    }
+    csv += header + '\r\n';
+
+    for (let j = 0; j < _data.length; j++) {
+      let line = '';
+      Object.keys(_data[j]).map(function(key) {
+         line += _data[j][key] + ';';
+      });
+
+      csv += line + '\r\n';
+    }
+
+    return csv
   }
   
   release() {

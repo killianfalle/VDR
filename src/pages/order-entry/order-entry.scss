@@ -36,9 +36,10 @@ page-order-entry {
 	}
 
 	.selected {
-		border: 2px solid color($colors,yellow);
+		border: 1px solid color($colors,orange);
 		background: color($colors,orange);
 		.item {
+			font-weight: bold;
 			font-style: italic;
 			color: color($colors,light) !important;
 		}

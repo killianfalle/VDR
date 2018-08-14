@@ -14,6 +14,14 @@
 // To declare rules for a specific mode, create a child rule
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
+@font-face{
+    font-family: Karla;
+    src: url('../assets/fonts/karla.woff2');
+}
+
+*{
+  font-family: 'Karla', sans-serif;
+}
 
 .toolbar-ios .segment-button {
   max-width: 100%;

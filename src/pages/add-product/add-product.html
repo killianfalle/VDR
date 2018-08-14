@@ -7,7 +7,7 @@
 <ion-header>
 
   <ion-navbar color="orange">
-    <ion-title>Add Product</ion-title>
+    <ion-title>New Product</ion-title>
     <ion-buttons end>
       <cart></cart>
     </ion-buttons>
@@ -22,9 +22,9 @@
 		Product
 	</ion-item-divider>
 	<ion-item>
-		<ion-input type="text" [(ngModel)]="product.product" placeholder="enter product name"></ion-input>
+		<ion-input type="text" [(ngModel)]="product.name" placeholder="enter product name"></ion-input>
 	</ion-item>
-	<div class="error" *ngIf="error">{{ error }}</div>
+	<div class="error" *ngIf="error.name">{{ error.name }}</div>
 
 	<br>
 
@@ -43,7 +43,7 @@
 				</ion-item>
 			</ion-col>
 			<ion-col col-1 align-self-center text-center>
-				<ion-icon color="danger" name="remove-circle" (click)="remove_class(i)" [hidden]="i == 0" item-end></ion-icon>
+				<ion-icon color="danger" name="remove-circle" (click)="remove_class(i)" item-end></ion-icon>
 			</ion-col>
 		</ion-row>
 
@@ -57,11 +57,11 @@
 			<ion-row>
 				<ion-col col-1 align-self-center text-center>
 					<ion-icon *ngIf="row == 0" item-start></ion-icon>
-					<ion-icon color="danger" name="remove-circle" (click)="remove_size(i,row)" [hidden]="row == 0" item-start></ion-icon>
+					<ion-icon color="danger" name="remove-circle" (click)="remove_size(i,row)" item-start></ion-icon>
 				</ion-col>
 				<ion-col>
 					<ion-item>
-						<ion-input type="text" [(ngModel)]="size.name" placeholder="enter size"></ion-input>
+						<ion-input type="text" [(ngModel)]="size.name" placeholder="enter size" [disabled]="class.name == ''"></ion-input>
 					</ion-item>
 				</ion-col>
 			</ion-row>
@@ -87,7 +87,7 @@
 				</ion-item>
 			</ion-col>
 			<ion-col col-1 align-self-center text-center>
-				<ion-icon color="danger" name="remove-circle" (click)="remove_quantities(i)" [hidden]="i == 0" item-end></ion-icon>
+				<ion-icon color="danger" name="remove-circle" (click)="remove_quantities(i)" item-end></ion-icon>
 			</ion-col>
 		</ion-row>
 	</div>
