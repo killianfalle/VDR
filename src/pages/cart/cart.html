@@ -44,9 +44,9 @@
 
 							<ion-col text-center align-self-center col-4 padding>
 								<h3>
-									<ion-icon class="qty-icon" color="orange" name='add' *ngIf="key == row" (click)="quantity(row,i)"></ion-icon>
+									<ion-icon class="qty-icon" color="orange" name='add' *ngIf="key == row" (click)="quantity(row,i)" ion-long-press [interval]="300" (onPressStart)="pressed()" (onPressing)="active(row,i)" (onPressEnd)="released()"></ion-icon>
 									<span>{{ data.quantity }}</span>
-									<ion-icon class="qty-icon" color="orange" name='remove' *ngIf="key == row" (click)="quantity(row,i,false)"></ion-icon>
+									<ion-icon class="qty-icon" color="orange" name='remove' *ngIf="key == row" (click)="quantity(row,i,false)" ion-long-press [interval]="300" (onPressStart)="pressed()" (onPressing)="active(row,i,false)" (onPressEnd)="released()"></ion-icon>
 								</h3>
 							</ion-col>
 

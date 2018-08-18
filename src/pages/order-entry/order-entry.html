@@ -27,13 +27,9 @@
 		  <div class="hr-line"></div>
 		</div>
 
-		<ion-row text-center text-wrap>
-			<ion-col col-6 *ngFor="let prod of product; let i = index" [ngClass]="{'last-col' : ((product.length % 2) == 1 && (product.length - 1) == i )}">
-				<ion-card [ngClass]="{'selected' : (form.id == prod.id)}" (click)="select_product(prod)">
-					<ion-item class="item-option" text-center>
-				    	<h1 text-capitalize>{{ prod.name }}</h1>
-					</ion-item>
-				</ion-card>
+		<ion-row padding text-center text-wrap>
+			<ion-col class="option" col-12 *ngFor="let prod of product; let i = index" [ngClass]="{'selected' : (form.id == prod.id)}" (click)="select_product(prod)" align-self-center>
+		    	<p text-capitalize>{{ prod.name }}</p>
 			</ion-col>
 		</ion-row>
 	</div>
@@ -49,13 +45,9 @@
 			  <div class="hr-line"></div>
 			</div>
 
-			<ion-row text-center text-wrap>
-				<ion-col col-6 *ngFor="let class of classes; let i = index" [ngClass]="{'last-col' : ((classes.length % 2) == 1 && (classes.length - 1) == i )}">
-					<ion-card [ngClass]="{'selected' : (form.class.name == class.name)}" (click)="select_class(class)">
-						<ion-item class="item-option" text-center>
-					    	<h1 text-capitalize>{{ class.name }}</h1>
-						</ion-item>
-					</ion-card>
+			<ion-row padding text-center text-wrap>
+				<ion-col class="option" col-12 *ngFor="let class of classes; let i = index" [ngClass]="{'selected' : (form.class.name == class.name)}" (click)="select_class(class)">
+			    	<p text-capitalize>{{ class.name }}</p>
 				</ion-col>
 			</ion-row>
 		</div>
@@ -69,13 +61,9 @@
 			  <div class="hr-line"></div>
 			</div>
 
-			<ion-row text-center text-wrap>
-				<ion-col col-6 *ngFor="let size of sizes; let i = index" [ngClass]="{'last-col' : ((sizes.length % 2) == 1 && (sizes.length - 1) == i )}">
-					<ion-card [ngClass]="{'selected' : (form.size.name == size.name)}" (click)="select_size(size)">
-						<ion-item class="item-option" text-center>
-					    	<h1 text-capitalize>{{ size.name }}</h1>
-						</ion-item>
-					</ion-card>
+			<ion-row padding text-center text-wrap>
+				<ion-col class="option" col-6 *ngFor="let size of sizes; let i = index" [ngClass]="{'last-col' : ((sizes.length % 2) == 1 && (sizes.length - 1) == i ), 'selected' : (form.size.name == size.name)}" (click)="select_size(size)">
+			    	<p text-capitalize>{{ size.name }}</p>
 				</ion-col>
 			</ion-row>
 		</div>
@@ -89,13 +77,9 @@
 			  <div class="hr-line"></div>
 			</div>
 
-			<ion-row text-center>
-				<ion-col col-6 col-md *ngFor="let qty of quantities; let i = index" [ngClass]="{'last-col' : ((quantities.length % 2) == 1 && (quantities.length - 1) == i )}">
-					<ion-card [ngClass]="{'selected' : (form.qty_type.name == qty.name)}" (click)="select_qty(qty)">
-						<ion-item class="item-option" text-center>
-					    	<h1 text-capitalize>{{ qty.name }}</h1>
-						</ion-item>
-					</ion-card>
+			<ion-row padding text-center text-wrap>
+				<ion-col class="option" col-6 col-md *ngFor="let qty of quantities; let i = index" [ngClass]="{'last-col' : ((quantities.length % 2) == 1 && (quantities.length - 1) == i ), 'selected' : (form.qty_type.name == qty.name)}" (click)="select_qty(qty)">
+			    	<p text-capitalize>{{ qty.name }}</p>
 				</ion-col>
 			</ion-row>
 

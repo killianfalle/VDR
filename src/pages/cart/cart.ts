@@ -151,6 +151,25 @@ export class CartPage implements OnInit {
     });
   }
 
+  pressed() {  }
+
+  active(index,subIndex,_add = true) {
+    if(_add){
+      this.cart[index]['orders'][subIndex].quantity = parseInt(this.cart[index]['orders'][subIndex].quantity) + 1;
+      this.cart[index].total_payment =  parseInt(this.cart[index].total_payment) + parseInt(this.cart[index]['orders'][subIndex].price);
+      this.cart[index]['orders'][subIndex].total = parseInt(this.cart[index]['orders'][subIndex].total) + parseInt(this.cart[index]['orders'][subIndex].price);
+    }
+    else{
+      if(parseInt(this.cart[index]['orders'][subIndex].quantity) - 1){
+        this.cart[index]['orders'][subIndex].quantity = parseInt(this.cart[index]['orders'][subIndex].quantity) - 1;
+        this.cart[index].total_payment = parseInt(this.cart[index].total_payment) - parseInt(this.cart[index]['orders'][subIndex].price);
+        this.cart[index]['orders'][subIndex].total = parseInt(this.cart[index]['orders'][subIndex].total) - parseInt(this.cart[index]['orders'][subIndex].price);
+      }
+    }
+  }
+
+  released() { }
+
   ionViewDidLoad() {
     console.log('ionViewDidLoad CartPage');
   }

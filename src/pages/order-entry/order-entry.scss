@@ -5,6 +5,18 @@ page-order-entry {
 		padding: 0;
 	}
 
+	.option {
+		padding: 10px;
+		background: #EEEEEE;
+		border: 1px solid color($colors,orange);
+		margin-bottom: 2px;
+
+		p {
+			font-weight: bolder;
+			font-size: 1.2em;
+		}
+	}
+
 	.item-divider {
 		color: color($colors,dark);
 		font-size: 1.5em;
@@ -14,7 +26,6 @@ page-order-entry {
 	}
 
 	.card {
-		position: relative;
 		min-height: 80px;
 		background: #EEEEEE;
 		border: 1px solid color($colors,orange);
@@ -38,6 +49,10 @@ page-order-entry {
 	.selected {
 		border: 1px solid color($colors,orange);
 		background: color($colors,orange);
+		font-weight: bold;
+		font-style: italic;
+		color: color($colors,light) !important;
+
 		.item {
 			font-weight: bold;
 			font-style: italic;
