@@ -23,12 +23,57 @@ export class AlertComponent {
 			        text: 'Yes',
 			        role: 'yes',
 			        handler: () => {
-			        	resolve(true);
+			          resolve(true);
 			        }
 			      }
 			    ],
 			    enableBackdropDismiss: false
 		    }).present();
+		});
+	}
+
+	prompt_payment() {
+		return new Promise((resolve, reject) => {
+			this.alertCtrl.create({
+			  title: 'Payment',
+			  inputs: [
+			    {
+			      type: 'radio',
+			      label:'Cash',
+	        	  value:'cash'
+			    },
+			    {
+			      type: 'radio',
+			      label:'Cash on Delivery',
+	        	  value:'Cash on Delivery'
+			    },
+			    {
+			      type: 'radio',
+			      label:'A/R or Charge',
+	        	  value:'A/R or Charge'
+			    },
+			    {
+			      type: 'radio',
+			      label:'Partial Payment',
+	        	  value:'Partial Payment'
+			    }
+			  ],
+			  buttons: [
+			    {
+			      text: 'Cancel',
+			      role: 'cancel',
+			      handler: data => {
+			        resolve(false);
+			      }
+			    },
+			    {
+			      text: 'Ok',
+			      handler: data => {
+			        resolve(data);
+			      }
+			    }
+			  ]
+			}).present();
 		});
 	}
 

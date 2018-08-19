@@ -102,14 +102,19 @@ export class CalendarPage {
 
     header = '        Vista del rio \n Carmen, Cagayan de Oro City';
 
-    let content = header+'\n'+separator+'Order#: '+_data.order_id+'\nPrinted by: '+this.params.printed_by+'\nPrinted on: '+this.params.printed_at+'\n'+separator+'Owner: '+_data.first_name+'  '+_data.last_name+'\nRelease: '+moment(this.date).format("MM/DD/YYYY")+'\n'+separator+item+separator+'Total : P'+_data.total_payment+'\n\n\n';
 
-    this.print_for_release(content);
-
-    this.alert.confirm_print().then((res:any) => {
-      if(res){
+    this.alert.prompt_payment().then((response:any) => {
+      if(response){
+        let content = header+'\n'+separator+'Order#: '+_data.order_id+'\nPrinted by: '+this.params.printed_by+'\nPrinted on: '+this.params.printed_at+'\n'+separator+'Owner: '+_data.first_name+'  '+_data.last_name+'\nRelease: '+moment(this.date).format("MM/DD/YYYY")+'\n'+separator+item+separator+'Total: P'+_data.total_payment+'\nPayment: '+response+'\n\n\n';
+        
         this.print_for_release(content);
-        this.callback();
+
+        this.alert.confirm_print().then((res:any) => {
+          if(res){
+            this.print_for_release(content);
+            this.callback(response);
+          }
+        });
       }
     })
   }
@@ -118,8 +123,8 @@ export class CalendarPage {
     await this.printer.onWrite(_data);
   }
 
-  callback() {
-    this._callback(this.params,moment(this.date).format('YYYY-MM-DD'),this.self);
+  callback(_payment) {
+    this._callback(this.params,moment(this.date).format('YYYY-MM-DD'),_payment,this.self);
     this.navCtrl.pop();
   }
 

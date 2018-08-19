@@ -19,7 +19,7 @@ import { Keyboard } from '@ionic-native/keyboard';
 import { File } from '@ionic-native/file';
 
 import { SocketIoModule, SocketIoConfig } from 'ng-socket-io';
-const socket: SocketIoConfig = { url: 'http://159.89.194.81:3001', options: {} };
+const socket: SocketIoConfig = { url: 'http://192.168.1.13:3001', options: {} };
 
 var config = {
       backButtonText: '',

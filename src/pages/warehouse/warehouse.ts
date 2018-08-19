@@ -272,7 +272,7 @@ export class WarehousePage {
 
     header = '        Vista del rio \n       Zayas Warehouse,\n     Cagayan de Oro City';
 
-    let content = header+'\n'+ separator +'Order#: '+ _data.order_id +'\nReleased by: '+this.profile.first_name+' '+this.profile.last_name+'\n'+ separator +'Owner: '+_data.first_name+' '+_data.last_name+'\nRelease: '+moment(_data.release_at).format("MM/DD/YYYY")+'\n'+separator+item+separator+'\nReleased by:___________________\nReceived by:___________________\n\n\n\n';
+    let content = header+'\n'+ separator +'Order#: '+ _data.order_id +'\nReleased by: '+this.profile.first_name+' '+this.profile.last_name+'\n'+ separator +'Owner: '+_data.first_name+' '+_data.last_name+'\nRelease: '+moment(_data.release_at).format("MM/DD/YYYY")+'\n'+separator+item+separator+"Payment: "+_data.payment_type+"\n"+separator+'\nReleased by:___________________\nReceived by:___________________\n\n\n\n';
     
     await this.printer.onWrite(content);
     this.cleared_transaction(_data);
@@ -301,9 +301,9 @@ export class WarehousePage {
     header = '        Vista del rio \n       Zayas Warehouse,\n     Cagayan de Oro City';
 
     if(_data.void){
-      content = header+'\n'+ separator +'Order#: '+ _data.order_id +'\nReleased by: '+this.profile.first_name+' '+this.profile.last_name+'\n'+ separator +'Owner: '+_data.first_name+' '+_data.last_name+'\nRelease: '+moment(_data.release_at).format("MM/DD/YYYY")+'\nRemarks: Void\n'+separator+item+separator+'\nReleased by:___________________\nReceived by:___________________\n\n\n\n';
+      content = header+'\n'+ separator +'Order#: '+ _data.order_id +'\nReleased by: '+this.profile.first_name+' '+this.profile.last_name+'\n'+ separator +'Owner: '+_data.first_name+' '+_data.last_name+'\nRelease: '+moment(_data.release_at).format("MM/DD/YYYY")+'\nRemarks: Void\n'+separator+item+separator+"Payment: "+_data.payment_type+"\n"+separator+'\nReleased by:___________________\nReceived by:___________________\n\n\n\n';
     }else {
-      content = header+'\n'+ separator +'Order#: '+ _data.order_id +'\nReleased by: '+this.profile.first_name+' '+this.profile.last_name+'\n'+ separator +'Owner: '+_data.first_name+' '+_data.last_name+'\nRelease: '+moment(_data.release_at).format("MM/DD/YYYY")+'\n'+separator+item+separator+'\nReleased by:___________________\nReceived by:___________________\n\n\n\n';
+      content = header+'\n'+ separator +'Order#: '+ _data.order_id +'\nReleased by: '+this.profile.first_name+' '+this.profile.last_name+'\n'+ separator +'Owner: '+_data.first_name+' '+_data.last_name+'\nRelease: '+moment(_data.release_at).format("MM/DD/YYYY")+'\n'+separator+item+separator+"Payment: "+_data.payment_type+"\n"+'\nReleased by:___________________\nReceived by:___________________\n\n\n\n';
     }
 
     await this.printer.onWrite(content);

@@ -191,8 +191,9 @@
 			<div *ngFor="let transaction of pending_transactions; let row = index">
 				<ion-card>
 					<ion-item-divider  text-capitalize>
-						<h4>Owner: {{ transaction.first_name }} {{ transaction.last_name }}</h4>
-						<h4>Order #: {{ transaction.order_id }}</h4>
+						<h4 ion-text text-wrap>Owner: {{ transaction.first_name }} {{ transaction.last_name }}</h4>
+						<h4 ion-text text-wrap>Release Date : {{ transaction.release_at | date : 'MM/dd/yy' }}</h4>
+						<h4 ion-text text-wrap>Order #: {{ transaction.order_id }}</h4>
 						<button ion-button clear item-end (click)="edit_transaction(row,transaction)">Edit</button>
 						<button ion-button clear item-end color="danger" (click)="cancel_transaction(transaction)">Cancel</button>
 					</ion-item-divider>

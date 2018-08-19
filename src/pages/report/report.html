@@ -83,7 +83,6 @@
 					</ion-item>
 				</ion-card>
 			
-				<br>
 			</div>
 
 			<p *ngIf="!reports.length && isBusy" text-center>No results found.</p>
@@ -93,13 +92,16 @@
 
 		<div *ngSwitchCase="'daily-report'">
 
-			<ion-card>
+			<ion-card (click)="show_product(); $event.stopPropagation()">
 			  <ion-item>
 			  	<ion-label>Select Product</ion-label>
-			  	<ion-select [(ngModel)]="selected_product" (ionChange)="ngOnInit()" text-right>
-			  		<ion-option *ngFor="let product of products" value="{{ product.id }}">{{ product.name }}</ion-option>
-			  	</ion-select>
+			  	<button ion-button clear item-end>
+			  		<ion-icon name="add"></ion-icon>
+			  	</button>
 			  </ion-item>
+			</ion-card>
+
+			<ion-card>
 			  <ion-item>
 			  	<ion-label>
 			  		<ion-icon name="md-calendar"></ion-icon>
@@ -107,14 +109,6 @@
 			  	<ion-datetime displayFormat="MM/DD/YYYY" [(ngModel)]="sales_report_date" (ionChange)="ngOnInit()"></ion-datetime>
 			  </ion-item>
 			</ion-card>
-
-			<div class="hr-divider">
-			  <div class="hr-line"></div>
-			  <div class="hr-icon">
-			  	<h3>Release</h3>
-			  </div>
-			  <div class="hr-line"></div>
-			</div>
 
 			<ion-item no-lines>
 				<button ion-button icon-start clear color="primary" (click)="print('release')" item-end>

@@ -309,7 +309,8 @@ export class TransactionPage {
     })
   }
 
-  releasing_transaction(_data,date,self) {
+  releasing_transaction(_data,date,payment,self) {
+    _data.payment_type = payment;
     self.provider.postData({ transaction : _data, date : date , status : 'releasing' },'transaction/status').then((res:any) => {
       if(res._data.status){
         self.remove_pending(_data,self);
@@ -446,9 +447,9 @@ export class TransactionPage {
     header = '        Vista del rio \n Carmen, Cagayan de Oro City';
 
     if(_data.void){
-      content = header+'\n'+separator+'Order#: '+_data.order_id+'\nPrinted by: '+_data.printed_by+'\nPrinted on: '+_data.printed_at+'\n'+separator+'Owner: '+_data.first_name+'  '+_data.last_name+'\nRelease: '+moment(_data.release_at).format("MM/DD/YYYY")+'\nRemarks: Void\n'+separator+item+separator+'Total : P'+_data.total_payment+'\n\n\n';
+      content = header+'\n'+separator+'Order#: '+_data.order_id+'\nPrinted by: '+_data.printed_by+'\nPrinted on: '+_data.printed_at+'\n'+separator+'Owner: '+_data.first_name+'  '+_data.last_name+'\nRelease: '+moment(_data.release_at).format("MM/DD/YYYY")+'\nRemarks: Void\n'+separator+item+separator+'Total : P'+_data.total_payment+'\nPayment: '+_data.payment_type+'\n\n\n';
     }else {
-      content = header+'\n'+separator+'Order#: '+_data.order_id+'\nPrinted by: '+_data.printed_by+'\nPrinted on: '+_data.printed_at+'\n'+separator+'Owner: '+_data.first_name+'  '+_data.last_name+'\nRelease: '+moment(_data.release_at).format("MM/DD/YYYY")+'\n'+separator+item+separator+'Total : P'+_data.total_payment+'\n\n\n';
+      content = header+'\n'+separator+'Order#: '+_data.order_id+'\nPrinted by: '+_data.printed_by+'\nPrinted on: '+_data.printed_at+'\n'+separator+'Owner: '+_data.first_name+'  '+_data.last_name+'\nRelease: '+moment(_data.release_at).format("MM/DD/YYYY")+'\n'+separator+item+separator+'Total : P'+_data.total_payment+'\nPayment: '+_data.payment_type+'\n\n\n';
     }
 
     await this.printer.onWrite(content);

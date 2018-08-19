@@ -32,7 +32,7 @@ export class ReportPage implements OnInit {
   release_reports:any = [];  
   products:any = [];  
 
-  selected_product: any = '';
+  selected_product: any = [];
   daily_report_from: any = moment().format('YYYY-MM-DD');
   daily_report_to: any = moment().format('YYYY-MM-DD');
 
@@ -58,7 +58,7 @@ export class ReportPage implements OnInit {
       case "daily-report":
         this.release_reports = [];
         this.isBusy = false;
-        this.release();
+        this.release(this.selected_product);
         break;
       default:
         this.get_daily_report();
@@ -83,15 +83,25 @@ export class ReportPage implements OnInit {
     product.addButton({
       text: 'OK',
       handler: data => {
-        if(data != undefined){
-          this.export(data);
+        if(data.length > 0){
+          switch (this.report_tab) {
+            case "daily-report":
+              this.selected_product = data;
+              this.release_reports = [];
+              this.isBusy = false;
+              this.release(data);
+              break;
+            default:
+              this.export(data);
+              break;
+          }
         }
       }
     });
 
     for(let index = 0;index < this.products.length;index++){
         await product.addInput({
-          type: 'radio',
+          type: 'checkbox',
           label: this.products[index].name,
           value: this.products[index].id,
           checked: false
@@ -103,7 +113,7 @@ export class ReportPage implements OnInit {
 
   get_daily_report() {
     this.isBusy = false;
-    this.provider.getData({ product : this.selected_product, from : this.daily_report_from, to : this.daily_report_to },'report').then((res: any) => {
+    this.provider.getData({ from : this.daily_report_from, to : this.daily_report_to },'report').then((res: any) => {
       if(res._data.status){
         this.reports = res._data.data;
       }
@@ -114,8 +124,10 @@ export class ReportPage implements OnInit {
   export(_product) {
     this.isBusy = false;
     this.provider.getData({ product : _product, from : this.daily_report_from, to : this.daily_report_to },'report/export').then((res: any) => {
-      if(res._data.status){
+      if(res._data.status && res._data.data.length > 0){
        this.generate(res._data.data);
+      }else {
+        this.toast.presentToast('Failed to export! No results found.');
       }
       this.isBusy = true;
     })
@@ -168,8 +180,8 @@ export class ReportPage implements OnInit {
     return csv
   }
   
-  release() {
-    this.provider.getData({ product : this.selected_product, date : this.sales_report_date, status : 'cleared' },'report/release').then((res:any) => {
+  release(_data) {
+    this.provider.getData({ product : _data, date : this.sales_report_date, status : 'cleared' },'report/release').then((res:any) => {
       if(res._data.status){
         this.release_reports = res._data.data;
       }

@@ -135,18 +135,19 @@ export class CartPage implements OnInit {
   }
 
   check_out(_data) {
-    this.alert.confirm('Checkout').then((response:any) => {
-      if(response){
-      	this.provider.postData({ transaction : _data.id, status : 'pending' },'cart/status').then((res:any) => {
-      		if(res._data.status){
-      			this.ngOnInit();
-            _data.status = 'pending';
-            let params = { data : _data, type : 'add-pending-transaction' };
-            this.socket.emit('transaction', { text: params });
-            this.event.publish('notification:badge','decrement');
-            this.toast.presentToast('Successfully checkout');
-      		}
-      	});
+    this.navCtrl.push('CheckoutCalendarPage',{ self: this, callback : this.checkout, data : _data });
+  }
+
+  checkout(_data,date,self) {
+    self.provider.postData({ transaction : _data.id, release_at : date, status : 'pending' },'cart/status').then((res:any) => {
+      if(res._data.status){
+        self.ngOnInit();
+        _data.release_at = date;
+        _data.status = 'pending';
+        let params = { data : _data, type : 'add-pending-transaction' };
+        self.socket.emit('transaction', { text: params });
+        self.event.publish('notification:badge','decrement');
+        self.toast.presentToast('Successfully checkout');
       }
     });
   }
