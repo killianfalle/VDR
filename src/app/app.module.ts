@@ -9,13 +9,18 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { LoaderComponent } from '../components/loader/loader';
+import { ToastComponent } from '../components/toast/toast';
 import { AlertComponent } from '../components/alert/alert';
 import { DataProvider } from '../providers/data-provider';
 import { PrinterProvider } from '../providers/printer';
 import { BluetoothSerial } from '@ionic-native/bluetooth-serial';
+import { SQLite } from '@ionic-native/sqlite';
+import { Keyboard } from '@ionic-native/keyboard';
+import { File } from '@ionic-native/file';
+import { DecimalPipe } from '@angular/common';
 
 import { SocketIoModule, SocketIoConfig } from 'ng-socket-io';
-const socket: SocketIoConfig = { url: 'http://192.168.43.206:3001', options: {} };
+const socket: SocketIoConfig = { url: 'http://159.89.194.81:3001', options: {} };
 
 var config = {
       backButtonText: '',
@@ -45,10 +50,15 @@ var config = {
     StatusBar,
     SplashScreen,
     LoaderComponent,
+    ToastComponent,
     AlertComponent,
     DataProvider,
     PrinterProvider,
     BluetoothSerial,
+    SQLite,
+    Keyboard,
+    File,
+    DecimalPipe,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

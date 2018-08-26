@@ -5,6 +5,7 @@ import { Validators,
          FormGroup } from '@angular/forms';
 import { DataProvider } from '../../providers/data-provider';
 import { LoaderComponent } from '../../components/loader/loader';
+import { ToastComponent } from '../../components/toast/toast';
 
 /**
  * Generated class for the AddStaffPage page.
@@ -22,11 +23,13 @@ export class AddStaffPage {
 
   info: FormGroup;
   _callback: any;
+  error:any = {};
 
   constructor(
   	public navCtrl: NavController, 
   	public navParams: NavParams,
     public loader: LoaderComponent,
+    public toast: ToastComponent,
   	public provider: DataProvider,
   	public form: FormBuilder) {
 
@@ -38,7 +41,7 @@ export class AddStaffPage {
   	this.info = this.form.group({
       first_name: ['', Validators.required],
       last_name: ['', Validators.required],
-      type: ['', Validators.required],
+      user_role: ['', Validators.required],
       email: ['', Validators.required],
       password: ['', Validators.required],
       confirm_password: ['', Validators.required]
@@ -49,10 +52,13 @@ export class AddStaffPage {
   	this.provider.postData(this.info.value,'register').then((res: any) => {
   		if(res._data.status){
   			console.log(res._data.message);
+        this.toast.presentToast(res._data.message);
         this._callback(this.navParams.get('self'));
   			this.navCtrl.pop();
   		}
-  	});
+  	}).catch((error) => {
+      this.error = JSON.parse(error._body).error;
+    });
   }
 
   ionViewDidLoad() {

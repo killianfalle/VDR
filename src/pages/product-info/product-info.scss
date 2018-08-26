@@ -1,0 +1,18 @@
+page-product-info {
+
+	.row, .col {
+		margin: 0;
+		padding: 0;
+	}
+
+	.size .input-wrapper {
+		color: color($colors,orange);
+		font-weight: bold;
+		border-bottom: 0.55px solid gray;
+	}
+
+	.item-divider {
+		color: color($colors,orange);
+		font-weight: bold;
+	}
+}

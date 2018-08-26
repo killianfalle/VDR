@@ -6,6 +6,7 @@ import { IonicPage,
          Events } from 'ionic-angular';
 import { DataProvider } from '../../providers/data-provider';
 import { AlertComponent } from '../../components/alert/alert';
+import { ToastComponent } from '../../components/toast/toast';
 import { Socket } from 'ng-socket-io';
 
 /**
@@ -32,6 +33,7 @@ export class CartPage implements OnInit {
   	public navCtrl: NavController, 
   	public navParams: NavParams,
     private alert: AlertComponent,
+    private toast: ToastComponent,
   	private provider: DataProvider,
     private event: Events,
     private socket: Socket) 
@@ -57,10 +59,11 @@ export class CartPage implements OnInit {
   cancel_edit() {
     this.cart[this.key] = JSON.parse(localStorage.getItem('cart_item'));
     this.key = null;
+    localStorage.removeItem('cart_item');
   }
 
   delete(row,i,_data) {
-    this.alert.confirm().then((response: any) => {
+    this.alert.confirm('Remove Order').then((response: any) => {
       if(response){
         this.provider.postData({ root_id : this.cart[row].id, item_id : _data.id },'cart/delete').then((res:any) => {
           if(res._data.status){
@@ -76,10 +79,28 @@ export class CartPage implements OnInit {
               if(root > -1){
                 this.cart.splice(root, 1);
               }
-              this.event.publish('notification:badge');
+              this.event.publish('notification:badge','decrement');
             }
           }
         });  
+      }
+    });
+  }
+
+  discard(row,_id) {
+    this.alert.confirm('Discard Order').then((response: any) => {
+      if(response){
+        this.provider.postData({ transaction : _id, status : 'cancel' },'cart/discard').then((res:any) => {
+          if(res._data.status){
+            let root = this.cart.indexOf(this.cart[row]);
+
+            if(root > -1){
+              this.cart.splice(root, 1);
+              this.toast.presentToast('Order successfully discarded');
+              this.event.publish('notification:badge','decrement');
+            }
+          }
+        });
       }
     });
   }
@@ -100,11 +121,13 @@ export class CartPage implements OnInit {
   }
 
   update(_data) {
-    this.alert.confirm().then((response:any) => {
+    this.alert.confirm('Save Changes').then((response:any) => {
       if(response){
         this.provider.postData({ data : _data },'cart/update').then((res:any) => {
           if(res._data.status){
             this.key = null;
+            localStorage.removeItem('cart_item');
+            this.toast.presentToast(res._data.message);
           }
         });
       }
@@ -112,20 +135,42 @@ export class CartPage implements OnInit {
   }
 
   check_out(_data) {
-    this.alert.confirm().then((response:any) => {
-      if(response){
-      	this.provider.postData({ transaction : _data.id, status : 'pending' },'cart/status').then((res:any) => {
-      		if(res._data.status){
-      			this.ngOnInit();
-            _data.status = 'pending';
-            let params = { data : _data, type : 'add-pending-transaction' };
-            this.socket.emit('transaction', { text: params });
-            this.event.publish('notification:badge');
-      		}
-      	});
+    this.navCtrl.push('CheckoutCalendarPage',{ self: this, callback : this.checkout, data : _data });
+  }
+
+  checkout(_data,date,self) {
+    self.provider.postData({ transaction : _data.id, release_at : date, status : 'pending' },'cart/status').then((res:any) => {
+      if(res._data.status){
+        self.ngOnInit();
+        _data.release_at = date;
+        _data.order_id = res._data.data;
+        _data.status = 'pending';
+        let params = { data : _data, type : 'add-pending-transaction' };
+        self.socket.emit('transaction', { text: params });
+        self.event.publish('notification:badge','decrement');
+        self.toast.presentToast('Successfully checkout');
       }
     });
   }
+
+  pressed() {  }
+
+  active(index,subIndex,_add = true) {
+    if(_add){
+      this.cart[index]['orders'][subIndex].quantity = parseInt(this.cart[index]['orders'][subIndex].quantity) + 1;
+      this.cart[index].total_payment =  parseInt(this.cart[index].total_payment) + parseInt(this.cart[index]['orders'][subIndex].price);
+      this.cart[index]['orders'][subIndex].total = parseInt(this.cart[index]['orders'][subIndex].total) + parseInt(this.cart[index]['orders'][subIndex].price);
+    }
+    else{
+      if(parseInt(this.cart[index]['orders'][subIndex].quantity) - 1){
+        this.cart[index]['orders'][subIndex].quantity = parseInt(this.cart[index]['orders'][subIndex].quantity) - 1;
+        this.cart[index].total_payment = parseInt(this.cart[index].total_payment) - parseInt(this.cart[index]['orders'][subIndex].price);
+        this.cart[index]['orders'][subIndex].total = parseInt(this.cart[index]['orders'][subIndex].total) - parseInt(this.cart[index]['orders'][subIndex].price);
+      }
+    }
+  }
+
+  released() { }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad CartPage');

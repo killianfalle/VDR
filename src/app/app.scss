@@ -14,6 +14,18 @@
 // To declare rules for a specific mode, create a child rule
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
+@font-face{
+    font-family: Karla;
+    src: url('../assets/fonts/karla.woff2');
+}
+
+*{
+  font-family: 'Karla', sans-serif;
+}
+
+.toolbar-ios .segment-button {
+  max-width: 100%;
+}
 
 ion-loading.default {
 
@@ -40,14 +52,14 @@ ion-loading.default {
 	    &.spinner-dots circle {
 	      fill: color($colors,light);
 	    }
-	}
+  	}
 
-	ion-spinner svg:first-child {
-		left: 25px !important;
-	}
-	ion-spinner svg:nth-child(3) {
-		left: -25px !important;
-	}
+  	ion-spinner svg:first-child {
+  		left: 25px !important;
+  	}
+  	ion-spinner svg:nth-child(3) {
+  		left: -25px !important;
+  	}
   }
 }
 
@@ -57,8 +69,6 @@ ion-loading.custom {
   }
 
   .loading-wrapper {
-  	color: color($colors,light);
-    background: color($colors,dark);
     box-shadow: none;
 
     .spinner-dots{
@@ -78,4 +88,12 @@ ion-loading.custom {
 	    }
 	}
   }
+}
+
+body.keyboard-is-open .tabbar {
+  display: none;
+}
+
+body.keyboard-is-open .scroll-content {
+  margin-bottom: 0 !important;
 }

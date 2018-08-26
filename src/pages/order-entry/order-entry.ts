@@ -6,6 +6,7 @@ import { IonicPage,
          NavParams,
          Events } from 'ionic-angular';
 import { LoaderComponent } from '../../components/loader/loader';
+import { AlertComponent } from '../../components/alert/alert';
 import { DataProvider } from '../../providers/data-provider';
 
 /**
@@ -26,18 +27,20 @@ export class OrderEntryPage implements OnInit {
   user: any;
   form: any;
 
-  product: any = {};
+  product: any = [];
 
+  classes: any = [];
   sizes: any = [];
   quantities: any = [];
 
-  steps: any = 1;
+  steps: any = 0;
 
   constructor(
   	public navCtrl: NavController,
   	public navParams: NavParams,
     private provider: DataProvider,
     public loader: LoaderComponent,
+    public alert: AlertComponent,
     private event: Events
   ) {
     this.customer = navParams.get('customer');
@@ -48,27 +51,44 @@ export class OrderEntryPage implements OnInit {
   initForm() {
   	this.form = {
       id: null,
+      name: null,
   		class : { id : '', name: ''},
   		size: { id : '', name: ''},
       qty_type: { id : '', name: ''},
       quantity: null,
       price: null,
-      total: null
+      total: null,
+      customer: null,
+      transacted_by: null
   	}
+
+    this.form.customer = this.customer.id;
+    this.form.transacted_by = this.user.id;
   }
 
   ngOnInit() {
     this.provider.getData('','product').then((res: any) => {
-      this.product = res._data;
-      this.quantities = this.product.quantity;
-      this.form.id = res._data.id;
+      if(res._data.data){
+        this.product = res._data.data;
+      }
     });
   }
 
-  select_class(_class,_size) {
+  select_product(_data) {
+    this.form.id = _data.id;
+    this.form.name = _data.name;
+    this.classes = _data.class;
+    this.quantities = _data.quantity;
+
+    setTimeout(() => {
+      this.onPage();
+    },300)
+  }
+
+  select_class(_class) {
     this.form.class.id = _class.id;
     this.form.class.name = _class.name;
-    this.sizes = _size;
+    this.sizes = _class.size;
 
     setTimeout(() => {
       this.onPage();
@@ -93,20 +113,20 @@ export class OrderEntryPage implements OnInit {
 
   setTotal() {
     if(this.form.price != 0 && this.form.quantity != 0)
-      this.form.total = parseFloat(this.form.price) * parseFloat(this.form.quantity);
+      this.form.total = Math.round((parseFloat(this.form.price) * parseFloat(this.form.quantity)) * 100) / 100;
     if(this.form.price == 0 || this.form.quantity == 0)
       this.form.total = null;
   }
 
   submit() {
-    this.form.customer = this.customer.id;
-    this.form.transacted_by = this.user.id;
-
-    this.provider.postData(this.form,'transaction/entry').then((res: any) => {
-      if(res._data.status){
-        this.event.publish('notification:badge');
-        console.log(res._data.message);
-        this.navCtrl.pop();
+    this.alert.confirm().then(res => {
+      if(res){
+        this.provider.postData(this.form,'transaction/entry').then((res: any) => {
+          if(res._data.status){
+            this.event.publish('notification:badge',null,res._data.badge);
+            this.navCtrl.pop();
+          }
+        });
       }
     });
   }
@@ -119,7 +139,7 @@ export class OrderEntryPage implements OnInit {
   }
 
   preview(){
-    this.navCtrl.push('ReviewEntryPage', { data : this.form });
+    this.navCtrl.push('ReviewEntryPage', { data : this.form, customer : this.customer });
   }
 
   ionViewDidLoad() {

@@ -7,7 +7,7 @@
 <ion-header>
 
   <ion-navbar color="orange">
-    <ion-title>Register Customer</ion-title>
+    <ion-title>New Customer</ion-title>
     <ion-buttons end>
       <cart></cart>
     </ion-buttons>
@@ -16,13 +16,18 @@
 </ion-header>
 
 
-<ion-content padding>
+<ion-content>
 
 	<form [formGroup]="customer" (ngSubmit)="register()">
+		<br>
+		
+		<div class="error" *ngIf="error.full_name">{{ error.full_name }}</div>
+
 		<ion-item>
 			<ion-label stacked>First Name</ion-label>
 			<ion-input type="text" text-center formControlName="first_name"></ion-input>
 		</ion-item>
+		<div class="error" *ngIf="error.first_name">{{ error.first_name }}</div>
 
 		<br>
 
@@ -30,11 +35,14 @@
 			<ion-label stacked>Last Name</ion-label>
 			<ion-input type="text" text-center formControlName="last_name"></ion-input>
 		</ion-item>
+		<div class="error" *ngIf="error.last_name">{{ error.last_name }}</div>
 
 		<br>
 		<br>
 
-		<button ion-button block color="orange">Add Customer</button>
+		<div padding>
+			<button ion-button block color="orange">Add Customer</button>
+		</div>
 	</form>
 
 </ion-content>

@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { IonicPage,
-    		 NavController, 
-    		 NavParams } from 'ionic-angular';
+         NavController, 
+         NavParams } from 'ionic-angular';
 import { CalendarComponentOptions } from 'ion2-calendar';
 import { LoaderComponent } from '../../components/loader/loader';
 import { AlertComponent } from '../../components/alert/alert';
 import { PrinterProvider } from '../../providers/printer';
+import { DecimalPipe } from '@angular/common';
 import moment  from 'moment';
 
 /**
@@ -22,10 +23,12 @@ import moment  from 'moment';
 })
 export class CalendarPage {
 
+  profile: any;
+
   date: any = moment().format('YYYY-MM-DD');
   type: 'string';
   option: CalendarComponentOptions = {
-  	color: 'danger'
+    color: 'danger'
   };
 
   _callback: any;
@@ -33,19 +36,23 @@ export class CalendarPage {
   self: any;
 
   constructor(
-  	public navCtrl: NavController, 
-  	public navParams: NavParams,
+    public navCtrl: NavController, 
+    public navParams: NavParams,
     public loader: LoaderComponent,
     public alert: AlertComponent,
+    public decimal: DecimalPipe,
     private printer: PrinterProvider) {
 
-  	this.params = navParams.get('data');
-  	this.self = navParams.get('self');
-  	this._callback = navParams.get('callback');
+    this.profile = JSON.parse(localStorage.getItem('_info'));
+    this.params = navParams.get('data');
+    this.self = navParams.get('self');
+    this._callback = navParams.get('callback');
+    this.params.printed_by = this.profile.first_name+' '+this.profile.last_name;
+    this.params.printed_at = moment().format('MM/DD/YYYY');
   }
 
   action(submit = true) {
-  	if(submit){
+    if(submit){
       this.alert.confirm().then((response: any) => {
         if (response) {
           this.printer.is_enabled().then((res: any) => {
@@ -55,9 +62,9 @@ export class CalendarPage {
           });
         }
       });
-  	}else {
-  		this.navCtrl.pop();
-  	}
+    }else {
+      this.navCtrl.pop();
+    }
   }
 
   enable_blueetooth() {
@@ -76,36 +83,48 @@ export class CalendarPage {
     });
   }
 
-  async ready_print(_data){
+  ready_print(_data){
+    let separator = '-------------------------------\n';
+    let header = '';
     let item = '';
 
     for(let counter = 0;counter < _data.orders.length;counter++){
-      item += `\n`+
-              _data.orders[counter].class +`\n`+
-              _data.orders[counter].size +` (`+_data.orders[counter].type+`)\n`+
-              _data.orders[counter].quantity +` x `+_data.orders[counter].price+`\n`;
+      item += _data.orders[counter].class +'\n'+_data.orders[counter].size; 
+
+      if(_data.orders[counter].type == null){
+        item += '\n'+this.decimal.transform(_data.orders[counter].quantity,'1.0-0')+'xP'+this.decimal.transform(_data.orders[counter].price,'1.2-2')+'=P'+this.decimal.transform(_data.orders[counter].total,'1.2-2')+'\n';
+      }else{
+        item += '('+_data.orders[counter].type+')\n'+this.decimal.transform(_data.orders[counter].quantity,'1.0-0')+'xP'+this.decimal.transform(_data.orders[counter].price,'1.2-2')+'=P'+this.decimal.transform(_data.orders[counter].total,'1.2-2')+'\n';
+      }
+
+      if((counter+1) < _data.orders.length){
+        item += '\n';
+      }
     }
 
-    for(let count = 0;count < 2;count++){
-      await this.printer.onWrite(`
-        \n         Vista del rio         \n   
-        Cagayan De Oro City    
-        \n-------------------------------
-        \nOrder#: `+ _data.order_id +`
-        \nOwner: `+_data.first_name+`  `+_data.last_name +`
-        \nRelease: `+moment(this.date).format('MM/DD/YYYY')+`
-        \n-------------------------------\n`+
-           item + `
-        \n-------------------------------
-        \nTotal : P`+ _data.total_payment +`
-      \n`)
-    }
+    header = '        Vista del rio \n Carmen, Cagayan de Oro City';
 
-    this.callback();
+    this.alert.prompt_payment().then((response:any) => {
+      if(response){
+        let content = header+'\n'+separator+'Order#: '+_data.order_id+'\nPrinted by: '+this.params.printed_by+'\nPrinted on: '+this.params.printed_at+'\n'+separator+'Owner: '+_data.first_name+' '+_data.last_name+'\nRelease: '+moment(this.date).format("MM/DD/YYYY")+'\n'+separator+item+separator+'Total: P'+ this.decimal.transform(_data.total_payment,'1.2-2') +'\nPayment: '+response+'\n\n\n';
+        this.print_for_release(content);
+
+        this.alert.confirm_print().then((res:any) => {
+          if(res){
+            this.print_for_release(content);
+            this.callback(response);
+          }
+        });
+      }
+    })
   }
 
-  callback() {
-    this._callback(this.params,moment(this.date).format('YYYY-MM-DD'),this.self);
+  async print_for_release(_data) {
+    await this.printer.onWrite(_data);
+  }
+
+  callback(_payment) {
+    this._callback(this.params,moment(this.date).format('YYYY-MM-DD'),_payment,this.self);
     this.navCtrl.pop();
   }
 

@@ -22,6 +22,15 @@ export class LoaderComponent {
 				this.css = 'custom';
 				break;
 
+			case "processing":
+				this.content = `
+							  <div class="custom-spinner-container">
+							    <div class="custom-spinner-box"></div>
+							  </div>`;
+				this.spinner = 'bubbles';
+				this.css = 'custom';
+				break;
+
 			case "submit":
 				this.content = `
 							  <div class="custom-spinner-container">

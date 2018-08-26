@@ -10,9 +10,12 @@ import { LoaderComponent } from '../../components/loader/loader';
 })
 export class HomePage {
 
+  profile:any = {};
+
   constructor(
   	public navCtrl: NavController,
   	public loader: LoaderComponent) {
+    this.profile = JSON.parse(localStorage.getItem('_info'));
   }
 
   navigate(page){

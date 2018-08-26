@@ -17,13 +17,16 @@ import { LoaderComponent } from '../../components/loader/loader';
 })
 export class ReviewEntryPage {
 
+  customer: any;
   data: any = {};
 
   constructor(
   	public navCtrl: NavController, 
   	public navParams: NavParams,
   	public loader: LoaderComponent) {
-  	this.data = navParams.get('data');
+    this.data = navParams.get('data');
+  	this.customer = navParams.get('customer');
+    console.log(this.customer);
   }
 
   ionViewDidLoad() {

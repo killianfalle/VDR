@@ -7,151 +7,261 @@
 <ion-header>
 
   <ion-navbar color="orange">
+  	<ion-buttons *ngIf="profile.type == 'printer_staff'" start>
+  	  <logo></logo>
+  	</ion-buttons>
     <ion-title>Transaction</ion-title>
-    <ion-buttons end>
+    <ion-buttons [hidden]="profile.type == 'printer_staff'" end>
       <cart></cart>
     </ion-buttons>
   </ion-navbar>
+
+  <ion-toolbar>
+  	<ion-segment mode="md" [(ngModel)]="tabs" color="dark" (ionChange)="get_transaction()">
+  		<ion-segment-button value="cleared">
+  			Cleared (<span ion-text color="secondary">{{ cleared_result }}</span>)
+  		</ion-segment-button>
+
+  		<ion-segment-button value="releasing"  text-wrap>
+  			Releasing (<span ion-text color="secondary">{{ releasing_result }}</span>)
+  		</ion-segment-button>
+
+  		<ion-segment-button value="pending">
+  			Pending (<span ion-text color="secondary">{{ pending_result }}</span>)
+  		</ion-segment-button>
+  	</ion-segment>
+  </ion-toolbar>
 
 </ion-header>
 
 
 <ion-content>
 
-	<ion-segment mode="md" [(ngModel)]="tabs" color="dark" (ionChange)="get_transaction()">
-		<ion-segment-button value="cleared">
-			Cleared 
-		</ion-segment-button>
-
-		<ion-segment-button value="releasing">
-			Ready for Release 
-		</ion-segment-button>
-
-		<ion-segment-button value="pending">
-			Pending 
-		</ion-segment-button>
-	</ion-segment>
-	
-	<br>
-
-	<ion-item>
-		<ion-label>
-			<ion-icon name="md-calendar"></ion-icon>
-		</ion-label>
-		<ion-datetime displayFormat="MM/DD/YYYY" [(ngModel)]="search_date" (ionChange)="get_transaction()"></ion-datetime>
-	</ion-item>	
-
 	<br>
 
 	<div [ngSwitch]="tabs" >
 		<div *ngSwitchCase="'cleared'">
+
+			<ion-item>
+				<ion-label>
+					<ion-icon name="md-calendar"></ion-icon>
+				</ion-label>
+				<ion-datetime displayFormat="MM/DD/YYYY" [(ngModel)]="search_date" (ionChange)="get_transaction()"></ion-datetime>
+			</ion-item>	
+
+			<br>
+
+			<ion-item *ngIf="cleared_transactions.length == 0 && isBusy" text-center no-lines>
+				<p>No cleared transaction.</p>
+			</ion-item>
+
 			<div *ngFor="let transaction of cleared_transactions">
 				<ion-card>
-					<ion-card-header text-capitalize>
-						<p>Owner: {{ transaction.first_name }} {{ transaction.last_name }}</p>
-						<h4>Release Date : {{ transaction.release_at | date : 'MM/dd/yy' }}</h4>
-						<p>Status : 
+					<ion-item-divider text-capitalize>
+						<h4 ion-text text-wrap>Order #: {{ transaction.order_id }}</h4>
+						<h4 ion-text text-wrap>
+							Owner: 
+							<strong>{{ transaction.first_name }} {{ transaction.last_name }}</strong>
+						</h4>
+						<h4 ion-text text-wrap>
+							Release Date: 
+							<strong>{{ transaction.release_at | date : 'MM/dd/yy' }}</strong>
+						</h4>
+						<h4 [hidden]="!transaction.void">Status: 
 							<span>
-								<ion-badge color="secondary" *ngIf="transaction.status == 'cleared'">Cleared</ion-badge>
 								<ion-badge color="danger" [hidden]="!transaction.void">Void</ion-badge>
 							</span>
-						</p>
-					</ion-card-header>
+						</h4>
+					</ion-item-divider>
 
 					<ion-list>
 						<ion-item *ngFor="let item of transaction.orders">
-							<h4>{{ item.class }}</h4>
-							<h4 padding-left>{{ item.size }}({{ item.type }})</h4>
-							<p  padding-left>{{ item.quantity }}x{{ item.price }}</p>
+							<h2 ion-text color="orange">{{ item.product }}</h2>
+							<h4 padding-left>{{ item.class }}</h4>
+							<h4 padding-left>{{ item.size }}
+								<span [hidden]="!item.type">({{ item.type }})</span>
+							</h4>
+							<p  padding-left>
+								{{ item.quantity | number : fractionSize }} x &#8369;{{ item.price | number : fractionSize }}
+								<span ion-text color="danger" float-right>&#8369;{{ item.total | number : fractionSize }}</span>
+							</p>
 						</ion-item>
 					</ion-list>
 
-					<ion-item-divider [hidden]="transaction.void">
-						<button ion-button block padding color="danger" (tap)="void_transaction(transaction.id,'cleared');">
-							Void
-						</button>
-					</ion-item-divider>
+					<ion-card-content>
+						<h4 ion-text color="danger" text-right>Total : &#8369;{{ transaction.total_payment | number : fractionSize }}</h4>
+					</ion-card-content>
+
+					<ion-row>
+						<ion-col text-center>
+							<button ion-button [hidden]="transaction.void" small clear icon-end color="danger" (click)="void_transaction(transaction.id,'cleared');">
+								Set Void
+								<ion-icon name="alert"></ion-icon>
+							</button>
+							<button *ngIf="transaction.void" ion-button small clear icon-end color="orange" (click)="read_reason(transaction.void_reason)">
+								Read Void Reason
+							</button>
+						</ion-col>
+						<ion-col text-center>
+							<button ion-button small clear icon-end color="primary" (click)="reprint(transaction)" item-end>
+								RePrint
+								<ion-icon name="print"></ion-icon>
+							</button>
+						</ion-col>
+					</ion-row>
 				</ion-card>
+
+				<br>
 			</div>
 
 			<spinner [hidden]="isBusy"></spinner>
 		</div>
 
 		<div *ngSwitchCase="'releasing'">
+			<form (ngSubmit)="search()">
+				<ion-searchbar mode="md" [(ngModel)]="keyword" name="keyword" (ionClear)="reset();" placeholder="search"></ion-searchbar>
+			</form>
+
+			<br>
+			
+			<ion-item *ngIf="releasing_transactions.length == 0 && isBusy" text-center no-lines>
+				<p>No transaction for release .</p>
+			</ion-item>
+
 			<div *ngFor="let transaction of releasing_transactions">
 				<ion-card>
-					<ion-card-header  text-capitalize>
-						<p>Owner : {{ transaction.first_name }} {{ transaction.last_name }}</p>
-						<h4>Release Date : {{ transaction.release_at | date : 'MM/dd/yy' }}</h4>
-						<p>Status : 
+					<ion-item-divider text-capitalize>
+						<h4 ion-text text-wrap>Order #: {{ transaction.order_id }}</h4>
+						<h4 ion-text text-wrap>
+							Owner: 
+							<strong>{{ transaction.first_name }} {{ transaction.last_name }}</strong>
+						</h4>
+						<h4 ion-text text-wrap>
+							Release Date: 
+							<strong>{{ transaction.release_at | date : 'MM/dd/yy' }}</strong>	
+						</h4>
+						<h4 [hidden]="!transaction.void">Status: 
 							<span>
-								<ion-badge color="primary" *ngIf="transaction.status == 'releasing'">Ready for Release</ion-badge>
 								<ion-badge color="danger" [hidden]="!transaction.void">Void</ion-badge>
 							</span>
-						</p>
-					</ion-card-header>
+						</h4>
+					</ion-item-divider>
 
 					<ion-list>
 						<ion-item *ngFor="let item of transaction.orders">
-							<h4>{{ item.class }}</h4>
-							<h4 padding-left>{{ item.size }}({{ item.type }})</h4>
-							<p  padding-left>{{ item.quantity }}x{{ item.price }}</p>
+							<h2 ion-text color="orange">{{ item.product }}</h2>
+							<h4 padding-left>{{ item.class }}</h4>
+							<h4 padding-left>{{ item.size }}
+								<span [hidden]="!item.type">({{ item.type }})</span>
+							</h4>
+							<p  padding-left>
+								{{ item.quantity | number : fractionSize }} x &#8369;{{ item.price | number : fractionSize }}
+								<span ion-text color="danger" float-right>&#8369;{{ item.total | number : fractionSize }}</span>
+							</p>
 						</ion-item>
 					</ion-list>
 
-					<ion-item-divider>
-						<ion-row>
-							<!-- <ion-col>
-								<button ion-button block color="primary" (tap)="verify_connectivity(transaction);">
-									Print
-								</button>
-							</ion-col> -->
-							<ion-col [hidden]="transaction.void">
-								<button ion-button block color="danger" (tap)="void_transaction(transaction.id,'releasing');">
-									Void
-								</button>
-							</ion-col>
-						</ion-row>
-					</ion-item-divider>
+					<ion-card-content>
+						<h4 ion-text color="danger" text-right>Total : &#8369;{{ transaction.total_payment | number : fractionSize }}</h4>
+					</ion-card-content>
+
+					<ion-row>
+						<ion-col text-center>
+							<button [hidden]="transaction.void" small clear ion-button icon-end color="danger" (click)="void_transaction(transaction.id,'releasing');" item-start>
+								Set Void
+								<ion-icon name="alert"></ion-icon>
+							</button>
+							<button *ngIf="transaction.void" small clear ion-button icon-end color="orange" (click)="read_reason(transaction.void_reason)">
+								Read Reason
+							</button>
+						</ion-col>
+						<ion-col text-center>
+							<button ion-button small clear icon-end color="primary" (click)="reprint(transaction)" item-end>
+								RePrint
+								<ion-icon name="print"></ion-icon>
+							</button>
+						</ion-col>
+					</ion-row>
 				</ion-card>
+
+				<br>
 			</div>
 
-			<spinner [hidden]="isBusy"></spinner>
+			<spinner *ngIf="!isBusy && offset_releasing == 0"></spinner>
+
+			<ion-infinite-scroll #infinite_releasing (ionInfinite)="doInfinite($event)" threshold="100px">
+			  <ion-infinite-scroll-content>
+			  </ion-infinite-scroll-content>
+			</ion-infinite-scroll>
 		</div>
 
 		<div *ngSwitchCase="'pending'">
-			<div *ngFor="let transaction of pending_transactions">
+			
+			<form (ngSubmit)="search()">
+				<ion-searchbar mode="md" [(ngModel)]="keyword" name="keyword" (ionClear)="reset();" placeholder="search"></ion-searchbar>
+			</form>
+
+			<br>
+
+			<ion-item *ngIf="pending_transactions.length == 0 && isBusy" text-center no-lines>
+				<p>No pending transaction.</p>
+			</ion-item>
+
+			<div *ngFor="let transaction of pending_transactions; let row = index">
 				<ion-card>
-					<ion-card-header  text-capitalize>
-						<p>Owner: {{ transaction.first_name }} {{ transaction.last_name }}</p>
-					</ion-card-header>
+					<ion-item-divider  text-capitalize>
+						<h4 ion-text text-wrap>Order #: {{ transaction.order_id }}</h4>
+						<h4 ion-text text-wrap>
+							Owner: 
+							<strong>{{ transaction.first_name }} {{ transaction.last_name }}</strong>
+						</h4>
+						<h4 ion-text text-wrap>
+							Release Date: 
+							<strong>{{ transaction.release_at | date : 'MM/dd/yy' }}</strong>
+						</h4>
+						<h4 ion-text text-wrap>
+							Entry by: {{ transaction.firstName }} {{ transaction.lastName }}
+						</h4>
+						<button ion-button clear item-end (click)="edit_transaction(row,transaction)" [hidden]="profile.type == 'printer_staff'">Edit</button>
+						<button ion-button clear item-end color="danger" (click)="cancel_transaction(transaction)" [hidden]="profile.type == 'printer_staff'">Cancel</button>
+					</ion-item-divider>
 
 					<ion-list>
 						<ion-item *ngFor="let item of transaction.orders">
-							<h4>{{ item.class }}</h4>
-							<h4 padding-left>{{ item.size }}({{ item.type }})</h4>
-							<p  padding-left>{{ item.quantity }}x{{ item.price }}</p>
+							<h2 ion-text color="orange">{{ item.product }}</h2>
+							<h4 padding-left>{{ item.class }}</h4>
+							<h4 padding-left>{{ item.size }}
+								<span [hidden]="!item.type">({{ item.type }})</span>
+							</h4>
+							<p  padding-left>
+								{{ item.quantity | number : fractionSize }} x &#8369;{{ item.price | number : fractionSize }}
+								<span ion-text color="danger" float-right>&#8369;{{ item.total | number : fractionSize }}</span>
+							</p>
 						</ion-item>
 					</ion-list>
+					<ion-card-content>
+						<h4 ion-text color="danger" text-right>Total : &#8369;{{ transaction.total_payment | number : fractionSize }}</h4>
+					</ion-card-content>
 
-					<ion-item-divider>
-						<ion-row>
-							<ion-col>
-								<button ion-button block color="orange" (tap)="show_calendar(transaction)">
-									Ready for Release
-								</button>
-							</ion-col>
-							<ion-col>
-								<button ion-button block color="danger" (tap)="cancel_transaction(transaction)">
-									Cancel
-								</button>
-							</ion-col>
-						</ion-row>
-					</ion-item-divider>
+					<ion-row>
+						<ion-col text-center>
+							<button ion-button small clear icon-end color="orange" (click)="show_calendar(transaction)">
+								Ready for Release
+								<ion-icon name="checkbox-outline"></ion-icon>
+							</button>
+						</ion-col>
+					</ion-row>
 				</ion-card>
+
+				<br>
 			</div>
 
-			<spinner [hidden]="isBusy"></spinner>
+			<spinner *ngIf="!isBusy && offset_pending == 0"></spinner>
+
+			<ion-infinite-scroll #infinite_pending (ionInfinite)="doInfinite($event)" threshold="100px">
+			  <ion-infinite-scroll-content>
+			  </ion-infinite-scroll-content>
+			</ion-infinite-scroll>
 		</div>
 	</div>
 
