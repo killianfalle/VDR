@@ -10,10 +10,7 @@
   	<ion-buttons start>
   	  <logo></logo>
   	</ion-buttons>
-    <ion-title>Vista del rio</ion-title>
-    <ion-buttons end [hidden]="profile.type == 'warehouse_staff'">
-      <cart></cart>
-    </ion-buttons>
+    <ion-title>Vista Del Rio</ion-title>
   </ion-navbar>
 
   <ion-toolbar>
@@ -49,12 +46,18 @@
 			<div *ngFor="let transaction of cleared_transactions">
 				<ion-card>
 					<ion-item-divider text-capitalize>
-						<h4 ion-text text-wrap>Owner: {{ transaction.first_name }} {{ transaction.last_name }}</h4>
-						<h4 ion-text text-wrap>Release Date : {{ transaction.release_at | date : 'MM/dd/yy' }}</h4>
-						<h4 ion-text text-wrap>Status : 
+						<h4 ion-text text-wrap>Order #: {{ transaction.order_id }}</h4>
+						<h4 ion-text text-wrap>
+							Owner: 
+							<strong>{{ transaction.first_name }} {{ transaction.last_name }}</strong>
+						</h4>
+						<h4 ion-text text-wrap>
+							Release Date: 
+							<strong>{{ transaction.release_at | date : 'MM/dd/yy' }}</strong>
+						</h4>
+						<h4 ion-text text-wrap [hidden]="!transaction.void">Status: 
 							<span>
-								<ion-badge color="secondary" *ngIf="transaction.status == 'cleared'">Cleared</ion-badge>
-								<ion-badge color="danger" [hidden]="!transaction.void">Void</ion-badge>
+								<ion-badge color="danger">Void</ion-badge>
 							</span>
 						</h4>
 					</ion-item-divider>
@@ -64,7 +67,7 @@
 							<h2 ion-text color="orange">{{ item.product }}</h2>
 							<h4 padding-left>{{ item.class }}</h4>
 							<p  padding-left>
-								{{ item.quantity }} x {{ item.size }}
+								{{ item.quantity | number : fractionSize }} x {{ item.size }}
 								<span [hidden]="!item.type">({{ item.type }})</span>
 							</p>
 						</ion-item>
@@ -105,15 +108,18 @@
 			<div *ngFor="let transaction of releasing_transactions">
 				<ion-card>
 					<ion-item-divider  text-capitalize>
-						<h4 ion-text text-wrap>Printed By : {{ transaction.printed_by }}</h4>
-						<h4 ion-text text-wrap>Printed Date : {{ transaction.printed_at | date : 'MM/dd/yy' }}</h4>
-						<hr>
-						<h4 ion-text text-wrap>Owner : {{ transaction.first_name }} {{ transaction.last_name }}</h4>
-						<h4 ion-text text-wrap>Release Date : {{ transaction.release_at | date : 'MM/dd/yy' }}</h4>
-						<h4 ion-text text-wrap>Status : 
+						<h4 ion-text text-wrap>Order #: {{ transaction.order_id }}</h4>
+						<h4 ion-text text-wrap>
+							Owner: 
+							<strong>{{ transaction.first_name }} {{ transaction.last_name }}</strong>
+						</h4>
+						<h4 ion-text text-wrap>
+							Release Date: 
+							<strong>{{ transaction.release_at | date : 'MM/dd/yy' }}</strong>
+						</h4>
+						<h4 ion-text text-wrap [hidden]="!transaction.void">Status: 
 							<span>
-								<ion-badge color="primary" *ngIf="transaction.status == 'releasing'">Ready for Release</ion-badge>
-								<ion-badge color="danger" [hidden]="!transaction.void">Void</ion-badge>
+								<ion-badge color="danger" >Void</ion-badge>
 							</span>
 						</h4>
 					</ion-item-divider>
@@ -123,7 +129,7 @@
 							<h2 ion-text color="orange">{{ item.product }}</h2>
 							<h4 padding-left>{{ item.class }}</h4>
 							<p  padding-left>
-								{{ item.quantity }} x {{ item.size }}
+								{{ item.quantity | number : fractionSize }} x {{ item.size }}
 								<span [hidden]="!item.type">({{ item.type }})</span>
 							</p>
 						</ion-item>
@@ -143,6 +149,8 @@
 						</ion-col>
 					</ion-row>
 				</ion-card>
+
+				<br>
 			</div>
 
 			<ion-item *ngIf="releasing_transactions.length == 0 && isBusy" text-center no-lines>

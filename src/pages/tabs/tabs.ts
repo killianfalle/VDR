@@ -20,7 +20,8 @@ export class TabsPage implements OnInit {
   tab1Root = 'HomePage';
   tab2Root = 'StaffPage';
   tab3Root = 'WarehousePage';
-  tab4Root = 'SettingsPage';
+  tab4Root = 'TransactionPage';
+  tab5Root = 'SettingsPage';
 
   profile: any;
 

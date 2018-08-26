@@ -11,7 +11,7 @@
       <logo></logo>
     </ion-buttons>
     <ion-title>Settings</ion-title>
-    <ion-buttons end [hidden]="profile.type == 'warehouse_staff'">
+    <ion-buttons end [hidden]="profile.type == 'warehouse_staff' || profile.type == 'printer_staff'">
       <cart></cart>
     </ion-buttons>
   </ion-navbar>

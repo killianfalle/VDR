@@ -72,14 +72,14 @@
 								<span [hidden]="!item.type">({{ item.type }})</span>
 							</h4>
 							<p  padding-left>
-								{{ item.quantity }} x &#8369;{{ item.price }}
-								<span ion-text color="danger" float-right>&#8369;{{ item.total }}</span>
+								{{ item.quantity | number : fractionSize }} x &#8369;{{ item.price | number : fractionSize }}
+								<span ion-text color="danger" float-right>&#8369;{{ item.total | number : fractionSize }}</span>
 							</p>
 						</ion-item>
 					</ion-list>
 
 					<ion-item>
-						<h3 ion-text color="danger" item-end>Total : &#8369;{{ report.total_payment }}</h3>
+						<h3 ion-text color="danger" item-end>Total : &#8369;{{ report.total_payment | number : fractionSize }}</h3>
 					</ion-item>
 				</ion-card>
 			

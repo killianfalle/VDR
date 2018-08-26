@@ -6,6 +6,7 @@ import { CalendarComponentOptions } from 'ion2-calendar';
 import { LoaderComponent } from '../../components/loader/loader';
 import { AlertComponent } from '../../components/alert/alert';
 import { PrinterProvider } from '../../providers/printer';
+import { DecimalPipe } from '@angular/common';
 import moment  from 'moment';
 
 /**
@@ -39,6 +40,7 @@ export class CalendarPage {
     public navParams: NavParams,
     public loader: LoaderComponent,
     public alert: AlertComponent,
+    public decimal: DecimalPipe,
     private printer: PrinterProvider) {
 
     this.profile = JSON.parse(localStorage.getItem('_info'));
@@ -90,9 +92,9 @@ export class CalendarPage {
       item += _data.orders[counter].class +'\n'+_data.orders[counter].size; 
 
       if(_data.orders[counter].type == null){
-        item += '\n'+_data.orders[counter].quantity +' x P'+_data.orders[counter].price+' = P'+ _data.orders[counter].total+'\n';
+        item += '\n'+this.decimal.transform(_data.orders[counter].quantity,'1.0-0')+'xP'+this.decimal.transform(_data.orders[counter].price,'1.2-2')+'=P'+this.decimal.transform(_data.orders[counter].total,'1.2-2')+'\n';
       }else{
-        item += '('+_data.orders[counter].type+')\n'+_data.orders[counter].quantity +' x P'+_data.orders[counter].price+' = P'+ _data.orders[counter].total+'\n';
+        item += '('+_data.orders[counter].type+')\n'+this.decimal.transform(_data.orders[counter].quantity,'1.0-0')+'xP'+this.decimal.transform(_data.orders[counter].price,'1.2-2')+'=P'+this.decimal.transform(_data.orders[counter].total,'1.2-2')+'\n';
       }
 
       if((counter+1) < _data.orders.length){
@@ -102,11 +104,9 @@ export class CalendarPage {
 
     header = '        Vista del rio \n Carmen, Cagayan de Oro City';
 
-
     this.alert.prompt_payment().then((response:any) => {
       if(response){
-        let content = header+'\n'+separator+'Order#: '+_data.order_id+'\nPrinted by: '+this.params.printed_by+'\nPrinted on: '+this.params.printed_at+'\n'+separator+'Owner: '+_data.first_name+'  '+_data.last_name+'\nRelease: '+moment(this.date).format("MM/DD/YYYY")+'\n'+separator+item+separator+'Total: P'+_data.total_payment+'\nPayment: '+response+'\n\n\n';
-        
+        let content = header+'\n'+separator+'Order#: '+_data.order_id+'\nPrinted by: '+this.params.printed_by+'\nPrinted on: '+this.params.printed_at+'\n'+separator+'Owner: '+_data.first_name+' '+_data.last_name+'\nRelease: '+moment(this.date).format("MM/DD/YYYY")+'\n'+separator+item+separator+'Total: P'+ this.decimal.transform(_data.total_payment,'1.2-2') +'\nPayment: '+response+'\n\n\n';
         this.print_for_release(content);
 
         this.alert.confirm_print().then((res:any) => {

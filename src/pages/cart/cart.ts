@@ -143,6 +143,7 @@ export class CartPage implements OnInit {
       if(res._data.status){
         self.ngOnInit();
         _data.release_at = date;
+        _data.order_id = res._data.data;
         _data.status = 'pending';
         let params = { data : _data, type : 'add-pending-transaction' };
         self.socket.emit('transaction', { text: params });

@@ -12,6 +12,7 @@ import { DataProvider } from '../../providers/data-provider';
 import { PrinterProvider } from '../../providers/printer';
 import { Socket } from 'ng-socket-io';
 import { Observable } from 'rxjs/Observable';
+import { DecimalPipe } from '@angular/common';
 import moment from 'moment';
 
 /**
@@ -57,6 +58,7 @@ export class WarehousePage {
     public toast: ToastComponent,
     private provider: DataProvider,
     private printer: PrinterProvider,
+    private decimal: DecimalPipe,
     private socket: Socket) {
     this.profile = JSON.parse(localStorage.getItem('_info'));
 
@@ -257,12 +259,12 @@ export class WarehousePage {
     let item = '';
 
     for(let counter = 0;counter < _data.orders.length;counter++){
-      item += _data.orders[counter].class +'\n'+ _data.orders[counter].quantity;
+      item += _data.orders[counter].class +'\n'+this.decimal.transform(_data.orders[counter].quantity,'1.0-0');
 
       if (_data.orders[counter].type != null) {
-       item += ' x ' +_data.orders[counter].size +'('+_data.orders[counter].type+') \n';
+       item += 'x' +_data.orders[counter].size +'('+_data.orders[counter].type+') \n';
       }else {
-        item += ' x ' +_data.orders[counter].size+'\n';
+        item += 'x' +_data.orders[counter].size+'\n';
       }
 
       if((counter+1) < _data.orders.length){
@@ -273,7 +275,7 @@ export class WarehousePage {
     header = '        Vista del rio \n       Zayas Warehouse,\n     Cagayan de Oro City';
 
     let content = header+'\n'+ separator +'Order#: '+ _data.order_id +'\nReleased by: '+this.profile.first_name+' '+this.profile.last_name+'\n'+ separator +'Owner: '+_data.first_name+' '+_data.last_name+'\nRelease: '+moment(_data.release_at).format("MM/DD/YYYY")+'\n'+separator+item+separator+"Payment: "+_data.payment_type+"\n"+separator+'\nReleased by:___________________\nReceived by:___________________\n\n\n\n';
-    
+
     await this.printer.onWrite(content);
     this.cleared_transaction(_data);
   }
@@ -285,12 +287,12 @@ export class WarehousePage {
     let content = '';
 
     for(let counter = 0;counter < _data.orders.length;counter++){
-      item += _data.orders[counter].class +'\n'+ _data.orders[counter].quantity;
+      item += _data.orders[counter].class +'\n'+this.decimal.transform(_data.orders[counter].quantity,'1.0-0');
 
       if (_data.orders[counter].type != null) {
-       item += ' x ' +_data.orders[counter].size +'('+_data.orders[counter].type+') \n';
+       item += 'x' +_data.orders[counter].size +'('+_data.orders[counter].type+') \n';
       }else {
-        item += ' x ' +_data.orders[counter].size+'\n';
+        item += 'x' +_data.orders[counter].size+'\n';
       }
 
       if((counter+1) < _data.orders.length){

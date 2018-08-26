@@ -7,7 +7,7 @@
 <ion-header>
 
   <ion-navbar color="orange">
-    <ion-title>My Cart</ion-title>
+    <ion-title>Cart</ion-title>
   </ion-navbar>
 
 </ion-header>
@@ -45,14 +45,14 @@
 							<ion-col text-center align-self-center col-4 padding>
 								<h3>
 									<ion-icon class="qty-icon" color="orange" name='add' *ngIf="key == row" (click)="quantity(row,i)" ion-long-press [interval]="300" (onPressStart)="pressed()" (onPressing)="active(row,i)" (onPressEnd)="released()"></ion-icon>
-									<span>{{ data.quantity }}</span>
+									<span>{{ data.quantity | number : fractionSize }}</span>
 									<ion-icon class="qty-icon" color="orange" name='remove' *ngIf="key == row" (click)="quantity(row,i,false)" ion-long-press [interval]="300" (onPressStart)="pressed()" (onPressing)="active(row,i,false)" (onPressEnd)="released()"></ion-icon>
 								</h3>
 							</ion-col>
 
 							<ion-col col-2 text-center text-right align-self-center>
-								<h4>&#8369;{{ data.price }}</h4>
-								<h4 ion-text color="danger">&#8369;{{ data.total }}</h4>
+								<h4>&#8369;{{ data.price | number : fractionSize }}</h4>
+								<h4 ion-text text-wrap color="danger">&#8369;{{ data.total | number : fractionSize }}</h4>
 							</ion-col>
 						</ion-row>
 					</ion-item>
@@ -66,7 +66,7 @@
 			</ion-list>
 
 			<ion-card-content>
-				<h4 ion-text color="danger" text-right>Total : &#8369;{{ items.total_payment }}</h4>
+				<h4 ion-text color="danger" text-right>Total : &#8369;{{ items.total_payment | number : fractionSize }}</h4>
 			</ion-card-content>
 		</ion-card>
 

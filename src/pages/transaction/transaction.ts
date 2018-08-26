@@ -14,6 +14,7 @@ import { ToastComponent } from '../../components/toast/toast';
 import { PrinterProvider } from '../../providers/printer';
 import { Socket } from 'ng-socket-io';
 import { Observable } from 'rxjs/Observable';
+import { DecimalPipe } from '@angular/common';
 import moment from 'moment';
 
 /**
@@ -66,6 +67,7 @@ export class TransactionPage {
     private event: Events,
     private keyboard: Keyboard,
     private printer: PrinterProvider,
+    private decimal: DecimalPipe,
     private socket: Socket) {
     this.profile = JSON.parse(localStorage.getItem('_info'));
 
@@ -434,9 +436,9 @@ export class TransactionPage {
       item += _data.orders[counter].class +'\n'+_data.orders[counter].size; 
 
       if(_data.orders[counter].type == null){
-        item += '\n'+_data.orders[counter].quantity +' x P'+_data.orders[counter].price+' = P'+_data.orders[counter].total+'\n';
+        item += '\n'+this.decimal.transform(_data.orders[counter].quantity,'1.0-0')+'xP'+this.decimal.transform(_data.orders[counter].price,'1.2-2')+'=P'+this.decimal.transform(_data.orders[counter].total,'1.2-2')+'\n';
       }else{
-        item += '('+_data.orders[counter].type+')\n'+_data.orders[counter].quantity +' x P'+_data.orders[counter].price+' = P'+_data.orders[counter].total+'\n';
+        item += '('+_data.orders[counter].type+')\n'+this.decimal.transform(_data.orders[counter].quantity,'1.0-0')+'xP'+this.decimal.transform(_data.orders[counter].price,'1.2-2')+'=P'+this.decimal.transform(_data.orders[counter].total,'1.2-2')+'\n';
       }
 
       if((counter+1) < _data.orders.length){
@@ -447,9 +449,9 @@ export class TransactionPage {
     header = '        Vista del rio \n Carmen, Cagayan de Oro City';
 
     if(_data.void){
-      content = header+'\n'+separator+'Order#: '+_data.order_id+'\nPrinted by: '+_data.printed_by+'\nPrinted on: '+_data.printed_at+'\n'+separator+'Owner: '+_data.first_name+'  '+_data.last_name+'\nRelease: '+moment(_data.release_at).format("MM/DD/YYYY")+'\nRemarks: Void\n'+separator+item+separator+'Total : P'+_data.total_payment+'\nPayment: '+_data.payment_type+'\n\n\n';
+      content = header+'\n'+separator+'Order#: '+_data.order_id+'\nPrinted by: '+_data.printed_by+'\nPrinted on: '+_data.printed_at+'\n'+separator+'Owner: '+_data.first_name+' '+_data.last_name+'\nRelease: '+moment(_data.release_at).format("MM/DD/YYYY")+'\nRemarks: Void\n'+separator+item+separator+'Total: P'+this.decimal.transform(_data.total_payment,'1.2-2')+'\nPayment: '+_data.payment_type+'\n\n\n';
     }else {
-      content = header+'\n'+separator+'Order#: '+_data.order_id+'\nPrinted by: '+_data.printed_by+'\nPrinted on: '+_data.printed_at+'\n'+separator+'Owner: '+_data.first_name+'  '+_data.last_name+'\nRelease: '+moment(_data.release_at).format("MM/DD/YYYY")+'\n'+separator+item+separator+'Total : P'+_data.total_payment+'\nPayment: '+_data.payment_type+'\n\n\n';
+      content = header+'\n'+separator+'Order#: '+_data.order_id+'\nPrinted by: '+_data.printed_by+'\nPrinted on: '+_data.printed_at+'\n'+separator+'Owner: '+_data.first_name+' '+_data.last_name+'\nRelease: '+moment(_data.release_at).format("MM/DD/YYYY")+'\n'+separator+item+separator+'Total: P'+this.decimal.transform(_data.total_payment,'1.2-2')+'\nPayment: '+_data.payment_type+'\n\n\n';
     }
 
     await this.printer.onWrite(content);
