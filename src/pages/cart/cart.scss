@@ -25,16 +25,26 @@ page-cart {
 		}
 	}
 
-	ion-item-sliding:nth-child(even) {
-		background-color: #EEEEEE;
-
-		.item {
-			background-color: #EEEEEE;
-		}
-	}
-
 	h3 span {
 		font-size: 2.2em;
 		padding: 0.2em;
+	}
+
+	.qty-box {
+		border-bottom: none !important;
+
+		.input-wrapper {
+			border: 2px solid color($colors,danger) !important;
+		}
+
+		.text-input[disabled] {
+			opacity: 1 !important;
+		}
+	}
+
+	ion-item.item-input-disabled {
+		.input-wrapper {
+			border: none !important;
+		}
 	}
 }

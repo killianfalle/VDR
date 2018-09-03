@@ -27,7 +27,7 @@
 
 <ion-content>
 	<ion-item>
-		<button ion-button outline icon-start padding color="orange" (click)="navigate()" item-end>
+		<button ion-button outline icon-start padding color="orange" (click)="navigate('AddStaffPage','add')" item-end>
 			<ion-icon name="person-add"></ion-icon>
 			Add Staff
 		</button>
@@ -40,15 +40,16 @@
 	</ion-item>
 
 	<ion-item *ngFor="let staff of staffs">
-		<ion-avatar item-start>
-	      <img src="assets/imgs/avatar.png">
-	    </ion-avatar>
 		<h2 text-capitalize>{{ staff.first_name }} {{ staff.last_name }}</h2>
 		<h3>{{ staff.email }}</h3>
-		<p *ngIf="staff.type == 'admin_staff'" text-capitalize>Admin Staff</p>
-		<p *ngIf="staff.type == 'sale_staff'" text-capitalize>Sale Staff</p>
-		<p *ngIf="staff.type == 'warehouse_staff'" text-capitalize>Warehouse Staff</p>
-		<p *ngIf="staff.type == 'printer_staff'" text-capitalize>Printer Staff</p>
+		<p *ngIf="staff.user_role == 'admin_staff'" text-capitalize>Admin Staff</p>
+		<p *ngIf="staff.user_role == 'sale_staff'" text-capitalize>Sale Staff</p>
+		<p *ngIf="staff.user_role == 'warehouse_staff'" text-capitalize>Warehouse Staff</p>
+		<p *ngIf="staff.user_role == 'printer_staff'" text-capitalize>Printer Staff</p>
+
+		<p item-end>
+			<span ion-text color="primary" (click)="navigate('EditStaffPage','edit',staff); $event.stopPropagation();">Edit</span>
+		</p>
 	</ion-item>
 
 	<spinner [hidden]="isBusy"></spinner>

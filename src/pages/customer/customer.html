@@ -39,11 +39,10 @@
 		<p>No result found.</p>
 	</ion-item>
 
-	<ion-item *ngFor="let customer of customers" (click)="navigate('CustomerTransactionPage','history',customer.id); $event.stopPropagation();">
-		<ion-avatar item-start>
-	      <img src="assets/imgs/avatar.png">
-	    </ion-avatar>
-		<h2 ion-text text-wrap text-capitalize>{{ customer.first_name }} {{ customer.last_name }}</h2>
+	<ion-item *ngFor="let customer of customers" (click)="navigate('CustomerTransactionPage','history',customer.id); $event.stopPropagation();" text-wrap text-capitalize>
+		<strong>{{ customer.first_name }} {{ customer.last_name }}</strong> <br>
+		<strong>{{ customer.payment }}</strong> <br>
+		<strong>{{ customer.delivery }}</strong> 
 
 		<p item-end>
 			<span ion-text color="primary" (click)="on_edit(customer); $event.stopPropagation();">Edit</span>

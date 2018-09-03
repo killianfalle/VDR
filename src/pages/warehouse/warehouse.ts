@@ -29,7 +29,8 @@ import moment from 'moment';
 })
 export class WarehousePage {
 
-  @ViewChild(InfiniteScroll) infinite: InfiniteScroll;
+  @ViewChild(InfiniteScroll) infinite_cleared: InfiniteScroll;
+  @ViewChild(InfiniteScroll) infinite_releasing: InfiniteScroll;
 
   tabs: any = 'cleared';
 
@@ -43,6 +44,8 @@ export class WarehousePage {
   cleared_result: any = 0;
 
   offset:any = 0;
+  offset_releasing:any = 0;
+  offset_cleared:any = 0;
   limit:any = 10;
 
   keyword:any = '';
@@ -65,8 +68,9 @@ export class WarehousePage {
     this.get_transaction();
 
     this.add_releasing_transaction().subscribe((_data:any) => {
-      this.releasing_result += 1;
-      if(this.search_date == _data.release_at){
+      if(this.keyword == ''){
+        this.releasing_result += 1;
+        this.offset_releasing += 1;
         this.releasing_transactions.push(_data);
       }
     });
@@ -92,15 +96,18 @@ export class WarehousePage {
       let index = this.releasing_transactions.map(obj => obj.id).indexOf(_data);
       if(index > -1){
         this.releasing_transactions.splice(index, 1);
-        if(this.offset != 0)
-          this.offset -= 1;
+        if(this.offset_releasing != 0)
+          this.offset_releasing -= 1;
       }  
     });
 
     this.add_cleared_transaction().subscribe((_data:any) => {
-      this.cleared_result += 1;
       if(this.search_date == _data.release_at){
-        this.cleared_transactions.push(_data);
+        if(this.keyword == ''){
+          this.cleared_result += 1;
+          this.offset_cleared += 1;
+          this.cleared_transactions.push(_data);
+        }
       }
     });
   }
@@ -108,11 +115,10 @@ export class WarehousePage {
   async get_transaction() {
     switch (this.tabs) {
       case "cleared":
-        this.offset = 0;
-        this.cleared_transactions = [];
-        this.releasing_transactions = [];
+        this.offset = this.offset_cleared;
         break;
       default:
+        this.offset = this.offset_releasing
         break;
     }
     
@@ -123,25 +129,36 @@ export class WarehousePage {
         switch (this.tabs) {
           case "releasing":
             if(res._data.result > 0){
-              this.offset += res._data.result;
+              this.offset_releasing += res._data.result;
               this.releasing_result = this.offset;
-              this.loadData(res._data.data);
+              this.load_releasing(res._data.data);
             }else {
               this.stopInfinite();
             }
             break;
           default:
-            this.cleared_transactions = res._data.data;
-            this.cleared_result = res._data.result;
+            if(res._data.result > 0){
+              this.offset_cleared += res._data.result;
+              this.releasing_result = this.offset;
+              this.load_cleared(res._data.data);
+            }else {
+              this.stopInfinite();
+            }
             break;
         }
       this.isBusy = true;
     });
   }
 
-  loadData(_transaction) {
+  load_releasing(_transaction) {
     _transaction.map(data => {
       this.releasing_transactions.push(data);
+    });
+  }
+
+  load_cleared(_transaction) {
+    _transaction.map(data => {
+      this.cleared_transactions.push(data);
     });
   }
 
@@ -153,8 +170,26 @@ export class WarehousePage {
     }, 500);
   }
 
-  stopInfinite() {
-    this.infinite.enable(false);
+  stopInfinite(){
+    switch (this.tabs) {
+      case "cleared":
+        this.infinite_cleared.enable(false);
+        break;
+      default:
+        this.infinite_releasing.enable(false);
+        break;
+    }
+  }
+
+  enableInfinite() {
+    switch (this.tabs) {
+      case "cleared":
+        this.infinite_cleared.enable(true);
+        break;
+      default:
+        this.infinite_releasing.enable(true);
+        break;
+    }
   }
 
   add_releasing_transaction() {
@@ -257,14 +292,15 @@ export class WarehousePage {
     let separator = '-------------------------------\n';
     let header = '';
     let item = '';
+    let content = '';
 
     for(let counter = 0;counter < _data.orders.length;counter++){
       item += _data.orders[counter].class +'\n'+this.decimal.transform(_data.orders[counter].quantity,'1.0-0');
 
       if (_data.orders[counter].type != null) {
-       item += 'x' +_data.orders[counter].size +'('+_data.orders[counter].type+') \n';
+       item += ' x ' +_data.orders[counter].size +'('+_data.orders[counter].type+') \n';
       }else {
-        item += 'x' +_data.orders[counter].size+'\n';
+        item += ' x ' +_data.orders[counter].size+'\n';
       }
 
       if((counter+1) < _data.orders.length){
@@ -274,7 +310,11 @@ export class WarehousePage {
 
     header = '        Vista del rio \n       Zayas Warehouse,\n     Cagayan de Oro City';
 
-    let content = header+'\n'+ separator +'Order#: '+ _data.order_id +'\nReleased by: '+this.profile.first_name+' '+this.profile.last_name+'\n'+ separator +'Owner: '+_data.first_name+' '+_data.last_name+'\nRelease: '+moment(_data.release_at).format("MM/DD/YYYY")+'\n'+separator+item+separator+"Payment: "+_data.payment_type+"\n"+separator+'\nReleased by:___________________\nReceived by:___________________\n\n\n\n';
+    if(_data.void){
+      content = header+'\n'+ separator +'Order#: '+ _data.order_id +'\nReleased by: '+this.profile.first_name+' '+this.profile.last_name+'\n'+ separator +'Owner: '+_data.first_name+' '+_data.last_name+'\nRelease: '+moment(_data.release_at).format("MM/DD/YYYY")+'\nRemarks: Void\n'+separator+item+separator+"Payment: "+_data.payment_type+"\nDelivery: "+_data.delivery_option+'\n'+separator+'Items received above are \ntrue & correct.\n\nReceived by:\n______________________________\n(Customer printed name)\nContact#:\n______________________________\n\n\n';
+    }else {
+      content = header+'\n'+ separator +'Order#: '+ _data.order_id +'\nReleased by: '+this.profile.first_name+' '+this.profile.last_name+'\n'+ separator +'Owner: '+_data.first_name+' '+_data.last_name+'\nRelease: '+moment(_data.release_at).format("MM/DD/YYYY")+'\n'+separator+item+separator+"Payment: "+_data.payment_type+"\nDelivery: "+_data.delivery_option+'\n'+separator+'Items received above are \ntrue & correct.\n\nReceived by:\n______________________________\n(Customer printed name)\nContact#:\n______________________________\n\n\n';
+    }
 
     await this.printer.onWrite(content);
     this.cleared_transaction(_data);
@@ -290,9 +330,9 @@ export class WarehousePage {
       item += _data.orders[counter].class +'\n'+this.decimal.transform(_data.orders[counter].quantity,'1.0-0');
 
       if (_data.orders[counter].type != null) {
-       item += 'x' +_data.orders[counter].size +'('+_data.orders[counter].type+') \n';
+       item += ' x ' +_data.orders[counter].size +'('+_data.orders[counter].type+') \n';
       }else {
-        item += 'x' +_data.orders[counter].size+'\n';
+        item += ' x ' +_data.orders[counter].size+'\n';
       }
 
       if((counter+1) < _data.orders.length){
@@ -303,9 +343,9 @@ export class WarehousePage {
     header = '        Vista del rio \n       Zayas Warehouse,\n     Cagayan de Oro City';
 
     if(_data.void){
-      content = header+'\n'+ separator +'Order#: '+ _data.order_id +'\nReleased by: '+this.profile.first_name+' '+this.profile.last_name+'\n'+ separator +'Owner: '+_data.first_name+' '+_data.last_name+'\nRelease: '+moment(_data.release_at).format("MM/DD/YYYY")+'\nRemarks: Void\n'+separator+item+separator+"Payment: "+_data.payment_type+"\n"+separator+'\nReleased by:___________________\nReceived by:___________________\n\n\n\n';
+      content = header+'\n'+ separator +'Order#: '+ _data.order_id +'\nReleased by: '+this.profile.first_name+' '+this.profile.last_name+'\n'+ separator +'Owner: '+_data.first_name+' '+_data.last_name+'\nRelease: '+moment(_data.release_at).format("MM/DD/YYYY")+'\nRemarks: Void\n'+separator+item+separator+"Payment: "+_data.payment_type+"\nDelivery: "+_data.delivery_option+'\n'+separator+'Items received above are \ntrue & correct.\n\nReceived by:\n______________________________\n(Customer printed name)\nContact#:\n______________________________\n\n\n';
     }else {
-      content = header+'\n'+ separator +'Order#: '+ _data.order_id +'\nReleased by: '+this.profile.first_name+' '+this.profile.last_name+'\n'+ separator +'Owner: '+_data.first_name+' '+_data.last_name+'\nRelease: '+moment(_data.release_at).format("MM/DD/YYYY")+'\n'+separator+item+separator+"Payment: "+_data.payment_type+"\n"+'\nReleased by:___________________\nReceived by:___________________\n\n\n\n';
+      content = header+'\n'+ separator +'Order#: '+ _data.order_id +'\nReleased by: '+this.profile.first_name+' '+this.profile.last_name+'\n'+ separator +'Owner: '+_data.first_name+' '+_data.last_name+'\nRelease: '+moment(_data.release_at).format("MM/DD/YYYY")+'\n'+separator+item+separator+"Payment: "+_data.payment_type+"\nDelivery: "+_data.delivery_option+'\n'+separator+'Items received above are \ntrue & correct.\n\nReceived by:\n______________________________\n(Customer printed name)\nContact#:\n______________________________\n\n\n';
     }
 
     await this.printer.onWrite(content);
@@ -317,17 +357,21 @@ export class WarehousePage {
 
   reset() {
     this.keyword = '';
-    this.offset = 0;
-    this.releasing_transactions = [];
-    this.infinite.enable(true);
-    this.get_transaction();
+    this.searching();
   }
 
   search() {
     this.keyboard.close();
+    this.searching();
+  }
+
+  searching() {
     this.offset = 0;
+    this.offset_cleared = 0;
+    this.offset_releasing = 0;
     this.releasing_transactions = [];
-    this.infinite.enable(true);
+    this.cleared_transactions = [];
+    this.enableInfinite();
     this.get_transaction();
   }
 

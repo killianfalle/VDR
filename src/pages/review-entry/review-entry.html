@@ -32,7 +32,7 @@
 		<h5 padding-left>{{ data.size.name }}
 			<span [hidden]="!data.qty_type.name">({{ data.qty_type.name }})</span>
 		</h5>
-		<h6  padding-left>{{ data.quantity | number : fractionSize }}x&#8369;{{ data.price | number : fractionSize }}</h6>
+		<h6  padding-left>{{ data.quantity | number : fractionSize }} x &#8369;{{ data.price | number : fractionSize }}</h6>
 	</div>
 
 	<div class="total" padding-top text-wrap>

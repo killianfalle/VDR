@@ -27,6 +27,9 @@ export class AddCustomerPage {
   origin: any;
   error:any = {};
 
+  payment_types = [];
+  delivery_options = [];
+
   constructor(
   	public navCtrl: NavController, 
   	public navParams: NavParams,
@@ -38,13 +41,25 @@ export class AddCustomerPage {
     this._callback = navParams.get('callback');
     this.origin = navParams.get('self');
     this.initForm();
+    this.get_option();
   }
 
   initForm() {
     this.customer = this.form.group({
       first_name: ['', Validators.required],
       last_name: ['', Validators.required],
+      payment_type: ['', Validators.required],
+      delivery_option: ['', Validators.required],
     });
+  }
+
+  get_option() {
+    this.provider.getData('','option/all').then((res:any) => {
+      if(res._data.status) {
+        this.payment_types = res._data.data.payment;
+        this.delivery_options = res._data.data.delivery;
+      }
+    })
   }
 
   register() {
