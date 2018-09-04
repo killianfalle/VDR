@@ -19,6 +19,7 @@ export class HomePage {
   }
 
   navigate(page){
+    console.log("PAGE: "+page);
   	this.navCtrl.push(page, {});
   }
 
