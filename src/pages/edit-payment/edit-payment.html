@@ -1,0 +1,33 @@
+<!--
+  Generated template for the EditPaymentPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar color="orange">
+    <ion-title>Edit Payment</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+
+	<br>
+	
+	<ion-item>
+		<ion-label stacked>Name</ion-label>
+		<ion-input type="text" text-center [(ngModel)]="payment.name"></ion-input>
+	</ion-item>
+	<div class="error" *ngIf="error.name">{{ error.name }}</div>
+
+	<br>
+	<br>
+
+	<div padding>
+		<button ion-button block color="orange" (click)="update()">Save Changes</button>
+	</div>
+
+</ion-content>

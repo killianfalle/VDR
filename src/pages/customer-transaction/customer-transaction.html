@@ -21,11 +21,12 @@
 	<div *ngFor="let transaction of transactions">
 		<ion-card>
 			<ion-item-divider  text-capitalize>
-				<h4>Release Date : 
+				<h4>Order#: <strong>{{ transaction.order_id }}</strong></h4>
+				<h4>Release Date: 
 					<span *ngIf="transaction.status == 'pending'">N/A</span>
 					<span [hidden]="transaction.status == 'pending'">{{ transaction.release_at | date : 'MM/dd/yy' }}</span>
 				</h4>
-				<p>Status : 
+				<p>Status: 
 					<span>
 						<ion-badge color="secondary" *ngIf="transaction.status == 'cleared'">Cleared</ion-badge>
 						<ion-badge color="primary" *ngIf="transaction.status == 'releasing'">Ready for Release</ion-badge>
@@ -40,12 +41,12 @@
 					<h2 ion-text color="orange">{{ item.product }}</h2>
 					<h4 padding-left>{{ item.class }}</h4>
 					<h4 padding-left>{{ item.size }}({{ item.type }})</h4>
-					<p  padding-left>{{ item.quantity }} x &#8369;{{ item.price }}</p>
+					<p  padding-left>{{ item.quantity | number : fractionSize }} x &#8369;{{ item.price | number : fractionSize }}</p>
 				</ion-item>
 			</ion-list>
 
 			<ion-item-divider>
-				<h4 ion-text color="danger" text-right>Total : &#8369;{{ transaction.total_payment }}</h4>
+				<h4 ion-text color="danger" text-right>Total : &#8369;{{ transaction.total_payment | number : fractionSize }}</h4>
 			</ion-item-divider>
 
 			<ion-row *ngIf="transaction.void">

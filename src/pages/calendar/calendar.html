@@ -21,6 +21,22 @@
 	              [format]="'YYYY-MM-DD'">
 	</ion-calendar>
 
+	<ion-list radio-group [(ngModel)]="copies">
+		<ion-list-header color="dark">
+			Number of Print Copy
+		</ion-list-header>
+
+		<ion-item>
+		   <ion-label>2</ion-label>
+		   <ion-radio value="2" checked></ion-radio>
+		</ion-item>
+
+		<ion-item>
+		   <ion-label>3</ion-label>
+		   <ion-radio value="3"></ion-radio>
+		</ion-item>
+	</ion-list>
+
 	<ion-row>
 		<ion-col>
 			<button ion-button block color="danger" (click)="action(false)">Cancel</button>

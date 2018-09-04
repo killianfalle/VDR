@@ -19,6 +19,9 @@
 <ion-content>
 
 	<form [formGroup]="customer" (ngSubmit)="register()">
+		<ion-item-divider>
+			Personal Information
+		</ion-item-divider>
 		<br>
 		
 		<div class="error" *ngIf="error.full_name">{{ error.full_name }}</div>
@@ -36,6 +39,32 @@
 			<ion-input type="text" text-center formControlName="last_name"></ion-input>
 		</ion-item>
 		<div class="error" *ngIf="error.last_name">{{ error.last_name }}</div>
+
+		<br>
+
+		<ion-item-divider>
+			Transaction Information
+		</ion-item-divider>
+
+		<br>
+
+		<ion-item>
+			<ion-label stacked>Payment Type</ion-label>
+			<ion-select formControlName="payment_type">
+				<ion-option *ngFor="let payment of payment_types" value="{{payment.id}}">{{ payment.name }}</ion-option>
+			</ion-select>
+		</ion-item>
+		<div class="error" *ngIf="error.payment_type">{{ error.payment_type }}</div>
+
+		<br>
+
+		<ion-item>
+			<ion-label stacked>Delivery Option</ion-label>
+			<ion-select formControlName="delivery_option">
+				<ion-option *ngFor="let delivery of delivery_options" value="{{delivery.id}}">{{ delivery.name }}</ion-option>
+			</ion-select>
+		</ion-item>
+		<div class="error" *ngIf="error.delivery_option">{{ error.delivery_option }}</div>
 
 		<br>
 		<br>

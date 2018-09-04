@@ -3,7 +3,8 @@ import { Component,
 import { IonicPage,
 		     NavController, 
 		     NavParams,
-         Events } from 'ionic-angular';
+         Events,
+         Keyboard } from 'ionic-angular';
 import { DataProvider } from '../../providers/data-provider';
 import { AlertComponent } from '../../components/alert/alert';
 import { ToastComponent } from '../../components/toast/toast';
@@ -27,6 +28,8 @@ export class CartPage implements OnInit {
   cart:any = [];
   key:any;
 
+  keyword:any = '';
+
   isBusy:any = false;
 
   constructor(
@@ -36,6 +39,7 @@ export class CartPage implements OnInit {
     private toast: ToastComponent,
   	private provider: DataProvider,
     private event: Events,
+    private keyboard: Keyboard,
     private socket: Socket) 
   { 
   	this.user = JSON.parse(localStorage.getItem('_info'));
@@ -43,7 +47,7 @@ export class CartPage implements OnInit {
 
   ngOnInit() {
     this.isBusy = false;
-    this.provider.getData({ status : 'in_cart', user : this.user.id },'cart').then((res: any) => {
+    this.provider.getData({ status : 'in_cart', user : this.user.id, search: this.keyword },'cart').then((res: any) => {
       if(res._data.status){
         this.cart = res._data.data;
       }
@@ -143,7 +147,9 @@ export class CartPage implements OnInit {
       if(res._data.status){
         self.ngOnInit();
         _data.release_at = date;
-        _data.order_id = res._data.data;
+        _data.order_id = res._data.data.order_id;
+        _data.payment_type = res._data.data.payment_type;
+        _data.delivery_option = res._data.data.delivery_option;
         _data.status = 'pending';
         let params = { data : _data, type : 'add-pending-transaction' };
         self.socket.emit('transaction', { text: params });
@@ -171,6 +177,18 @@ export class CartPage implements OnInit {
   }
 
   released() { }
+
+  reset() {
+    this.keyword = '';
+    this.cart = [];
+    this.ngOnInit();
+  }
+
+  search() {
+    this.keyboard.close();
+    this.cart = [];
+    this.ngOnInit();
+  }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad CartPage');

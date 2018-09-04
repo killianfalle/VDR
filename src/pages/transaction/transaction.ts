@@ -31,6 +31,7 @@ import moment from 'moment';
 })
 export class TransactionPage {
 
+  @ViewChild(InfiniteScroll) infinite_cleared: InfiniteScroll;
   @ViewChild(InfiniteScroll) infinite_releasing: InfiniteScroll;
   @ViewChild(InfiniteScroll) infinite_pending: InfiniteScroll;
 
@@ -50,6 +51,7 @@ export class TransactionPage {
   offset:any = 0;
   offset_pending:any = 0;
   offset_releasing:any = 0;
+  offset_cleared:any = 0;
   limit:any = 10;
 
   keyword:any = '';
@@ -124,7 +126,10 @@ export class TransactionPage {
     this.add_cleared_transaction().subscribe((_data:any) => {
       this.cleared_result += 1;
       if(this.search_date == _data.release_at){
-        this.cleared_transactions.push(_data);
+        if(this.keyword == ''){
+          this.cleared_transactions.push(_data);
+          this.offset_cleared += 1;
+        }
       }
     });
 
@@ -146,12 +151,7 @@ export class TransactionPage {
   get_transaction() {
     switch (this.tabs) {
       case "cleared":
-        this.offset = 0;
-        this.offset_releasing = 0;
-        this.offset_pending = 0;
-        this.pending_transactions = [];
-        this.releasing_transactions = [];
-        this.cleared_transactions = [];
+        this.offset = this.offset_cleared;
         break;
       case "releasing":
         this.offset = this.offset_releasing;
@@ -189,8 +189,14 @@ export class TransactionPage {
             }
             break;
           default:
-            this.cleared_transactions = res._data.data;
-            this.cleared_result = res._data.result;
+            if(res._data.status){
+              if(res._data.result > 0){
+                this.offset_cleared += res._data.result;
+                this.loadData_cleared(res._data.data);
+              }else {
+                this.stopInfinite();
+              }
+            }
             break;
         }
       }
@@ -207,6 +213,12 @@ export class TransactionPage {
   loadData_releasing(_transaction) {
     _transaction.map(data => {
       this.releasing_transactions.push(data);
+    });
+  }
+
+  loadData_cleared(_transaction) {
+    _transaction.map(data => {
+      this.cleared_transactions.push(data);
     });
   }
 
@@ -231,6 +243,9 @@ export class TransactionPage {
 
   enableInfinite() {
     switch (this.tabs) {
+      case "cleared":
+        this.infinite_cleared.enable(true);
+        break;
       case "releasing":
         this.infinite_releasing.enable(true);
         break;
@@ -311,8 +326,7 @@ export class TransactionPage {
     })
   }
 
-  releasing_transaction(_data,date,payment,self) {
-    _data.payment_type = payment;
+  releasing_transaction(_data,date,self) {
     self.provider.postData({ transaction : _data, date : date , status : 'releasing' },'transaction/status').then((res:any) => {
       if(res._data.status){
         self.remove_pending(_data,self);
@@ -436,9 +450,9 @@ export class TransactionPage {
       item += _data.orders[counter].class +'\n'+_data.orders[counter].size; 
 
       if(_data.orders[counter].type == null){
-        item += '\n'+this.decimal.transform(_data.orders[counter].quantity,'1.0-0')+'xP'+this.decimal.transform(_data.orders[counter].price,'1.2-2')+'=P'+this.decimal.transform(_data.orders[counter].total,'1.2-2')+'\n';
+        item += '\n'+this.decimal.transform(_data.orders[counter].quantity,'1.0-0')+' x P'+this.decimal.transform(_data.orders[counter].price,'1.2-2')+' = P'+this.decimal.transform(_data.orders[counter].total,'1.2-2')+'\n';
       }else{
-        item += '('+_data.orders[counter].type+')\n'+this.decimal.transform(_data.orders[counter].quantity,'1.0-0')+'xP'+this.decimal.transform(_data.orders[counter].price,'1.2-2')+'=P'+this.decimal.transform(_data.orders[counter].total,'1.2-2')+'\n';
+        item += '('+_data.orders[counter].type+')\n'+this.decimal.transform(_data.orders[counter].quantity,'1.0-0')+' x P'+this.decimal.transform(_data.orders[counter].price,'1.2-2')+' = P'+this.decimal.transform(_data.orders[counter].total,'1.2-2')+'\n';
       }
 
       if((counter+1) < _data.orders.length){
@@ -449,9 +463,9 @@ export class TransactionPage {
     header = '        Vista del rio \n Carmen, Cagayan de Oro City';
 
     if(_data.void){
-      content = header+'\n'+separator+'Order#: '+_data.order_id+'\nPrinted by: '+_data.printed_by+'\nPrinted on: '+_data.printed_at+'\n'+separator+'Owner: '+_data.first_name+' '+_data.last_name+'\nRelease: '+moment(_data.release_at).format("MM/DD/YYYY")+'\nRemarks: Void\n'+separator+item+separator+'Total: P'+this.decimal.transform(_data.total_payment,'1.2-2')+'\nPayment: '+_data.payment_type+'\n\n\n';
+      content = header+'\n'+separator+'Order#: '+_data.order_id+'\nPrinted by: '+_data.printed_by+'\nPrinted on: '+_data.printed_at+'\n'+separator+'Owner: '+_data.first_name+' '+_data.last_name+'\nRelease: '+moment(_data.release_at).format("MM/DD/YYYY")+'\nRemarks: Void\n'+separator+item+separator+'Total: P'+this.decimal.transform(_data.total_payment,'1.2-2')+'\n'+separator+'Payment: '+_data.payment_type+'\nDelivery: '+_data.delivery_option+'\n\n\n';
     }else {
-      content = header+'\n'+separator+'Order#: '+_data.order_id+'\nPrinted by: '+_data.printed_by+'\nPrinted on: '+_data.printed_at+'\n'+separator+'Owner: '+_data.first_name+' '+_data.last_name+'\nRelease: '+moment(_data.release_at).format("MM/DD/YYYY")+'\n'+separator+item+separator+'Total: P'+this.decimal.transform(_data.total_payment,'1.2-2')+'\nPayment: '+_data.payment_type+'\n\n\n';
+      content = header+'\n'+separator+'Order#: '+_data.order_id+'\nPrinted by: '+_data.printed_by+'\nPrinted on: '+_data.printed_at+'\n'+separator+'Owner: '+_data.first_name+' '+_data.last_name+'\nRelease: '+moment(_data.release_at).format("MM/DD/YYYY")+'\n'+separator+item+separator+'Total: P'+this.decimal.transform(_data.total_payment,'1.2-2')+'\n'+separator+'Payment: '+_data.payment_type+'\nDelivery: '+_data.delivery_option+'\n\n\n';
     }
 
     await this.printer.onWrite(content);
@@ -459,20 +473,21 @@ export class TransactionPage {
 
   reset() {
     this.keyword = '';
-    this.offset_pending = 0;
-    this.offset_releasing = 0;
-    this.pending_transactions = [];
-    this.releasing_transactions = [];
-    this.enableInfinite();
-    this.get_transaction();
+    this.searching();
   }
 
   search() {
     this.keyboard.close();
+    this.searching();
+  }
+
+  searching(){
     this.offset_pending = 0;
     this.offset_releasing = 0;
+    this.offset_cleared = 0;
     this.pending_transactions = [];
     this.releasing_transactions = [];
+    this.cleared_transactions = [];
     this.enableInfinite();
     this.get_transaction();
   }

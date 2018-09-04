@@ -37,7 +37,9 @@
 
 <ion-content>
 
-	<br>
+	<form (ngSubmit)="search()">
+		<ion-searchbar mode="md" [(ngModel)]="keyword" name="keyword" (ionClear)="reset();" placeholder="search"></ion-searchbar>
+	</form>
 
 	<div [ngSwitch]="tabs" >
 		<div *ngSwitchCase="'cleared'">
@@ -114,14 +116,16 @@
 				<br>
 			</div>
 
-			<spinner [hidden]="isBusy"></spinner>
+			<spinner *ngIf="!isBusy && offset_cleared == 0"></spinner>
+
+			<ion-infinite-scroll #infinite_cleared (ionInfinite)="doInfinite($event)" threshold="100px">
+			  <ion-infinite-scroll-content>
+			  </ion-infinite-scroll-content>
+			</ion-infinite-scroll>
 		</div>
 
 		<div *ngSwitchCase="'releasing'">
-			<form (ngSubmit)="search()">
-				<ion-searchbar mode="md" [(ngModel)]="keyword" name="keyword" (ionClear)="reset();" placeholder="search"></ion-searchbar>
-			</form>
-
+			
 			<br>
 			
 			<ion-item *ngIf="releasing_transactions.length == 0 && isBusy" text-center no-lines>
@@ -196,10 +200,6 @@
 		</div>
 
 		<div *ngSwitchCase="'pending'">
-			
-			<form (ngSubmit)="search()">
-				<ion-searchbar mode="md" [(ngModel)]="keyword" name="keyword" (ionClear)="reset();" placeholder="search"></ion-searchbar>
-			</form>
 
 			<br>
 
