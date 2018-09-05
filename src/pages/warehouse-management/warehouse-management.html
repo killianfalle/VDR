@@ -17,20 +17,27 @@
 
 
 <ion-content padding>
-	<button ion-button float-right (click)="setAddForm(true)" style="margin-bottom: 20px;"
-	*ngIf="!showAddForm">
+	<button ion-button block (click)="setAddForm(true)" 
+	style="margin-bottom: 20px;" *ngIf="!showAddForm && !showEditForm">
 		Add Warehouse
 	</button>
 
-	<button ion-button color="danger" float-right (click)="setAddForm(false)" style="margin-bottom: 20px;"
-	*ngIf="showAddForm">
-		Close Form
+	<button ion-button  block color="danger" (click)="setAddForm(false)" 
+	style="margin-bottom: 20px;" *ngIf="showAddForm">
+		Close Add Warehouse Form
 	</button>
 
+
+	<button ion-button  block color="danger" (click)="showEditForm = false" 
+	style="margin-bottom: 20px;" *ngIf="showEditForm">
+		Close Edit Warehouse Form
+	</button>
+
+	<!-- ADD WAREHOUSE FORM -->
 	<div *ngIf="showAddForm">
 		<ion-item>
 			<ion-label stacked>Warehouse Name</ion-label>
-			<ion-input type="text" text-center [(ngModel)]="form.name"></ion-input>
+			<ion-input type="text" text-center [(ngModel)]="addForm.name"></ion-input>
 		</ion-item>
 		<p style="padding-left: 18px !important; color: #F53D3D;">{{ apiValidators.name }}</p>
 
@@ -38,20 +45,47 @@
 
 		<ion-item>
 			<ion-label stacked>Address</ion-label>
-			<ion-input type="text" text-center [(ngModel)]="form.address"></ion-input>
+			<ion-input type="text" text-center [(ngModel)]="addForm.address"></ion-input>
 		</ion-item>
 		<p style="padding-left: 18px !important; color: #F53D3D;">{{ apiValidators.address }}</p>
 
 		<div padding style="padding-right: 0px !important;">
-			<button ion-button block color="orange" (click)="submitAddForm()">Submit</button>
+			<button ion-button block color="orange" (click)="submitAddForm()">
+				Submit Add Warehouse Form
+			</button>
 		</div>
 	</div>
 
-	<div *ngIf="!showAddForm">
+	<!-- EDIT WAREHOUSE FORM -->
+	<div *ngIf="showEditForm">
+		<ion-item>
+			<ion-label stacked>Warehouse Name</ion-label>
+			<ion-input type="text" text-center [(ngModel)]="updateForm.name"></ion-input>
+		</ion-item>
+		<p style="padding-left: 18px !important; color: #F53D3D;">{{ apiValidators.name }}</p>
+
+		<br>
+
+		<ion-item>
+			<ion-label stacked>Address</ion-label>
+			<ion-input type="text" text-center [(ngModel)]="updateForm.address"></ion-input>
+		</ion-item>
+		<p style="padding-left: 18px !important; color: #F53D3D;">{{ apiValidators.address }}</p>
+
+		<div padding style="padding-right: 0px !important;">
+			<button ion-button block color="orange" (click)="submitEditForm()">
+				Submit Edit Warehouse Form
+			</button>
+		</div>
+	</div>
+
+	<!-- WAREHOUSE LIST -->
+	<div *ngIf="!showAddForm && !showEditForm">
 		<ion-list>
 			<ion-item *ngFor="let warehouse of warehouseList">
 				<h2><strong>{{ warehouse.name }}</strong></h2>
 				<h3>{{ warehouse.address }}</h3>
+				<button ion-button color="secondary" (click)="selectToEdit(warehouse.id)">Edit</button>
 			</ion-item>
 		</ion-list>
 	</div>
