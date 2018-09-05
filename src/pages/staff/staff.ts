@@ -35,6 +35,7 @@ export class StaffPage implements OnInit{
   limit:any = 20;
 
   isBusy:any = false;
+  warehouseList:any = [];
 
   constructor(
     public navCtrl: NavController, 
@@ -51,6 +52,9 @@ export class StaffPage implements OnInit{
     self.isBusy = false;
     self.provider.getData({ search : self.keyword, offset : self.offset, limit : self.limit },'staff').then((res: any) => {
         if(res._data.status){
+          this.warehouseList = res._data.warehouseList;
+          console.log("WAREHOUSE LIST:");
+          console.log(this.warehouseList);
           if(res._data.result > 0){
             self.offset += res._data.result;
             self.loadData(res._data.data);
@@ -95,11 +99,11 @@ export class StaffPage implements OnInit{
 
     switch (type) {
       case "add":
-        params = { self : this, callback : this.refresh };
+        params = { self : this, callback : this.refresh, warehouseList: this.warehouseList };
         this.navCtrl.push(page, params );
         break;
       case "edit":
-        params = { self : this, callback : this.refresh, data : _params };
+        params = { self : this, callback : this.refresh, data : _params, warehouseList: this.warehouseList };
         this.navCtrl.push(page, params );
         break;
       default:
