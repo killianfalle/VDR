@@ -42,7 +42,7 @@ export class CheckoutCalendarPage {
     if(submit){
       this.alert.confirm().then((response: any) => {
         if (response) {
-          this._callback(this.params,moment(this.date).format('YYYY-MM-DD'),this.self);
+          this._callback(this.params,moment(this.date).format('YYYY-MM-DD'),this.self, this.navParams.get('warhouseID'));
           this.navCtrl.pop();
         }
       });

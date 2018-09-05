@@ -4,7 +4,8 @@ import { IonicPage,
 		     NavController, 
 		     NavParams,
          Events,
-         Keyboard } from 'ionic-angular';
+         Keyboard,
+         AlertController  } from 'ionic-angular';
 import { DataProvider } from '../../providers/data-provider';
 import { AlertComponent } from '../../components/alert/alert';
 import { ToastComponent } from '../../components/toast/toast';
@@ -27,7 +28,8 @@ export class CartPage implements OnInit {
   user:any;
   cart:any = [];
   key:any;
-
+  warehouseList: any = [];
+  selectedWarehouse: any;
   keyword:any = '';
 
   isBusy:any = false;
@@ -40,7 +42,9 @@ export class CartPage implements OnInit {
   	private provider: DataProvider,
     private event: Events,
     private keyboard: Keyboard,
-    private socket: Socket) 
+    private socket: Socket,
+    public alertCtrl: AlertController
+  ) 
   { 
   	this.user = JSON.parse(localStorage.getItem('_info'));
   }
@@ -49,6 +53,9 @@ export class CartPage implements OnInit {
     this.isBusy = false;
     this.provider.getData({ status : 'in_cart', user : this.user.id, search: this.keyword },'cart').then((res: any) => {
       if(res._data.status){
+        console.log("CART'S WAREHOUSE LIST:");
+        console.log(res._data.warehouseList);
+        this.warehouseList = res._data.warehouseList;
         this.cart = res._data.data;
       }
       this.isBusy = true;
@@ -139,11 +146,36 @@ export class CartPage implements OnInit {
   }
 
   check_out(_data) {
-    this.navCtrl.push('CheckoutCalendarPage',{ self: this, callback : this.checkout, data : _data });
+    let alert = this.alertCtrl.create();
+    alert.setTitle('Select Warehouse');
+    for(var counter = 0; counter < this.warehouseList.length; counter++){
+      alert.addInput({
+        type: 'radio',
+        label: this.warehouseList[counter]['name'] + ' - ' + this.warehouseList[counter]['address'],
+        value: this.warehouseList[counter]['id'],
+        checked: false
+      });
+    }
+      
+    alert.addButton('Cancel');
+    alert.addButton({
+      text: 'OK',
+      handler: warehouseID => {
+        console.log(warehouseID);
+        this.selectedWarehouse = warehouseID;
+        this.navCtrl.push('CheckoutCalendarPage',{ self: this, callback : this.checkout, data : _data, warhouseID: warehouseID });
+      }
+    });
+    alert.present();
+
+    // this.navCtrl.push('CheckoutCalendarPage',{ self: this, callback : this.checkout, data : _data });
   }
 
-  checkout(_data,date,self) {
-    self.provider.postData({ transaction : _data.id, release_at : date, status : 'pending' },'cart/status').then((res:any) => {
+  checkout(_data,date,self, warehouseID) {
+    console.log("TANGINA! ANO GINAGAWA MO!");
+    console.log("SELECTED WAREHOUSE ID:");
+    console.log(warehouseID);
+    self.provider.postData({ transaction : _data.id, release_at : date, status : 'pending', warehouseID: warehouseID },'cart/status').then((res:any) => {
       if(res._data.status){
         self.ngOnInit();
         _data.release_at = date;
