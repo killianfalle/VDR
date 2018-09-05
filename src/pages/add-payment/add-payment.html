@@ -1,0 +1,34 @@
+<!--
+  Generated template for the AddPaymentPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar color="orange">
+    <ion-title>New Payment</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+<ion-content>
+
+	<form [formGroup]="payment" (ngSubmit)="save()">
+		<br>
+
+		<ion-item>
+			<ion-label stacked>Name</ion-label>
+			<ion-input type="text" text-center formControlName="name"></ion-input>
+		</ion-item>
+		<div class="error" *ngIf="error.name">{{ error.name }}</div>
+
+		<br>
+		<br>
+
+		<div padding>
+			<button ion-button block color="orange">Add Payment</button>
+		</div>
+	</form>
+
+</ion-content>

@@ -37,7 +37,11 @@
 		<div class="error" *ngIf="error.last_name">{{ error.last_name }}</div>
 
 		<br>
+		<br>
 
+		<ion-item-divider>
+			Account Information
+		</ion-item-divider>
 		<ion-item>
 			<ion-label stacked>User Role</ion-label>
 			<ion-select formControlName="user_role">
@@ -49,11 +53,7 @@
 		<div class="error" *ngIf="error.user_role">{{ error.user_role }}</div>
 
 		<br>
-		<br>
-
-		<ion-item-divider>
-			Account Information
-		</ion-item-divider>
+		
 		<ion-item>
 			<ion-label stacked>Email</ion-label>
 			<ion-input type="text" text-center formControlName="email"></ion-input>

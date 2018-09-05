@@ -1,0 +1,59 @@
+<!--
+  Generated template for the WarehouseManagementPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar color="orange">
+    <ion-title>Warehouses</ion-title>
+    <ion-buttons end>
+      <cart></cart>
+    </ion-buttons>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+	<button ion-button float-right (click)="setAddForm(true)" style="margin-bottom: 20px;"
+	*ngIf="!showAddForm">
+		Add Warehouse
+	</button>
+
+	<button ion-button color="danger" float-right (click)="setAddForm(false)" style="margin-bottom: 20px;"
+	*ngIf="showAddForm">
+		Close Form
+	</button>
+
+	<div *ngIf="showAddForm">
+		<ion-item>
+			<ion-label stacked>Warehouse Name</ion-label>
+			<ion-input type="text" text-center [(ngModel)]="form.name"></ion-input>
+		</ion-item>
+		<p style="padding-left: 18px !important; color: #F53D3D;">{{ apiValidators.name }}</p>
+
+		<br>
+
+		<ion-item>
+			<ion-label stacked>Address</ion-label>
+			<ion-input type="text" text-center [(ngModel)]="form.address"></ion-input>
+		</ion-item>
+		<p style="padding-left: 18px !important; color: #F53D3D;">{{ apiValidators.address }}</p>
+
+		<div padding style="padding-right: 0px !important;">
+			<button ion-button block color="orange" (click)="submitAddForm()">Submit</button>
+		</div>
+	</div>
+
+	<div *ngIf="!showAddForm">
+		<ion-list>
+			<ion-item *ngFor="let warehouse of warehouseList">
+				<h2><strong>{{ warehouse.name }}</strong></h2>
+				<h3>{{ warehouse.address }}</h3>
+			</ion-item>
+		</ion-list>
+	</div>
+		
+</ion-content>

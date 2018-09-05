@@ -22,8 +22,10 @@ export class EditCustomerPage {
   _callback: any;
   origin: any;
   customer:any;
-
   error:any = {};
+
+  payment_types = [];
+  delivery_options = [];
 
   constructor(
   	public navCtrl: NavController, 
@@ -35,6 +37,16 @@ export class EditCustomerPage {
   	this.customer = this.navParams.get('data');
   	this._callback = navParams.get('callback');
   	this.origin = navParams.get('self');
+    this.get_option();
+  }
+
+  get_option() {
+    this.provider.getData('','option/all').then((res:any) => {
+      if(res._data.status) {
+        this.payment_types = res._data.data.payment;
+        this.delivery_options = res._data.data.delivery;
+      }
+    })
   }
 
   update() {
