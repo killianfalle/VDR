@@ -24,6 +24,7 @@ export class AddStaffPage {
   info: FormGroup;
   _callback: any;
   error:any = {};
+  warehouseList: any = [];
 
   constructor(
   	public navCtrl: NavController, 
@@ -34,6 +35,9 @@ export class AddStaffPage {
   	public form: FormBuilder) {
 
     this._callback = navParams.get('callback');
+
+    this.warehouseList = navParams.get('warehouseList');
+    console.log(this.warehouseList);
   	this.initForm();
   }
 
@@ -42,10 +46,14 @@ export class AddStaffPage {
       first_name: ['', Validators.required],
       last_name: ['', Validators.required],
       user_role: ['', Validators.required],
+      designated_warehouse: [''],
       email: ['', Validators.required],
       password: ['', Validators.required],
       confirm_password: ['', Validators.required]
     });
+
+
+    // console.log(this);
   }
 
   register() {

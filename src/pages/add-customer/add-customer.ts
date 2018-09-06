@@ -72,7 +72,7 @@ export class AddCustomerPage {
       }
     }).catch((error) => {
       this.error = JSON.parse(error._body).error;
-    });;
+    });
   }
 
   ionViewDidLoad() {
