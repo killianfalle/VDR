@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "1036324484009",
+    "firebase_url": "https://vista-del-rio.firebaseio.com",
+    "project_id": "vista-del-rio",
+    "storage_bucket": "vista-del-rio.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1036324484009:android:80d9b8d7fffba2fb",
+        "android_client_info": {
+          "package_name": "com.vdr.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1036324484009-7sgae3ge60oqclb9j6a2vhjkht4cbqb2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAFMZcvD6X8-wqnNIDa2uJCKyWuIdkRht8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

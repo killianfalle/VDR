@@ -1,0 +1,71 @@
+<!--
+  Generated template for the EditCustomerPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar color="orange">
+    <ion-title>Edit Customer</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+<ion-content>
+
+	<ion-item-divider>
+		Personal Information
+	</ion-item-divider>
+	<br>
+	
+	<div class="error" *ngIf="error.full_name">{{ error.full_name }}</div>
+
+	<ion-item>
+		<ion-label stacked>First Name</ion-label>
+		<ion-input type="text" text-center [(ngModel)]="customer.first_name"></ion-input>
+	</ion-item>
+	<div class="error" *ngIf="error.first_name">{{ error.first_name }}</div>
+
+	<br>
+
+	<ion-item>
+		<ion-label stacked>Last Name</ion-label>
+		<ion-input type="text" text-center [(ngModel)]="customer.last_name"></ion-input>
+	</ion-item>
+	<div class="error" *ngIf="error.last_name">{{ error.last_name }}</div>
+
+	<br>
+
+	<ion-item-divider>
+		Transaction Information
+	</ion-item-divider>
+
+	<br>
+
+	<ion-item>
+		<ion-label stacked>Payment Type</ion-label>
+		<ion-select [(ngModel)]="customer.payment_type">
+			<ion-option *ngFor="let payment of payment_types" value="{{payment.id}}">{{ payment.name }}</ion-option>
+		</ion-select>
+	</ion-item>
+	<div class="error" *ngIf="error.payment_type">{{ error.payment_type }}</div>
+
+	<br>
+
+	<ion-item>
+		<ion-label stacked>Delivery Option</ion-label>
+		<ion-select [(ngModel)]="customer.delivery_option">
+			<ion-option *ngFor="let delivery of delivery_options" value="{{delivery.id}}">{{ delivery.name }}</ion-option>
+		</ion-select>
+	</ion-item>
+	<div class="error" *ngIf="error.delivery_option">{{ error.delivery_option }}</div>
+
+	<br>
+	<br>
+
+	<div padding>
+		<button ion-button block color="orange" (click)="update()">Save Changes</button>
+	</div>
+
+</ion-content>

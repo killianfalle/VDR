@@ -1,5 +1,11 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { Validators,
+         FormBuilder, 
+         FormGroup } from '@angular/forms';
+import { DataProvider } from '../../providers/data-provider';
+import { LoaderComponent } from '../../components/loader/loader';
+import { ToastComponent } from '../../components/toast/toast';
 
 /**
  * Generated class for the AddStaffPage page.
@@ -15,11 +21,52 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 })
 export class AddStaffPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  info: FormGroup;
+  _callback: any;
+  error:any = {};
+
+  constructor(
+  	public navCtrl: NavController, 
+  	public navParams: NavParams,
+    public loader: LoaderComponent,
+    public toast: ToastComponent,
+  	public provider: DataProvider,
+  	public form: FormBuilder) {
+
+    this._callback = navParams.get('callback');
+  	this.initForm();
+  }
+
+  initForm() {
+  	this.info = this.form.group({
+      first_name: ['', Validators.required],
+      last_name: ['', Validators.required],
+      user_role: ['', Validators.required],
+      email: ['', Validators.required],
+      password: ['', Validators.required],
+      confirm_password: ['', Validators.required]
+    });
+  }
+
+  register() {
+  	this.provider.postData(this.info.value,'register').then((res: any) => {
+  		if(res._data.status){
+  			console.log(res._data.message);
+        this.toast.presentToast(res._data.message);
+        this._callback(this.navParams.get('self'),true);
+  			this.navCtrl.pop();
+  		}
+  	}).catch((error) => {
+      this.error = JSON.parse(error._body).error;
+    });
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad AddStaffPage');
+    this.loader.show_loader();
+  }
+
+  ionViewDidEnter() {
+    this.loader.hide_loader();
   }
 
 }

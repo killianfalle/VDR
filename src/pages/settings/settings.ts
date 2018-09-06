@@ -1,5 +1,10 @@
 import { Component } from '@angular/core';
-import { App, IonicPage, NavController, NavParams } from 'ionic-angular';
+import { App,
+         IonicPage, 
+         NavController, 
+         NavParams } from 'ionic-angular';
+import { DataProvider } from '../../providers/data-provider';
+import { LoaderComponent } from '../../components/loader/loader';
 
 /**
  * Generated class for the SettingsPage page.
@@ -15,23 +20,36 @@ import { App, IonicPage, NavController, NavParams } from 'ionic-angular';
 })
 export class SettingsPage {
 
+  profile:any;
+  device:any;
+
   constructor(
   	public app: App, 
   	public navCtrl: NavController, 
-  	public navParams: NavParams) {
+  	public navParams: NavParams,
+    public provider: DataProvider,
+    public loader: LoaderComponent) {
+    this.profile = JSON.parse(localStorage.getItem('_info'));
+    this.device = localStorage.getItem('_device');
   }
-
 
   navigate() {
   	this.navCtrl.push('ChangePasswordPage');
   }
 
   logout() {
-  	this.app.getRootNav().setRoot('LoginPage');
+    this.provider.postData({ token : this.device } , 'device/unregister').then((res: any) => {
+      localStorage.clear();
+  	  this.app.getRootNav().setRoot('LoginPage', { logout : true, email : this.profile.email });
+    });
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad SettingsPage');
+    this.loader.show_loader();
+  }
+
+  ionViewDidEnter() {
+    this.loader.hide_loader();
   }
 
 }

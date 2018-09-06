@@ -1,0 +1,101 @@
+<!--
+  Generated template for the AddProductPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar color="orange">
+    <ion-title>New Product</ion-title>
+    <ion-buttons end>
+      <cart></cart>
+    </ion-buttons>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content>
+
+	<ion-item-divider>
+		Product
+	</ion-item-divider>
+	<ion-item>
+		<ion-input type="text" [(ngModel)]="product.name" placeholder="enter product name"></ion-input>
+	</ion-item>
+	<div class="error" *ngIf="error.name">{{ error.name }}</div>
+
+	<br>
+
+	<ion-item-divider>
+		Class
+		<button ion-button color="dark" clear icon-only (click)="add_class()" item-end>
+			<ion-icon name="add-circle"></ion-icon>
+		</button>
+	</ion-item-divider>
+	<div *ngFor="let class of product.classes; let i = index">
+		<ion-row>
+			<ion-col>
+				<ion-item>
+					<ion-label>{{ (i+1) }}.</ion-label>
+					<ion-input type="text" [(ngModel)]="class.name" placeholder="enter class"></ion-input>
+				</ion-item>
+			</ion-col>
+			<ion-col col-1 align-self-center text-center>
+				<ion-icon color="danger" name="remove-circle" (click)="remove_class(i)" item-end></ion-icon>
+			</ion-col>
+		</ion-row>
+
+		<ion-item-divider>
+			 Size
+			<button ion-button color="dark" clear icon-only (click)="add_size(i)" item-start>
+				<ion-icon name="add-circle"></ion-icon>
+			</button>
+		</ion-item-divider>
+		<div *ngFor="let size of class.size; let row = index">
+			<ion-row>
+				<ion-col col-1 align-self-center text-center>
+					<ion-icon *ngIf="row == 0" item-start></ion-icon>
+					<ion-icon color="danger" name="remove-circle" (click)="remove_size(i,row)" item-start></ion-icon>
+				</ion-col>
+				<ion-col>
+					<ion-item>
+						<ion-input type="text" [(ngModel)]="size.name" placeholder="enter size" [disabled]="class.name == ''"></ion-input>
+					</ion-item>
+				</ion-col>
+			</ion-row>
+		</div>
+
+		<br>
+	</div>
+
+	<br>
+
+
+	<ion-item-divider>
+		Quantity
+		<button ion-button color="dark" clear icon-only (click)="add_quantities()" item-end>
+			<ion-icon name="add-circle"></ion-icon>
+		</button>
+	</ion-item-divider>
+	<div *ngFor="let quantity of product.quantities; let i = index">
+		<ion-row>
+			<ion-col>
+				<ion-item>
+					<ion-input type="text" [(ngModel)]="quantity.name" placeholder="enter quantity"></ion-input>
+				</ion-item>
+			</ion-col>
+			<ion-col col-1 align-self-center text-center>
+				<ion-icon color="danger" name="remove-circle" (click)="remove_quantities(i)" item-end></ion-icon>
+			</ion-col>
+		</ion-row>
+	</div>
+
+	<br>
+
+	<div padding>
+		<button ion-button block color="orange" (click)="submit()">Save Product</button>
+	</div>
+
+</ion-content>

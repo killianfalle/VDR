@@ -1,0 +1,47 @@
+<!--
+  Generated template for the PaymentPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar color="orange">
+    <ion-title>Payment</ion-title>
+    <ion-buttons end>
+      <cart></cart>
+    </ion-buttons>
+  </ion-navbar>
+
+</ion-header>
+
+<ion-content>
+
+	<ion-item>
+		<button ion-button outline icon-start padding color="orange" (click)="navigate()" item-end>
+			<ion-icon name="add"></ion-icon>
+			Add Payment
+		</button>
+	</ion-item>
+
+	<ion-item *ngIf="payments.length == 0 && keyword == null && isBusy" text-center no-lines>
+		<p>No payment.</p>
+	</ion-item>
+
+	<ion-item *ngIf="payments.length == 0 && keyword != null && isBusy" text-center no-lines>
+		<p>No result found.</p>
+	</ion-item>
+
+	<ion-item *ngFor="let payment of payments">
+		<h2 text-capitalize>{{ payment.name }}</h2>
+
+		<p item-end>
+			<span ion-text color="primary" (click)="on_edit(payment); $event.stopPropagation();">Edit</span>
+			&nbsp;
+			<span ion-text color="danger" (click)="on_delete(payment.id); $event.stopPropagation();">Delete</span>
+		</p>
+	</ion-item>
+
+	<spinner [hidden]="isBusy"></spinner>
+
+</ion-content>

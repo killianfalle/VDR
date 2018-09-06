@@ -1,0 +1,18 @@
+page-checkout-calendar {
+	ion-calendar {
+		background: #EEEEEE;
+		padding: 0;
+
+		.title {
+			background: #222;
+		}
+
+		.title .switch-btn {
+			color: orange;
+		}
+
+		.title .back , .title .forward {
+			color: #fff;
+		}
+	}
+}

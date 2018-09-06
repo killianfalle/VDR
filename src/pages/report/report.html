@@ -8,82 +8,151 @@
 
   <ion-navbar color="orange">
     <ion-title>Report</ion-title>
+    <ion-buttons end>
+      <cart></cart>
+    </ion-buttons>
   </ion-navbar>
+
+  <ion-toolbar>
+  	<ion-segment mode="md" [(ngModel)]="report_tab" color="dark" (ionChange)="ngOnInit()">
+  		<ion-segment-button value="csv-report">
+  			CSV Report 
+  		</ion-segment-button>
+
+  		<ion-segment-button value="daily-report">
+  			Daily Report 
+  		</ion-segment-button>
+  	</ion-segment>
+  </ion-toolbar>
 
 </ion-header>
 
 
 <ion-content>
 
-	<ion-item>
-		<ion-label>
-			<ion-icon name="md-calendar"></ion-icon>
-		</ion-label>
-		<ion-datetime></ion-datetime>
-	</ion-item>
-
-	<div padding>
-		<button ion-button block color="orange" (click)="exportCSV(); $event.stopPropagation()">Export CSV</button>
-	</div>
-
 	<br>
 
-	<ion-card *ngFor="let data of record">
-		<ion-row>
-			<ion-col col-3 margin-left>
-				<h2>Class</h2>
-			</ion-col>
-			<ion-col col-1>
-				<h2>:</h2>
-			</ion-col>
-			<ion-col col-6>
-				<h2>{{ data.class }}</h2>
-			</ion-col>
-		</ion-row>
-		<ion-row>
-			<ion-col col-3 margin-left>
-				<h2>Size</h2>
-			</ion-col>
-			<ion-col col-1>
-				<h2>:</h2>
-			</ion-col>
-			<ion-col col-6>
-				<h2>{{ data.size }}</h2>
-			</ion-col>
-		</ion-row>
-		<ion-row>
-			<ion-col col-3 margin-left>
-				<h2>Type</h2>
-			</ion-col>
-			<ion-col col-1>
-				<h2>:</h2>
-			</ion-col>
-			<ion-col col-6>
-				<h2>{{ data.type }}</h2>
-			</ion-col>
-		</ion-row>
-		<ion-row>
-			<ion-col col-3 margin-left>
-				<h2>Quantity</h2>
-			</ion-col>
-			<ion-col col-1>
-				<h2>:</h2>
-			</ion-col>
-			<ion-col col-6>
-				<h2>{{ data.qty }}</h2>
-			</ion-col>
-		</ion-row>
-		<ion-row>
-			<ion-col col-3 margin-left>
-				<h2>Release</h2>
-			</ion-col>
-			<ion-col col-1>
-				<h2>:</h2>
-			</ion-col>
-			<ion-col col-6>
-				<h2>{{ data.release }}</h2>
-			</ion-col>
-		</ion-row>
-	</ion-card>
+	<div [ngSwitch]="report_tab" >
+		<div *ngSwitchCase="'csv-report'">
+			<ion-row>
+				<ion-col>
+					<ion-item>
+						<ion-label stacked> From
+							<ion-icon name="md-calendar"></ion-icon>
+						</ion-label>
+						<ion-datetime displayFormat="MM/DD/YYYY" [(ngModel)]="daily_report_from" (ionChange)="ngOnInit()"></ion-datetime>
+					</ion-item>
+				</ion-col>
+				<ion-col>
+					<ion-item>
+						<ion-label stacked> To
+							<ion-icon name="md-calendar"></ion-icon>
+						</ion-label>
+						<ion-datetime displayFormat="MM/DD/YYYY" [(ngModel)]="daily_report_to" (ionChange)="ngOnInit()"></ion-datetime>
+					</ion-item>
+				</ion-col>
+			</ion-row>
+			<br>
+			<div padding>
+				<button ion-button block color="orange" (click)="show_product(); $event.stopPropagation()">Export</button>
+			</div>
+
+			<div *ngFor="let report of reports">
+				<ion-card>
+					<ion-item-divider text-capitalize>
+						<h4>Owner: {{ report.first_name }} {{ report.last_name }}</h4>
+						<h4>Release Date : {{ report.release_at | date : 'MM/dd/yy' }}</h4>
+					</ion-item-divider>
+
+					<ion-list>
+						<ion-item *ngFor="let item of report.orders">
+							<h2 ion-text color="orange">{{ item.product }}</h2>
+							<h4 padding-left>{{ item.class }}</h4>
+							<h4 padding-left>{{ item.size }}
+								<span [hidden]="!item.type">({{ item.type }})</span>
+							</h4>
+							<p  padding-left>
+								{{ item.quantity | number : fractionSize }} x &#8369;{{ item.price | number : fractionSize }}
+								<span ion-text color="danger" float-right>&#8369;{{ item.total | number : fractionSize }}</span>
+							</p>
+						</ion-item>
+					</ion-list>
+
+					<ion-item>
+						<h3 ion-text color="danger" item-end>Total : &#8369;{{ report.total_payment | number : fractionSize }}</h3>
+					</ion-item>
+				</ion-card>
+			
+			</div>
+
+			<p *ngIf="!reports.length && isBusy" text-center>No results found.</p>
+
+			<spinner [hidden]="isBusy"></spinner>
+		</div>
+
+		<div *ngSwitchCase="'daily-report'">
+
+			<ion-card (click)="show_product(); $event.stopPropagation()">
+			  <ion-item>
+			  	<ion-label>Select Product</ion-label>
+			  	<button ion-button clear item-end>
+			  		<ion-icon name="add"></ion-icon>
+			  	</button>
+			  </ion-item>
+			</ion-card>
+
+			<ion-card>
+			  <ion-item>
+			  	<ion-label>
+			  		<ion-icon name="md-calendar"></ion-icon>
+			  	</ion-label>
+			  	<ion-datetime displayFormat="MM/DD/YYYY" [(ngModel)]="sales_report_date" (ionChange)="ngOnInit()"></ion-datetime>
+			  </ion-item>
+			</ion-card>
+
+			<ion-item no-lines>
+				<button ion-button icon-start clear color="primary" (click)="print('release')" item-end>
+					<ion-icon name="print"></ion-icon>
+					Print
+				</button>
+			</ion-item>
+			<ion-item-divider class="table" no-lines>
+				<ion-row text-wrap>
+					<ion-col col-4>
+						<h3 ion-text color="orange">Class</h3>
+					</ion-col>
+					<ion-col col-4>
+						<h3 ion-text color="orange">Size</h3>
+					</ion-col>
+					<ion-col col-2>
+						<h3 ion-text color="orange">QTY</h3>
+					</ion-col>
+					<ion-col col-2 text-center>
+						<h3 ion-text color="orange">Total</h3>
+					</ion-col>
+				</ion-row>
+				<br>
+				<ion-row text-wrap *ngFor="let release of release_reports">
+					<ion-col col-4>
+						<p>{{ release.class }}</p>
+					</ion-col>
+					<ion-col col-4>
+						<p>{{ release.size }}</p>
+					</ion-col>
+					<ion-col col-2>
+						<p>{{ release.type }}</p>
+					</ion-col>
+					<ion-col col-2 text-center>
+						<p>{{ release.quantity }}</p>
+					</ion-col>
+				</ion-row>
+				<br>
+
+				<p *ngIf="!release_reports.length && isBusy" text-center>No results found.</p>
+				
+				<spinner [hidden]="isBusy"></spinner>
+			</ion-item-divider>
+		</div>
+	</div>
 
 </ion-content>

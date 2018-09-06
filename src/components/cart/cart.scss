@@ -1,0 +1,30 @@
+cart {
+	.button-small-ios {
+		height: 2.8em;
+	}
+
+	.button-small-ios[icon-only] ion-icon {
+		font-size: 2.0em;
+	}
+
+	ion-badge {
+		padding: 2px 6px;
+	}
+
+	#notification-button {            
+       position: relative;
+       width: 42px;
+       top:1px;
+       right: 1px;
+       overflow: visible!important;
+    }
+
+
+	#notifications-badge {
+       background-color: red;
+       position: absolute;
+       top: 0;
+       right: 1px;
+       border-radius: 100%;
+   }
+}

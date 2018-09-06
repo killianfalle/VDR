@@ -1,0 +1,50 @@
+page-cart {
+
+	ion-card {
+		margin: 0 !important;
+		width: 100% !important;
+	}
+
+	.item-divider {
+		h4 {
+			font-weight: bolder;
+		}
+	}
+
+	.cart-item {
+		border-top: 1px dotted black;
+	}
+
+	.row , .col {
+		padding: 0;
+		margin: 0;
+
+		.icon {
+			font-size: 2.3em;
+			font-weight: bolder;
+		}
+	}
+
+	h3 span {
+		font-size: 2.2em;
+		padding: 0.2em;
+	}
+
+	.qty-box {
+		border-bottom: none !important;
+
+		.input-wrapper {
+			border: 2px solid color($colors,danger) !important;
+		}
+
+		.text-input[disabled] {
+			opacity: 1 !important;
+		}
+	}
+
+	ion-item.item-input-disabled {
+		.input-wrapper {
+			border: none !important;
+		}
+	}
+}

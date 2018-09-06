@@ -1,0 +1,60 @@
+<!--
+  Generated template for the CustomerPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar color="orange">
+    <ion-title>Customer</ion-title>
+    <ion-buttons end>
+      <cart></cart>
+    </ion-buttons>
+  </ion-navbar>
+
+  <ion-toolbar>
+  	<form (ngSubmit)="search()">
+  		<ion-searchbar mode="md" [(ngModel)]="keyword" name="keyword" (ionClear)="reset();" placeholder="search"></ion-searchbar>
+  	</form>
+  </ion-toolbar>
+
+</ion-header>
+
+
+<ion-content>
+	
+	<ion-item>
+		<button ion-button outline icon-start padding color="orange" (click)="navigate('AddCustomerPage','add')" item-end>
+			<ion-icon name="person-add"></ion-icon>
+			Add Customer
+		</button>
+	</ion-item>
+
+	<ion-item *ngIf="customers.length == 0 && keyword == null && isBusy" text-center no-lines>
+		<p>No customer.</p>
+	</ion-item>
+
+	<ion-item *ngIf="customers.length == 0 && keyword != null && isBusy" text-center no-lines>
+		<p>No result found.</p>
+	</ion-item>
+
+	<ion-item *ngFor="let customer of customers" (click)="navigate('CustomerTransactionPage','history',customer.id); $event.stopPropagation();" text-wrap text-capitalize>
+		<h2><strong>{{ customer.first_name }} {{ customer.last_name }}</strong></h2>
+		<h3><strong>{{ customer.payment }}</strong></h3>
+		<p ion-text color="dark"><strong>{{ customer.delivery }}</strong></p> 
+
+		<p item-end>
+			<span ion-text color="primary" (click)="on_edit(customer); $event.stopPropagation();">Edit</span>
+			&nbsp;
+			<span ion-text color="danger" (click)="remove(customer); $event.stopPropagation();">Delete</span>
+		</p>
+	</ion-item>
+
+	<spinner *ngIf="!isBusy && offset == 0"></spinner>
+
+	<ion-infinite-scroll #infinite (ionInfinite)="doInfinite($event)" threshold="100px">
+	  <ion-infinite-scroll-content>
+	  </ion-infinite-scroll-content>
+	</ion-infinite-scroll>
+</ion-content>

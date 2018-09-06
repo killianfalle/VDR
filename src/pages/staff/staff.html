@@ -7,35 +7,51 @@
 <ion-header>
 
   <ion-navbar color="orange">
+  	<ion-buttons start>
+      <logo></logo>
+    </ion-buttons>
     <ion-title>Staff</ion-title>
+    <ion-buttons end>
+      <cart></cart>
+    </ion-buttons>
   </ion-navbar>
+
+  <ion-toolbar>
+  	<form (ngSubmit)="search()">
+  		<ion-searchbar mode="md" [(ngModel)]="keyword" name="keyword" (ionClear)="reset();" placeholder="search"></ion-searchbar>
+  	</form>
+  </ion-toolbar>
 
 </ion-header>
 
 
-<ion-content padding>
-
-	<ion-item no-lines>
-		<form>
-			<ion-searchbar mode="md" placeholder="search"></ion-searchbar>
-		</form>
-		
-		<button ion-button outline icon-start padding color="orange" (tap)="navigate()" item-end>
+<ion-content>
+	<ion-item>
+		<button ion-button outline icon-start padding color="orange" (click)="navigate('AddStaffPage','add')" item-end>
 			<ion-icon name="person-add"></ion-icon>
 			Add Staff
 		</button>
 	</ion-item>
+	<ion-item no-lines text-center *ngIf="staffs.length == 0 && keyword == null && isBusy">
+		<p>No staff.</p>
+	</ion-item>
+	<ion-item no-lines text-center *ngIf="staffs.length == 0 && keyword != null && isBusy">
+		<p>No result found.</p>
+	</ion-item>
 
-	<ion-list>
-	  <ion-item>
-	  	<h2>John Doe</h2>
-	  	<h3>john@gmail.com</h3>
-	  	<p>Admin Staff</p>
-	  </ion-item>
-	  <ion-item>
-	  	<h2>Maria Juanna</h2>
-	  	<h3>mari@gmail.com</h3>
-	  	<p>Warehouse Staff</p>
-	  </ion-item>
-	</ion-list>
+	<ion-item *ngFor="let staff of staffs">
+		<h2 text-capitalize>{{ staff.first_name }} {{ staff.last_name }}</h2>
+		<h3>{{ staff.email }}</h3>
+		<p *ngIf="staff.user_role == 'admin_staff'" text-capitalize>Admin Staff</p>
+		<p *ngIf="staff.user_role == 'sale_staff'" text-capitalize>Sale Staff</p>
+		<p *ngIf="staff.user_role == 'warehouse_staff'" text-capitalize>Warehouse Staff</p>
+		<p *ngIf="staff.user_role == 'printer_staff'" text-capitalize>Printer Staff</p>
+
+		<p item-end>
+			<span ion-text color="primary" (click)="navigate('EditStaffPage','edit',staff); $event.stopPropagation();">Edit</span>
+		</p>
+	</ion-item>
+
+	<spinner [hidden]="isBusy"></spinner>
+	
 </ion-content>

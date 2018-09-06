@@ -7,7 +7,10 @@
 <ion-header>
 
   <ion-navbar color="orange">
-    <ion-title>Review</ion-title>
+    <ion-title>Review Order</ion-title>
+    <ion-buttons end>
+      <cart></cart>
+    </ion-buttons>
   </ion-navbar>
 
 </ion-header>
@@ -15,47 +18,25 @@
 
 <ion-content padding>
 
-	<div text-center>
-		<h4>Vista del rio</h4>
-		<p>Carmen Cagayan de oro city</p>
+	<div class="customer">
+		<h5 ion-text color="orange" text-capitalize>Name : 
+			<span ion-text color="dark">{{ customer.first_name }} {{ customer.last_name }}</span>
+		</h5>
 	</div>
 
-	<hr>
+	<br>
 
-	<ion-item no-lines>
-		<h4>Purchase</h4>
-		<h3 item-end>{{ data.current_date }}</h3>
-	</ion-item>
-	<ion-item no-lines>
-		<h4>Release</h4>
-		<h3 item-end [hidden]="!data.release_date">{{ data.release_date }}</h3>
-	</ion-item>
+	<div margin-top text-wrap>
+		<h4 ion-text color="orange">{{ data.name }}</h4>
+		<h5 padding-left>{{ data.class.name }}</h5>
+		<h5 padding-left>{{ data.size.name }}
+			<span [hidden]="!data.qty_type.name">({{ data.qty_type.name }})</span>
+		</h5>
+		<h6  padding-left>{{ data.quantity | number : fractionSize }} x &#8369;{{ data.price | number : fractionSize }}</h6>
+	</div>
 
-	<ion-row>
-		<ion-item>
-			<h3>Classification</h3>
-		</ion-item>
-		<ion-item no-lines text-center>
-			<h1>{{ data.class }}</h1>
-		</ion-item>
-		<ion-item>
-			<h3>Size</h3>
-		</ion-item>
-		<ion-item no-lines text-center>
-			<h1>{{ data.size }}</h1>
-		</ion-item>
-		<ion-item>
-			<h3>Type</h3>
-		</ion-item>
-		<ion-item no-lines text-center>
-			<h1>{{ data.qty_type }}</h1>
-		</ion-item>
-		<ion-item>
-			<h3>Quantity</h3>
-		</ion-item>
-		<ion-item no-lines text-center>
-			<h1>{{ data.qty }}</h1>
-		</ion-item>
-	</ion-row>
+	<div class="total" padding-top text-wrap>
+		<h4 ion-text color="danger">Total : <span>&#8369;{{ data.total | number : fractionSize }}</span></h4>
+	</div>
 
 </ion-content>

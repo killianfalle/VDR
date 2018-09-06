@@ -1,0 +1,99 @@
+page-order-entry {
+	
+	.row , .col {
+		margin: 0;
+		padding: 0;
+	}
+
+	.option {
+		padding: 10px;
+		background: #EEEEEE;
+		border: 1px solid color($colors,orange);
+		margin-bottom: 2px;
+
+		p {
+			font-weight: bolder;
+			font-size: 1.2em;
+		}
+	}
+
+	.item-divider {
+		color: color($colors,dark);
+		font-size: 1.5em;
+		font-weight: bolder;
+		background: color($colors,yellow);
+		text-align: center;
+	}
+
+	.card {
+		min-height: 80px;
+		background: #EEEEEE;
+		border: 1px solid color($colors,orange);
+	}
+
+	.item-option {
+		color: color($colors,orange);
+		position: absolute;
+	    top: 50%;
+	    left: 50%;
+	    transform: translateX(-50%) translateY(-50%);
+		background: transparent;
+	}
+
+	.last-col {
+		flex: 0 0 100% !important;
+	    width: 100% !important;
+	    max-width: 100% !important;
+	}
+
+	.selected {
+		border: 1px solid color($colors,orange);
+		background: color($colors,orange);
+		font-weight: bold;
+		font-style: italic;
+		color: color($colors,light) !important;
+
+		.item {
+			font-weight: bold;
+			font-style: italic;
+			color: color($colors,light) !important;
+		}
+	}
+
+	.text-input[disabled] {
+		opacity: 1 !important;
+	}
+
+	ion-label.custom-label {
+		text-align: right;
+		max-width: none;
+		width: 19vh;
+		font-size: 1.2em;
+		font-weight: bold;
+	}
+
+	.hr-divider {
+	  display: flex;
+	  
+	  .hr-line {
+	    width: 100%;
+	    position: relative;
+	    margin: 15px;
+	    border-bottom: 0.55px solid #c8c7cc;
+	  }
+
+	  .hr-icon {
+	    position: relative;
+	    top: 3px;
+	    color: #c8c7cc
+	  }
+
+	  .icon {
+	  	font-size: 2.5em;
+	  }
+
+	  h1 {
+	  	line-height: 0.8;
+	  }
+	}
+}

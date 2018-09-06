@@ -1,14 +1,21 @@
 page-home {
 
-	.card {
-		background: #EEEEEE;
-		
-		.row .col {
-			font-size: 1.5em;
-		}
+	.row {
+		margin-top: 5px;
 	}
 
-	.icon {
-		font-size: 5em;
+	.card {
+		width: 100%;
+		margin: 0;
+		padding: 5px;
+		max-height: 141px;
+
+		.icon {
+			font-size: 5em;
+		}
+
+		.card-header {
+			font-weight: bolder;
+		}
 	}
 }
