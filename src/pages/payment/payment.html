@@ -37,6 +37,8 @@
 
 		<p item-end>
 			<span ion-text color="primary" (click)="on_edit(payment); $event.stopPropagation();">Edit</span>
+			&nbsp;
+			<span ion-text color="danger" (click)="on_delete(payment.id); $event.stopPropagation();">Delete</span>
 		</p>
 	</ion-item>
 

@@ -69,6 +69,25 @@ export class PaymentPage {
     this.navCtrl.push('EditPaymentPage', params );
   }
 
+  on_delete(_id) {
+    this.alert.confirm().then((response:any) => {
+      if(response) {
+        this.delete(_id);
+      }
+    }).catch((error:any)=> {
+      console.log(error);
+    })
+  }
+
+  delete(_id) {
+    this.provider.postData({ id: _id, status: 'inactive' },'payment/delete').then((res:any) => {
+      if(res._data.status) {
+        this.refresh();
+        this.toast.presentToast(res._data.message);
+      }
+    })
+  }
+
   ionViewDidLoad() {
     this.loader.show_loader();
   }
