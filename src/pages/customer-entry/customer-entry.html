@@ -35,7 +35,9 @@
   </ion-item>
 
   <ion-item *ngFor="let customer of customers; let i = index" [ngClass]="{'selected' : (i == key)}" (click)="navigate(customer,i)" text-capitalize detail-push>
-  	{{ customer.first_name }} {{ customer.last_name }}
+    <h2><strong>{{ customer.first_name }} {{ customer.last_name }}</strong></h2>
+    <h3><strong>{{ customer.payment }}</strong></h3>
+    <p ion-text color="dark"><strong>{{ customer.delivery }}</strong></p> 
   </ion-item>
 
   <spinner *ngIf="!isBusy && offset == 0"></spinner>

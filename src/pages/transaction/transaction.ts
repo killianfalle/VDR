@@ -123,6 +123,18 @@ export class TransactionPage {
       }  
     });
 
+    this.remove_cleared_transaction().subscribe((_data) => {
+      if(this.cleared_result != 0)
+        this.cleared_result -= 1;
+
+      let index = this.cleared_transactions.map(obj => obj.id).indexOf(_data);
+      if(index > -1){
+        this.cleared_transactions.splice(index, 1);
+        if(this.offset_cleared != 0)
+          this.offset_cleared -= 1;
+      }  
+    });
+
     this.add_cleared_transaction().subscribe((_data:any) => {
       this.cleared_result += 1;
       if(this.search_date == _data.release_at){
@@ -318,6 +330,16 @@ export class TransactionPage {
     return observable;
   }
 
+  remove_cleared_transaction() {
+    let observable = new Observable(observer => {
+      this.socket.on('remove-cleared-transaction', (data) => {
+        console.log(data);
+        observer.next(data.data);
+      });
+    })
+    return observable;
+  }
+
   show_calendar(_data) {
     this.navCtrl.push('CalendarPage', {
       data : _data,
@@ -354,17 +376,17 @@ export class TransactionPage {
 
     void_form.onDidDismiss(data => {
      if(data != null){
-       this.provider.postData({ transaction : id , reason : data },'transaction/void').then((res:any) => {
+       this.provider.postData({ transaction: id , reason: data },'transaction/void').then((res:any) => {
          if(res._data.status){
            let params = {};
 
            switch (type) {
              case "releasing":
-               params = { data : id, reason : data, type : 'set-void-releasing-transaction' };
+               params = { data: id, reason: data, type: 'set-void-releasing-transaction' };
                this.socket.emit('transaction', { text: params });
                break;
              case "cleared":
-               params = { data : id, reason : data, type : 'set-void-cleared-transaction' };
+               params = { data: id, reason: data, type: 'set-void-cleared-transaction' };
                this.socket.emit('transaction', { text: params });
                break;
              default:
@@ -378,10 +400,31 @@ export class TransactionPage {
     void_form.present();
   }
 
+  return_transaction(_data) {
+    let void_form = this.modalCtrl.create('VoidFormPage',{});
+
+    void_form.onDidDismiss(data => {
+     if(data != null){
+       this.provider.postData({ transaction:{ id: _data.id }, reason: data, status: 'return' },'transaction/return').then((res:any) => {
+         if(res._data.status){
+           console.log(res);
+           let param = { data : _data.id, type : 'remove-cleared-transaction' };
+           this.socket.emit('transaction', { text: param });
+
+           let params = { data: _data, type: 'add-pending-transaction' };
+           this.socket.emit('transaction', { text: params });
+         }
+       });
+     }
+   });
+
+    void_form.present();
+  }
+
   cancel_transaction(_data) {
     this.alert.confirm('Cancel Transaction').then((response: any) => {
       if(response){
-        this.provider.postData({ transaction : _data, status : 'cancel' },'transaction/status').then((res:any) => {
+        this.provider.postData({ transaction: _data, status: 'cancel' },'transaction/status').then((res:any) => {
           if(res._data.status){
             this.remove_pending(_data,this);
             this.toast.presentToast('Successfully cancelled transaction');
@@ -395,7 +438,7 @@ export class TransactionPage {
     this.alert.confirm('Edit Transaction').then((response: any) => {
       if(response){
         this.loader.show_loader('processing');
-        this.provider.postData({ transaction : _data, status : 'in_cart' },'transaction/status').then((res:any) => {
+        this.provider.postData({ transaction: _data, status: 'in_cart' },'transaction/status').then((res:any) => {
           if(res._data.status){
             let root = this.pending_transactions.indexOf(this.pending_transactions[row]);
 

@@ -53,7 +53,7 @@ export class AddStaffPage {
   		if(res._data.status){
   			console.log(res._data.message);
         this.toast.presentToast(res._data.message);
-        this._callback(this.navParams.get('self'));
+        this._callback(this.navParams.get('self'),true);
   			this.navCtrl.pop();
   		}
   	}).catch((error) => {

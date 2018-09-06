@@ -97,20 +97,27 @@
 					<ion-row>
 						<ion-col text-center>
 							<button ion-button [hidden]="transaction.void" small clear icon-end color="danger" (click)="void_transaction(transaction.id,'cleared');">
-								Set Void
+								<strong>Set Void</strong>
 								<ion-icon name="alert"></ion-icon>
 							</button>
 							<button *ngIf="transaction.void" ion-button small clear icon-end color="orange" (click)="read_reason(transaction.void_reason)">
-								Read Void Reason
+								<strong>Read Reason</strong>
+							</button>
+						</ion-col>
+						<ion-col col-6 text-center *ngIf="profile.type == 'admin'" >
+							<button ion-button small clear icon-end color="orange" (click)="return_transaction(transaction)" item-end>
+								<strong>Return Pending</strong>
+								<ion-icon name="redo"></ion-icon>
 							</button>
 						</ion-col>
 						<ion-col text-center>
 							<button ion-button small clear icon-end color="primary" (click)="reprint(transaction)" item-end>
-								RePrint
+								<strong>RePrint</strong>
 								<ion-icon name="print"></ion-icon>
 							</button>
 						</ion-col>
 					</ion-row>
+
 				</ion-card>
 
 				<br>
@@ -172,16 +179,16 @@
 					<ion-row>
 						<ion-col text-center>
 							<button [hidden]="transaction.void" small clear ion-button icon-end color="danger" (click)="void_transaction(transaction.id,'releasing');" item-start>
-								Set Void
+								<strong>Set Void</strong>
 								<ion-icon name="alert"></ion-icon>
 							</button>
 							<button *ngIf="transaction.void" small clear ion-button icon-end color="orange" (click)="read_reason(transaction.void_reason)">
-								Read Reason
+								<strong>Read Reason</strong>
 							</button>
 						</ion-col>
 						<ion-col text-center>
 							<button ion-button small clear icon-end color="primary" (click)="reprint(transaction)" item-end>
-								RePrint
+								<strong>RePrint</strong>
 								<ion-icon name="print"></ion-icon>
 							</button>
 						</ion-col>
@@ -221,6 +228,11 @@
 						</h4>
 						<h4 ion-text text-wrap>
 							Entry by: {{ transaction.firstName }} {{ transaction.lastName }}
+						</h4>
+						<h4 [hidden]="!transaction.void">Status: 
+							<span>
+								<ion-badge color="danger" [hidden]="!transaction.void">Void</ion-badge>
+							</span>
 						</h4>
 						<button ion-button clear item-end (click)="edit_transaction(row,transaction)" [hidden]="profile.type == 'printer_staff'">Edit</button>
 						<button ion-button clear item-end color="danger" (click)="cancel_transaction(transaction)" [hidden]="profile.type == 'printer_staff'">Cancel</button>

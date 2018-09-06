@@ -40,9 +40,9 @@
 	</ion-item>
 
 	<ion-item *ngFor="let customer of customers" (click)="navigate('CustomerTransactionPage','history',customer.id); $event.stopPropagation();" text-wrap text-capitalize>
-		<strong>{{ customer.first_name }} {{ customer.last_name }}</strong> <br>
-		<strong>{{ customer.payment }}</strong> <br>
-		<strong>{{ customer.delivery }}</strong> 
+		<h2><strong>{{ customer.first_name }} {{ customer.last_name }}</strong></h2>
+		<h3><strong>{{ customer.payment }}</strong></h3>
+		<p ion-text color="dark"><strong>{{ customer.delivery }}</strong></p> 
 
 		<p item-end>
 			<span ion-text color="primary" (click)="on_edit(customer); $event.stopPropagation();">Edit</span>

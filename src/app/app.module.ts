@@ -20,7 +20,7 @@ import { File } from '@ionic-native/file';
 import { DecimalPipe } from '@angular/common';
 
 import { SocketIoModule, SocketIoConfig } from 'ng-socket-io';
-const socket: SocketIoConfig = { url: 'http://192.168.1.7:3001', options: {} };
+const socket: SocketIoConfig = { url: 'http://192.168.1.6:3001', options: {} };
 
 var config = {
       backButtonText: '',

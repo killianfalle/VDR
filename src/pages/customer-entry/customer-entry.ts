@@ -58,7 +58,7 @@ export class CustomerEntryPage implements OnInit {
 
   loadData(_customer) {
     _customer.map(data => {
-      this.customers.push({ id: data.id, first_name : data.first_name, last_name : data.last_name });
+      this.customers.push(data);
     });
   }
 

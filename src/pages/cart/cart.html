@@ -48,6 +48,7 @@
 							</ion-col>
 
 							<ion-col col-4 text-center text-right align-self-end>
+								<h4 [hidden]="key == row">{{ data.quantity }}</h4>
 								<h4>&#8369;{{ data.price | number : fractionSize }}</h4>
 								<h4 ion-text text-wrap color="danger">&#8369;{{ data.total | number : fractionSize }}</h4>
 							</ion-col>
@@ -55,16 +56,16 @@
 
 						<br>
 
-						<ion-row>
-							<ion-col text-right *ngIf="key == row">
+						<ion-row *ngIf="key == row">
+							<ion-col text-right>
 								<ion-icon class="qty-icon" color="orange" name='add' (click)="quantity(row,i)" ion-long-press [interval]="300" (onPressStart)="pressed()" (onPressing)="active(row,i)" (onPressEnd)="released()"></ion-icon>
 							</ion-col>
 							<ion-col text-center>
 								<ion-item class="qty-box" no-lines style="min-width: 50px;">
-									<ion-input type="number" text-center [disabled]="key != row" [(ngModel)]="data.quantity"></ion-input>
+									<ion-input type="number" text-center [(ngModel)]="data.quantity" (keyup)="updateQty(row,i,$event)" [disabled]="key != row"></ion-input>
 								</ion-item>
 							</ion-col>
-							<ion-col text-left *ngIf="key == row">
+							<ion-col text-left>
 								<ion-icon class="qty-icon" color="orange" name='remove' (click)="quantity(row,i,false)" ion-long-press [interval]="300" (onPressStart)="pressed()" (onPressing)="active(row,i,false)" (onPressEnd)="released()"></ion-icon>
 							</ion-col>
 						</ion-row>

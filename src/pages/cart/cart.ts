@@ -176,6 +176,23 @@ export class CartPage implements OnInit {
     }
   }
 
+  updateQty(index,subIndex,val) {
+    console.log(val);
+    if(this.cart[index]['orders'][subIndex].quantity > 0) {
+      console.log(this.cart[index]['orders'][subIndex].quantity);
+      this.cart[index]['orders'][subIndex].total = 0;
+      this.cart[index].total_payment = 0;
+      this.cart[index]['orders'][subIndex].total = (this.cart[index]['orders'][subIndex].quantity * parseInt(this.cart[index]['orders'][subIndex].price));
+      this.cart[index].total_payment = parseInt(this.cart[index].total_payment) + parseInt(this.cart[index]['orders'][subIndex].total);
+    }else if(parseInt(this.cart[index]['orders'][subIndex].quantity) === 0) {
+      this.cart[index]['orders'][subIndex].quantity = 1;
+      this.cart[index]['orders'][subIndex].total = 0;
+      this.cart[index].total_payment = 0;
+      this.cart[index]['orders'][subIndex].total = (this.cart[index]['orders'][subIndex].quantity * parseInt(this.cart[index]['orders'][subIndex].price));
+      this.cart[index].total_payment = parseInt(this.cart[index].total_payment) + parseInt(this.cart[index]['orders'][subIndex].total);
+    }
+  }
+
   released() { }
 
   reset() {

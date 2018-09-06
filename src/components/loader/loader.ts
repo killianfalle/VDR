@@ -16,7 +16,7 @@ export class LoaderComponent {
 			case "auth":
 				this.content = `
 							  <div class="custom-spinner-container">
-							    <div class="custom-spinner-box">Authenticating..</div>
+							    <div class="custom-spinner-box">Loggin in</div>
 							  </div>`;
 				this.spinner = 'crescent';
 				this.css = 'custom';

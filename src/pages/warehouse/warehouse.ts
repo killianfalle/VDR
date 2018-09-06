@@ -110,6 +110,18 @@ export class WarehousePage {
         }
       }
     });
+
+    this.remove_cleared_transaction().subscribe((_data) => {
+      if(this.cleared_result != 0)
+        this.cleared_result -= 1;
+
+      let index = this.cleared_transactions.map(obj => obj.id).indexOf(_data);
+      if(index > -1){
+        this.cleared_transactions.splice(index, 1);
+        if(this.offset_cleared != 0)
+          this.offset_cleared -= 1;
+      }  
+    });
   }
 
   async get_transaction() {
@@ -222,6 +234,15 @@ export class WarehousePage {
   remove_releasing_transaction() {
     let observable = new Observable(observer => {
       this.socket.on('remove-releasing-transaction', (data) => {
+        observer.next(data.data);
+      });
+    })
+    return observable;
+  }
+
+  remove_cleared_transaction() {
+    let observable = new Observable(observer => {
+      this.socket.on('remove-cleared-transaction', (data) => {
         observer.next(data.data);
       });
     })
