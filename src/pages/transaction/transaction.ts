@@ -352,7 +352,7 @@ export class TransactionPage {
     self.provider.postData({ transaction : _data, date : date , status : 'releasing' },'transaction/status').then((res:any) => {
       if(res._data.status){
         self.remove_pending(_data,self);
-        self.add_releasing(_data,date,self);
+        self.add_releasing(_data,date,self, res._data.staffIdList);
         self.event.publish('transaction:release', _data, date);
         self.toast.presentToast(res._data.message);
       }
@@ -364,10 +364,10 @@ export class TransactionPage {
     self.socket.emit('transaction', { text: params });
   }
 
-  add_releasing(_data,date,self){
+  add_releasing(_data,date,self, staffIDList){
     _data.status = 'releasing';
     _data.release_at = date;
-    let params = { data : _data, type : 'add-releasing-transaction' };
+    let params = { data : _data, type : 'add-releasing-transaction', 'staffIDList': staffIDList };
     self.socket.emit('transaction', { text: params });
   }
 

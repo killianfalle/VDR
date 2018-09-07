@@ -68,10 +68,19 @@ export class WarehousePage {
     this.get_transaction();
 
     this.add_releasing_transaction().subscribe((_data:any) => {
-      if(this.keyword == ''){
-        this.releasing_result += 1;
-        this.offset_releasing += 1;
-        this.releasing_transactions.push(_data);
+      var userInfo = JSON.parse(localStorage.getItem('_info'));
+
+      if(userInfo.type == 'warehouse_staff'){
+        for(var counter = 0; counter < _data.staffIdList.length; counter++){
+          if(_data.staffIdList[counter] == userInfo['id']){
+            if(this.keyword == ''){
+              this.releasing_result += 1;
+              this.offset_releasing += 1;
+              this.releasing_transactions.push(_data.data);
+            }
+            break;
+          }
+        }
       }
     });
 
@@ -207,7 +216,7 @@ export class WarehousePage {
   add_releasing_transaction() {
     let observable = new Observable(observer => {
       this.socket.on('add-releasing-transaction', (data) => {
-        observer.next(data.data);
+        observer.next(data);
       });
     })
     return observable;

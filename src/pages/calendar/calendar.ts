@@ -36,6 +36,8 @@ export class CalendarPage {
   _callback: any;
   params: any;
   self: any;
+  warehouseName: any;
+  warehouseLocation: any;
 
   constructor(
     public navCtrl: NavController, 
@@ -51,10 +53,19 @@ export class CalendarPage {
     this._callback = navParams.get('callback');
     this.params.printed_by = this.profile.first_name+' '+this.profile.last_name;
     this.params.printed_at = moment().format('MM/DD/YYYY');
+
+    this.warehouseName = this.params.warehouse_designation.warehouse_info.name;
+    this.warehouseLocation =  this.params.warehouse_designation.warehouse_info.address;
+    console.log("NAME OF THE WAREHOUSE:");
+    console.log(this.warehouseName);
+
+    console.log("LOCATION OF THE WAREHOUSE:");
+    console.log(this.warehouseLocation);
   }
 
   action(submit = true) {
     if(submit){
+      // this.callback();
       this.alert.confirm().then((response: any) => {
         if (response) {
           this.printer.is_enabled().then((res: any) => {
@@ -104,7 +115,8 @@ export class CalendarPage {
       }
     }
 
-    header = '        Vista del rio \n Carmen, Cagayan de Oro City';
+    // header =   '        Vista del rio \n Carmen, Cagayan de Oro City';
+    header =   '        '+ this.warehouseName + ' \n ' +  this.warehouseLocation;
 
     let content = header+'\n'+separator+'Order#: '+_data.order_id+'\nPrinted by: '+this.params.printed_by+'\nPrinted on: '+this.params.printed_at+'\n'+separator+'Owner: '+_data.first_name+' '+_data.last_name+'\nRelease: '+moment(this.date).format("MM/DD/YYYY")+'\n'+separator+item+separator+'Total: P'+ this.decimal.transform(_data.total_payment,'1.2-2')+'\n'+separator+'Payment: '+_data.payment_type+'\nDelivery: '+_data.delivery_option+'\n\n\n';
     this.print_for_release(content);
