@@ -172,14 +172,10 @@ export class CartPage implements OnInit {
   }
 
   checkout(_data,date,self, warehouseID) {
-    console.log("TANGINA! ANO GINAGAWA MO!");
-    console.log("SELECTED WAREHOUSE ID:");
-    console.log(warehouseID);
     self.provider.postData({ transaction : _data.id, release_at : date, status : 'pending', warehouseID: warehouseID },'cart/status').then((res:any) => {
       if(res._data.status){
         self.ngOnInit();
         _data.release_at = date;
-        _data.order_id = res._data.data.order_id;
         _data.payment_type = res._data.data.payment_type;
         _data.delivery_option = res._data.data.delivery_option;
         _data.status = 'pending';
