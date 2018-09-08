@@ -111,11 +111,17 @@ export class WarehousePage {
     });
 
     this.add_cleared_transaction().subscribe((_data:any) => {
-      if(this.search_date == _data.release_at){
-        if(this.keyword == ''){
-          this.cleared_result += 1;
-          this.offset_cleared += 1;
-          this.cleared_transactions.push(_data);
+      var userInfo = JSON.parse(localStorage.getItem('_info'));
+      for(var counter = 0; counter < _data.staffList.length; counter++){
+        if(_data.staffList[counter] == userInfo['id']){
+          if(this.search_date == _data.release_at){
+            if(this.keyword == ''){
+              this.cleared_result += 1;
+              this.offset_cleared += 1;
+              this.cleared_transactions.push(_data);
+            }
+          }
+          break;
         }
       }
     });
@@ -261,7 +267,7 @@ export class WarehousePage {
   add_cleared_transaction() {
     let observable = new Observable(observer => {
       this.socket.on('add-cleared-transaction', (data) => {
-        observer.next(data.data);
+        observer.next(data);
       });
     })
     return observable;
@@ -274,7 +280,8 @@ export class WarehousePage {
         this.socket.emit('transaction', { text: params });
 
         _data.status = 'cleared';
-        params = { data : _data, type : 'add-cleared-transaction' };
+        var staffList = res._data.staffIdList;
+        params = { data : _data, type : 'add-cleared-transaction', 'staffList' : staffList };
         this.socket.emit('transaction', { text: params });
 
         this.toast.presentToast('Successfully released transaction');
@@ -283,6 +290,7 @@ export class WarehousePage {
   }
 
   print(title,_data,reprint = false){
+    // this.cleared_transaction(_data);
     this.alert.confirm(title).then((res:any) => {
       if(res){
         this.do_print(_data,reprint);
