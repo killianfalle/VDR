@@ -17,6 +17,28 @@ page-order-entry {
 		}
 	}
 
+	#product {
+		padding: 5px;
+		background: #EEEEEE;
+		border: 1px solid color($colors,orange);
+		margin-bottom: 2px;
+
+		p {
+			font-weight: bolder;
+			font-size: 1.2em;
+		}
+	}
+
+	#product.col[col-6] {
+		width: 49.5%;
+		max-width:  49.5%;
+	}
+
+	#product:nth-child(odd) {
+		margin-right: 2.2px;
+	}
+
+
 	.item-divider {
 		color: color($colors,dark);
 		font-size: 1.5em;
@@ -58,6 +80,14 @@ page-order-entry {
 			font-style: italic;
 			color: color($colors,light) !important;
 		}
+	}
+
+	.selected-item {
+		border: 1px solid color($colors,orange) !important;
+		background: color($colors,orange) !important;
+		font-weight: bold;
+		font-style: italic;
+		color: color($colors,light) !important;
 	}
 
 	.text-input[disabled] {

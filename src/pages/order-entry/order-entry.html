@@ -27,32 +27,20 @@
 		  <div class="hr-line"></div>
 		</div>
 
-		<ion-row padding text-center text-wrap>
-			<ion-col class="option" col-12 *ngFor="let prod of product; let i = index" [ngClass]="{'selected' : (form.id == prod.id)}" (click)="select_product(prod)" align-self-center>
-		    	<p text-capitalize>{{ prod.name }}</p>
+		<br>
+		
+		<ion-row *ngFor="let prod of product; let i = index">
+			<ion-col id="product" col-6 *ngFor="let class of prod.class; let i = index" [ngClass]="{'selected-item' : (form.id == prod.id && form.class.id == prod.class[i].id) }" (click)="select_product(prod,i)" align-self-center>
+				<div class="product-item">
+			    	<p text-capitalize>{{ prod.name }}</p>
+			    	<p text-capitalize>{{ class.name }}</p>
+				</div>
 			</ion-col>
 		</ion-row>
 	</div>
 
-
 	<div *ngIf="steps > 0">
 		<div [hidden]="steps != 1">
-			<div class="hr-divider">
-			  <div class="hr-line"></div>
-			  <div class="hr-icon">
-			  	<h1>Classification</h1>
-			  </div>
-			  <div class="hr-line"></div>
-			</div>
-
-			<ion-row padding text-center text-wrap>
-				<ion-col class="option" col-12 *ngFor="let class of classes; let i = index" [ngClass]="{'selected' : (form.class.name == class.name)}" (click)="select_class(class)">
-			    	<p text-capitalize>{{ class.name }}</p>
-				</ion-col>
-			</ion-row>
-		</div>
-
-		<div [hidden]="steps != 2">
 			<div class="hr-divider">
 			  <div class="hr-line"></div>
 			  <div class="hr-icon">
@@ -68,7 +56,7 @@
 			</ion-row>
 		</div>
 
-		<div [hidden]="steps != 3">
+		<div [hidden]="steps != 2">
 			<div class="hr-divider" *ngIf="quantities.length > 0">
 			  <div class="hr-line"></div>
 			  <div class="hr-icon">
@@ -138,14 +126,14 @@
 		&nbsp;
 		&nbsp;
 
-		<ion-col *ngIf="steps == 3">
+		<ion-col *ngIf="steps == 2">
 			<button ion-button color="primary" block (click)="preview(); $event.stopPropagation()">
 				Review
 			</button>
 		</ion-col>
 	</ion-row>
 
-	<ion-row padding *ngIf="steps == 3">
+	<ion-row padding *ngIf="steps == 2">
 		<ion-col>
 			<button ion-button color="orange" block (click)="submit(); $event.stopPropagation()" 
 			[disabled]="(form.price == null || form.price == '') || (form.quantity == null || form.quantity == '')">
