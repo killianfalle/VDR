@@ -74,27 +74,19 @@ export class OrderEntryPage implements OnInit {
     });
   }
 
-  select_product(_data) {
+  select_product(_data,_index) {
     this.form.id = _data.id;
     this.form.name = _data.name;
-    this.classes = _data.class;
+    this.form.class.id = _data.class[_index].id;
+    this.form.class.name = _data.class[_index].name;
+    this.sizes = _data.class[_index].size;
     this.quantities = _data.quantity;
 
     setTimeout(() => {
       this.onPage();
     },300)
   }
-
-  select_class(_class) {
-    this.form.class.id = _class.id;
-    this.form.class.name = _class.name;
-    this.sizes = _class.size;
-
-    setTimeout(() => {
-      this.onPage();
-    },300)
-  }
-
+  
   select_size(_size) {
     this.form.size.id = _size.id;
     this.form.size.name = _size.name;

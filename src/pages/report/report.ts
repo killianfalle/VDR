@@ -104,7 +104,7 @@ export class ReportPage implements OnInit {
           type: 'checkbox',
           label: this.products[index].name,
           value: this.products[index].id,
-          checked: false
+          checked: true
         });
     }
 

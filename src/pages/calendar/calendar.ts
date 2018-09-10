@@ -116,7 +116,8 @@ export class CalendarPage {
     }
 
     // header =   '        Vista del rio \n Carmen, Cagayan de Oro City';
-    header =   '        '+ this.warehouseName + ' \n ' +  this.warehouseLocation;
+    //header =   '        '+ this.warehouseName + ' \n ' +  this.warehouseLocation;
+    header =   '        Vista Del Rio \nWH: ' +  this.warehouseLocation;
 
     let content = header+'\n'+separator+'Order#: '+_data.order_id+'\nPrinted by: '+this.params.printed_by+'\nPrinted on: '+this.params.printed_at+'\n'+separator+'Owner: '+_data.first_name+' '+_data.last_name+'\nRelease: '+moment(this.date).format("MM/DD/YYYY")+'\n'+separator+item+separator+'Total: P'+ this.decimal.transform(_data.total_payment,'1.2-2')+'\n'+separator+'Payment: '+_data.payment_type+'\nDelivery: '+_data.delivery_option+'\n\n\n';
     this.print_for_release(content);

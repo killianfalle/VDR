@@ -85,7 +85,7 @@
 			<ion-item *ngFor="let warehouse of warehouseList">
 				<h2><strong>{{ warehouse.name }}</strong></h2>
 				<h3>{{ warehouse.address }}</h3>
-				<button ion-button color="secondary" (click)="selectToEdit(warehouse.id)">Edit</button>
+				<button ion-button (click)="selectToEdit(warehouse.id)" item-end>Edit</button>
 			</ion-item>
 		</ion-list>
 	</div>

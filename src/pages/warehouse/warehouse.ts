@@ -280,46 +280,50 @@ export class WarehousePage {
         this.socket.emit('transaction', { text: params });
 
         _data.status = 'cleared';
-        var staffList = res._data.staffIdList;
-        params = { data : _data, type : 'add-cleared-transaction', 'staffList' : staffList };
-        this.socket.emit('transaction', { text: params });
+        let staff_List = res._data.staffIdList;
+        // params = { data : _data, type : 'add-cleared-transaction',  : staff_List };
+        var anotherParams = [];
+        anotherParams['data'] = _data;
+        anotherParams['type'] = 'add-cleared-transaction';
+        anotherParams['staffList'] = staff_List;
+        this.socket.emit('transaction', { text: anotherParams });
 
         this.toast.presentToast('Successfully released transaction');
       }
     })
   }
 
-  print(title,_data,reprint = false){
+  print(title,_data,reprint = false,ps = false){
     // this.cleared_transaction(_data);
     this.alert.confirm(title).then((res:any) => {
       if(res){
-        this.do_print(_data,reprint);
+        this.do_print(_data,reprint,ps);
       }
     });
   }
 
-  do_print(_data,_reprint){
+  do_print(_data,_reprint,_ps){
     this.printer.is_enabled().then((res: any) => {
-      this.verify_connectivity(_data,_reprint);
+      this.verify_connectivity(_data,_reprint,_ps);
     }).catch((err) => {
-      this.enable_blueetooth(_data,_reprint);
+      this.enable_blueetooth(_data,_reprint,_ps);
     });
   }
 
-  enable_blueetooth(_data,_reprint) {
+  enable_blueetooth(_data,_reprint,_ps) {
     this.printer.set_enable().then((res:any) => {
-      this.verify_connectivity(_data,_reprint);
+      this.verify_connectivity(_data,_reprint,_ps);
     }).catch((err) => {
-      this.enable_blueetooth(_data,_reprint);
+      this.enable_blueetooth(_data,_reprint,_ps);
     });
   }
 
-  verify_connectivity(_data,_reprint) {
+  verify_connectivity(_data,_reprint,_ps) {
     this.printer.connectivity().then((res: any) => {
       if(!_reprint){
         this.ready_print(_data);
       }else{
-        this.reprint(_data);
+        this.reprint(_data,_ps);
       }
     }).catch((err) => {
       this.navCtrl.push('BluetoothPage');
@@ -346,7 +350,7 @@ export class WarehousePage {
       }
     }
 
-    header = '        Vista del rio \n       Zayas Warehouse,\n     Cagayan de Oro City';
+    header = '        Vista del rio \n'+ _data.warehouse_designation.warehouse_info.address;
 
     if(_data.void){
       content = header+'\n'+ separator +'Order#: '+ _data.order_id +'\nReleased by: '+this.profile.first_name+' '+this.profile.last_name+'\n'+ separator +'Owner: '+_data.first_name+' '+_data.last_name+'\nRelease: '+moment(_data.release_at).format("MM/DD/YYYY")+'\nRemarks: Void\n'+separator+item+separator+"Payment: "+_data.payment_type+"\nDelivery: "+_data.delivery_option+'\n'+separator+'Items received above are \ntrue & correct.\n\nReceived by:\n______________________________\n(Customer printed name)\nContact#:\n______________________________\n\n\n';
@@ -358,7 +362,7 @@ export class WarehousePage {
     this.cleared_transaction(_data);
   }
 
-  async reprint(_data){
+  async reprint(_data,_ps){
     let separator = '-------------------------------\n';
     let header = '';
     let item = '';
@@ -380,10 +384,14 @@ export class WarehousePage {
 
     header = '        Vista del rio \n       Zayas Warehouse,\n     Cagayan de Oro City';
 
-    if(_data.void){
-      content = header+'\n'+ separator +'Order#: '+ _data.order_id +'\nReleased by: '+this.profile.first_name+' '+this.profile.last_name+'\n'+ separator +'Owner: '+_data.first_name+' '+_data.last_name+'\nRelease: '+moment(_data.release_at).format("MM/DD/YYYY")+'\nRemarks: Void\n'+separator+item+separator+"Payment: "+_data.payment_type+"\nDelivery: "+_data.delivery_option+'\n'+separator+'Items received above are \ntrue & correct.\n\nReceived by:\n______________________________\n(Customer printed name)\nContact#:\n______________________________\n\n\n';
+    if(_ps){
+      content = header+'\n'+ separator +'Order#: '+ _data.order_id +'\nReleased by: '+this.profile.first_name+' '+this.profile.last_name+'\n'+ separator +'Owner: '+_data.first_name+' '+_data.last_name+'\nRelease: '+moment(_data.release_at).format("MM/DD/YYYY")+'\nRemarks: Packing Slip\n'+separator+item+separator+"Payment: "+_data.payment_type+"\nDelivery: "+_data.delivery_option+'\n'+separator+'\n\n\n';
     }else {
-      content = header+'\n'+ separator +'Order#: '+ _data.order_id +'\nReleased by: '+this.profile.first_name+' '+this.profile.last_name+'\n'+ separator +'Owner: '+_data.first_name+' '+_data.last_name+'\nRelease: '+moment(_data.release_at).format("MM/DD/YYYY")+'\n'+separator+item+separator+"Payment: "+_data.payment_type+"\nDelivery: "+_data.delivery_option+'\n'+separator+'Items received above are \ntrue & correct.\n\nReceived by:\n______________________________\n(Customer printed name)\nContact#:\n______________________________\n\n\n';
+      if(_data.void){
+        content = header+'\n'+ separator +'Order#: '+ _data.order_id +'\nReleased by: '+this.profile.first_name+' '+this.profile.last_name+'\n'+ separator +'Owner: '+_data.first_name+' '+_data.last_name+'\nRelease: '+moment(_data.release_at).format("MM/DD/YYYY")+'\nRemarks: Void\n'+separator+item+separator+"Payment: "+_data.payment_type+"\nDelivery: "+_data.delivery_option+'\n'+separator+'Items received above are \ntrue & correct.\n\nReceived by:\n______________________________\n(Customer printed name)\nContact#:\n______________________________\n\n\n';
+      }else {
+        content = header+'\n'+ separator +'Order#: '+ _data.order_id +'\nReleased by: '+this.profile.first_name+' '+this.profile.last_name+'\n'+ separator +'Owner: '+_data.first_name+' '+_data.last_name+'\nRelease: '+moment(_data.release_at).format("MM/DD/YYYY")+'\n'+separator+item+separator+"Payment: "+_data.payment_type+"\nDelivery: "+_data.delivery_option+'\n'+separator+'Items received above are \ntrue & correct.\n\nReceived by:\n______________________________\n(Customer printed name)\nContact#:\n______________________________\n\n\n';
+      }
     }
 
     await this.printer.onWrite(content);
