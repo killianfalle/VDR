@@ -48,7 +48,7 @@
 							</ion-col>
 
 							<ion-col col-4 text-center text-right align-self-end>
-								<h4 [hidden]="key == row">{{ data.quantity }}</h4>
+								<h1 [hidden]="key == row">{{ data.quantity }}</h1>
 								<h4>&#8369;{{ data.price | number : fractionSize }}</h4>
 								<h4 ion-text text-wrap color="danger">&#8369;{{ data.total | number : fractionSize }}</h4>
 							</ion-col>

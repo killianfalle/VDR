@@ -17,27 +17,26 @@ page-order-entry {
 		}
 	}
 
+	.product {
+		padding: 10px;
+	}
+
 	#product {
 		padding: 5px;
 		background: #EEEEEE;
 		border: 1px solid color($colors,orange);
 		margin-bottom: 2px;
 
-		p {
-			font-weight: bolder;
-			font-size: 1.2em;
+		.class-lbl {
+			font-weight: bold;
 		}
 	}
 
-	#product.col[col-6] {
-		width: 49.5%;
-		max-width:  49.5%;
+	#product {
+		width: 49%;
+		max-width:  49%;
+		float: left;
 	}
-
-	#product:nth-child(odd) {
-		margin-right: 2.2px;
-	}
-
 
 	.item-divider {
 		color: color($colors,dark);
