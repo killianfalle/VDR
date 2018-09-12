@@ -76,6 +76,7 @@ export class TransactionPage {
   	this.get_transaction();
 
     this.add_pending_transaction().subscribe((_data) => {
+      console.log(_data);
       this.pending_result += 1;
       if(this.keyword == ''){
         this.pending_transactions.unshift(_data);

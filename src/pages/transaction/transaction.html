@@ -69,6 +69,9 @@
 							Release Date: 
 							<strong>{{ transaction.release_at | date : 'MM/dd/yy' }}</strong>
 						</h4>
+						<h4 ion-text text-wrap>
+							Location: {{ transaction.warehouse_designation?.warehouse_info.address }}
+						</h4>
 						<h4 [hidden]="!transaction.void">Status: 
 							<span>
 								<ion-badge color="danger" [hidden]="!transaction.void">Void</ion-badge>
@@ -151,6 +154,9 @@
 							Release Date: 
 							<strong>{{ transaction.release_at | date : 'MM/dd/yy' }}</strong>	
 						</h4>
+						<h4 ion-text text-wrap>
+							Location: {{ transaction.warehouse_designation?.warehouse_info.address }}
+						</h4>
 						<h4 [hidden]="!transaction.void">Status: 
 							<span>
 								<ion-badge color="danger" [hidden]="!transaction.void">Void</ion-badge>
@@ -228,6 +234,9 @@
 						</h4>
 						<h4 ion-text text-wrap>
 							Entry by: {{ transaction.firstName }} {{ transaction.lastName }}
+						</h4>
+						<h4 ion-text text-wrap>
+							Location: {{ transaction.warehouse_designation?.warehouse_info.address }}
 						</h4>
 						<h4 [hidden]="!transaction.void">Status: 
 							<span>

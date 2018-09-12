@@ -39,17 +39,24 @@
 				<ion-item-sliding *ngFor="let data of items.orders; let i = index">
 					<ion-item>
 						<ion-row>
-							<ion-col col-8 align-self-center>
+							<ion-col col-7 align-self-center>
 								<h2 ion-text color="orange">{{ data.product }}</h2>
-								<h5>{{ data.class }}</h5>
+								<h5>
+									<strong>{{ data.class }}</strong>
+								</h5>
 								<h5>{{ data.size }}
 									<span *ngIf="data.type != null">({{ data.type }})</span>
 								</h5>
 							</ion-col>
 
+							<ion-col col-1 text-center align-self-center>
+								<h3 [hidden]="key == row">{{ data.quantity }}</h3>
+							</ion-col>
+
 							<ion-col col-4 text-center text-right align-self-end>
-								<h1 [hidden]="key == row">{{ data.quantity }}</h1>
-								<h4>&#8369;{{ data.price | number : fractionSize }}</h4>
+								<h4>
+									<strong>&#8369;{{ data.price | number : fractionSize }}</strong>
+								</h4>
 								<h4 ion-text text-wrap color="danger">&#8369;{{ data.total | number : fractionSize }}</h4>
 							</ion-col>
 						</ion-row>
