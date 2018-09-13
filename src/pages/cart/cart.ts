@@ -179,7 +179,7 @@ export class CartPage implements OnInit {
         _data.payment_type = res._data.data.payment_type;
         _data.delivery_option = res._data.data.delivery_option;
         _data.status = 'pending';
-        let params = { data : _data, type : 'add-pending-transaction' };
+        let params = { data : res._data.updated_trans , type : 'add-pending-transaction' };
         self.socket.emit('transaction', { text: params });
         self.event.publish('notification:badge','decrement');
         self.toast.presentToast('Successfully checkout');
