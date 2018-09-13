@@ -34,6 +34,26 @@
 
 	<div [ngSwitch]="report_tab" >
 		<div *ngSwitchCase="'csv-report'">
+			<ion-card (click)="show_product(); $event.stopPropagation()">
+			  <ion-item>
+			  	<ion-label>Select Product</ion-label>
+			  	<button ion-button clear item-end>
+			  		<ion-icon name="add"></ion-icon>
+			  	</button>
+			  </ion-item>
+			</ion-card>
+
+			<ion-card>
+				<ion-item>
+					<ion-label>
+						Select Warehouse
+					</ion-label>
+					<ion-select [(ngModel)]="warehouse">
+						<ion-option *ngFor="let warehouse of warehouses" value="{{ warehouse.id }}">{{ warehouse.address }}</ion-option>
+					</ion-select>
+				</ion-item>
+			</ion-card>
+
 			<ion-row>
 				<ion-col>
 					<ion-item>
@@ -54,7 +74,7 @@
 			</ion-row>
 			<br>
 			<div padding>
-				<button ion-button block color="orange" (click)="show_product(); $event.stopPropagation()">Export</button>
+				<button ion-button block color="orange" (click)="exportCSV(); $event.stopPropagation()">Export</button>
 			</div>
 
 			<div *ngFor="let report of reports">
@@ -102,6 +122,17 @@
 			</ion-card>
 
 			<ion-card>
+				<ion-item>
+					<ion-label>
+						Select Warehouse
+					</ion-label>
+					<ion-select [(ngModel)]="daily_warehouse">
+						<ion-option *ngFor="let warehouse of warehouses" value="{{ warehouse.id }}">{{ warehouse.address }}</ion-option>
+					</ion-select>
+				</ion-item>
+			</ion-card>
+
+			<ion-card>
 			  <ion-item>
 			  	<ion-label>
 			  		<ion-icon name="md-calendar"></ion-icon>
@@ -109,6 +140,10 @@
 			  	<ion-datetime displayFormat="MM/DD/YYYY" [(ngModel)]="sales_report_date" (ionChange)="ngOnInit()"></ion-datetime>
 			  </ion-item>
 			</ion-card>
+			<br>
+			<div padding>
+				<button ion-button block color="orange" (click)="daily_report(); $event.stopPropagation()">Search</button>
+			</div>
 
 			<ion-item no-lines>
 				<button ion-button icon-start clear color="primary" (click)="print('release')" item-end>

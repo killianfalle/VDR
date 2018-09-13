@@ -31,7 +31,11 @@ export class ReportPage implements OnInit {
   reports:any = [];  
   release_reports:any = [];  
   products:any = [];  
+  warehouses:any = [];  
+  warehouse:any = '';  
+  daily_warehouse:any = ''; 
 
+  csv_selected_product: any = [];
   selected_product: any = [];
   daily_report_from: any = moment().format('YYYY-MM-DD');
   daily_report_to: any = moment().format('YYYY-MM-DD');
@@ -51,6 +55,7 @@ export class ReportPage implements OnInit {
     private file: File,
     private printer: PrinterProvider) {
     this.getProduct();
+    this.getWarehouse();
   }
 
   ngOnInit() {
@@ -74,6 +79,12 @@ export class ReportPage implements OnInit {
     })
   }
 
+  getWarehouse() {
+    this.provider.getData('','get-warehouses').then((res: any) => {
+      this.warehouses = res.warehouses;
+    })
+  }
+
   async show_product(){
     let product = this.alertCtrl.create();
 
@@ -87,12 +98,9 @@ export class ReportPage implements OnInit {
           switch (this.report_tab) {
             case "daily-report":
               this.selected_product = data;
-              this.release_reports = [];
-              this.isBusy = false;
-              this.release(data);
               break;
             default:
-              this.export(data);
+              this.csv_selected_product = data;
               break;
           }
         }
@@ -121,9 +129,16 @@ export class ReportPage implements OnInit {
     });
   }
 
+  exportCSV() {
+    if(this.csv_selected_product.length > 0)
+      this.export(this.csv_selected_product);
+    else 
+      this.toast.presentToast("Please select a product.");
+  }
+
   export(_product) {
     this.isBusy = false;
-    this.provider.getData({ product : _product, from : this.daily_report_from, to : this.daily_report_to },'report/export').then((res: any) => {
+    this.provider.getData({ product : _product, warehouse: this.warehouse, from : this.daily_report_from, to : this.daily_report_to },'report/export').then((res: any) => {
       if(res._data.status && res._data.data.length > 0){
        this.generate(res._data.data);
       }else {
@@ -179,9 +194,16 @@ export class ReportPage implements OnInit {
 
     return csv
   }
+
+  daily_report() {
+    if(this.selected_product.length > 0)
+      this.ngOnInit();
+    else 
+      this.toast.presentToast("Please select a product.");
+  }
   
   release(_data) {
-    this.provider.getData({ product : _data, date : this.sales_report_date, status : 'cleared' },'report/release').then((res:any) => {
+    this.provider.getData({ product : _data, warehouse: this.daily_warehouse, date : this.sales_report_date, status : 'cleared' },'report/release').then((res:any) => {
       if(res._data.status){
         this.release_reports = res._data.data;
       }
