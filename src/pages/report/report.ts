@@ -129,11 +129,27 @@ export class ReportPage implements OnInit {
     });
   }
 
-  exportCSV() {
+  exportCSVCleared() {
     if(this.csv_selected_product.length > 0)
       this.export(this.csv_selected_product);
     else 
       this.toast.presentToast("Please select a product.");
+  }
+
+  exportCSVCancel() {
+    if(this.csv_selected_product.length > 0){
+      this.isBusy = false;
+      this.provider.getData({ product : this.csv_selected_product, from : this.daily_report_from, to : this.daily_report_to },'report/export/cancelled').then((res: any) => {
+        if(res._data.status && res._data.data.length > 0){
+         this.generate(res._data.data);
+        }else {
+          this.toast.presentToast('Failed to export! No results found.');
+        }
+        this.isBusy = true;
+      })
+    }else {
+      this.toast.presentToast("Please select a product.");
+    }
   }
 
   export(_product) {
