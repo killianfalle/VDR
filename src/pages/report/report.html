@@ -73,9 +73,14 @@
 				</ion-col>
 			</ion-row>
 			<br>
-			<div padding>
-				<button ion-button block color="orange" (click)="exportCSV(); $event.stopPropagation()">Export</button>
-			</div>
+			<ion-row>
+				<ion-col>
+					<button ion-button block color="dark" (click)="exportCSVCleared(); $event.stopPropagation()">Export Cleared</button>
+				</ion-col>
+				<ion-col>
+					<button ion-button block color="orange" (click)="exportCSVCancel(); $event.stopPropagation()">Export Cancelled</button>
+				</ion-col>
+			</ion-row>
 
 			<div *ngFor="let report of reports">
 				<ion-card>
