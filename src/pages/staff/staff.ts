@@ -111,6 +111,26 @@ export class StaffPage implements OnInit{
     }
   }
 
+  on_delete(id) {
+    this.alert.confirm('Delete Staff').then((res:any) => {
+      if(res) {
+        this.delete(id);
+      }
+    })
+  }
+
+  delete(id) {
+    this.provider.postData({ id: id },'staff/delete').then((res:any) => {
+      if (res._data.status) {
+        this.toast.presentToast(res._data.message);
+        this.refresh(this,true);
+      }
+    }).catch((error) => {
+      console.log(error);
+      this.toast.presentToast("Failed to delete. Please try again.");
+    })
+  }
+
   reset() {
     this.keyword = '';
     this.offset = 0;
