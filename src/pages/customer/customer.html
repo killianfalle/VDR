@@ -45,9 +45,11 @@
 		<p ion-text color="dark"><strong>{{ customer.delivery }}</strong></p> 
 
 		<p item-end>
-			<span ion-text color="primary" (click)="on_edit(customer); $event.stopPropagation();">Edit</span>
+			<span ion-text color="primary" (click)="on_edit(customer); $event.stopPropagation();" [hidden]="customer.status == 'inactive'">Edit</span>
 			&nbsp;
-			<span ion-text color="danger" (click)="remove(customer); $event.stopPropagation();">Delete</span>
+			<span ion-text color="danger" (click)="remove(customer); $event.stopPropagation();" [hidden]="customer.status == 'inactive'">Delete</span>
+			&nbsp;
+			<span ion-text color="secondary" (click)="restore(customer); $event.stopPropagation();" *ngIf="customer.status == 'inactive'">Restore</span>
 		</p>
 	</ion-item>
 

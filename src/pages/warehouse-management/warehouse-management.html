@@ -16,25 +16,19 @@
 </ion-header>
 
 
-<ion-content padding>
-	<button ion-button block (click)="setAddForm(true)" 
-	style="margin-bottom: 20px;" *ngIf="!showAddForm && !showEditForm">
-		Add Warehouse
-	</button>
-
-	<button ion-button  block color="danger" (click)="setAddForm(false)" 
-	style="margin-bottom: 20px;" *ngIf="showAddForm">
-		Close Add Warehouse Form
-	</button>
-
-
-	<button ion-button  block color="danger" (click)="showEditForm = false" 
-	style="margin-bottom: 20px;" *ngIf="showEditForm">
-		Close Edit Warehouse Form
-	</button>
+<ion-content>
+	<ion-item>
+		<button ion-button (click)="setAddForm(true)" outline padding icon-start float-right color="orange" *ngIf="!showAddForm && !showEditForm">
+			<ion-icon name="add"></ion-icon>
+			Add Warehouse
+		</button>
+	</ion-item>
 
 	<!-- ADD WAREHOUSE FORM -->
 	<div *ngIf="showAddForm">
+
+		
+
 		<ion-item>
 			<ion-label stacked>Warehouse Name</ion-label>
 			<ion-input type="text" text-center [(ngModel)]="addForm.name"></ion-input>
@@ -49,11 +43,20 @@
 		</ion-item>
 		<p style="padding-left: 18px !important; color: #F53D3D;">{{ apiValidators.address }}</p>
 
-		<div padding style="padding-right: 0px !important;">
-			<button ion-button block color="orange" (click)="submitAddForm()">
-				Submit Add Warehouse Form
-			</button>
-		</div>
+		<ion-row>
+			<ion-col>
+				<button ion-button  block color="danger" (click)="setAddForm(false)" 
+				style="margin-bottom: 20px;" *ngIf="showAddForm">
+					Cancel
+				</button>
+			</ion-col>
+			<ion-col>
+				<button ion-button block color="orange" (click)="submitAddForm()">
+					Save
+				</button>
+			</ion-col>
+		</ion-row>
+
 	</div>
 
 	<!-- EDIT WAREHOUSE FORM -->
@@ -72,11 +75,19 @@
 		</ion-item>
 		<p style="padding-left: 18px !important; color: #F53D3D;">{{ apiValidators.address }}</p>
 
-		<div padding style="padding-right: 0px !important;">
-			<button ion-button block color="orange" (click)="submitEditForm()">
-				Submit Edit Warehouse Form
-			</button>
-		</div>
+		<ion-row>
+			<ion-col>
+				<button ion-button  block color="danger" (click)="showEditForm = false" 
+				style="margin-bottom: 20px;" *ngIf="showEditForm">
+					Cancel
+				</button>
+			</ion-col>
+			<ion-col>
+				<button ion-button block color="orange" (click)="submitEditForm()">
+					Save Changes
+				</button>
+			</ion-col>
+		</ion-row>
 	</div>
 
 	<!-- WAREHOUSE LIST -->
@@ -85,7 +96,7 @@
 			<ion-item *ngFor="let warehouse of warehouseList">
 				<h2><strong>{{ warehouse.name }}</strong></h2>
 				<h3>{{ warehouse.address }}</h3>
-				<button ion-button (click)="selectToEdit(warehouse.id)" item-end>Edit</button>
+				<button ion-button (click)="selectToEdit(warehouse.id)" clear item-end>Edit</button>
 			</ion-item>
 		</ion-list>
 	</div>

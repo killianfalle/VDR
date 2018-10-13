@@ -111,7 +111,28 @@ export class StaffPage implements OnInit{
     }
   }
 
-  on_delete(id) {
+  show_confirmation(id,action) {
+    switch(action){
+      case 'delete' :
+        this.alert.confirm('Delete Staff').then((res:any) => {
+          if(res) {
+            this.delete(id);
+          }
+        })
+        break;
+      case 'restore':
+        this.alert.confirm('Restore Staff').then((res:any) => {
+          if(res) {
+            this.restore(id);
+          }
+        })
+        break;
+      default:
+        break;
+    }
+  }
+
+  on_restore(id) {
     this.alert.confirm('Delete Staff').then((res:any) => {
       if(res) {
         this.delete(id);
@@ -128,6 +149,18 @@ export class StaffPage implements OnInit{
     }).catch((error) => {
       console.log(error);
       this.toast.presentToast("Failed to delete. Please try again.");
+    })
+  }
+
+  restore(id) {
+    this.provider.postData({ id: id },'staff/restore').then((res:any) => {
+      if (res._data.status) {
+        this.toast.presentToast(res._data.message);
+        this.refresh(this,true);
+      }
+    }).catch((error) => {
+      console.log(error);
+      this.toast.presentToast("Failed to restore. Please try again.");
     })
   }
 
