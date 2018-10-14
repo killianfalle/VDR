@@ -36,6 +36,7 @@ page-order-entry {
 		width: 49%;
 		max-width:  49%;
 		float: left;
+		min-height: 122px;
 	}
 
 	.item-divider {
@@ -52,6 +53,12 @@ page-order-entry {
 		border: 1px solid color($colors,orange);
 	}
 
+	.price {
+		min-height: 50px;
+		background: #EEEEEE;
+		border: 1px solid color($colors,orange);
+	}
+
 	.item-option {
 		color: color($colors,orange);
 		position: absolute;
@@ -59,6 +66,10 @@ page-order-entry {
 	    left: 50%;
 	    transform: translateX(-50%) translateY(-50%);
 		background: transparent;
+
+		.label {
+			font-size: 16px;
+		}
 	}
 
 	.last-col {

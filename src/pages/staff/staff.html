@@ -49,9 +49,11 @@
 		<p *ngIf="staff.user_role == 'printer_staff'" text-capitalize>Printer Staff</p>
 
 		<p item-end>
-			<span ion-text color="primary" (click)="navigate('EditStaffPage','edit',staff); $event.stopPropagation();">Edit</span>
+			<span ion-text color="primary" (click)="navigate('EditStaffPage','edit',staff); $event.stopPropagation();" [hidden]="staff.status == 'disabled'">Edit</span>
 			&nbsp;
-			<span ion-text color="danger" (click)="on_delete(staff.id); $event.stopPropagation();">Delete</span>
+			<span ion-text color="danger" (click)="show_confirmation(staff.id,'delete'); $event.stopPropagation();" [hidden]="staff.status == 'disabled'">Delete</span>
+			&nbsp;
+			<span ion-text color="secondary" (click)="show_confirmation(staff.id,'restore'); $event.stopPropagation();" *ngIf="staff.status == 'disabled'">Restore</span>
 		</p>
 	</ion-item>
 

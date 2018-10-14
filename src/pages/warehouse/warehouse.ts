@@ -422,7 +422,8 @@ export class WarehousePage {
   }
 
   ionViewCanEnter() {
-    this.provider.getData({ date : this.search_date },'transaction/badge').then((res:any) => {
+    //this.provider.getData({ date : this.search_date },'transaction/badge').then((res:any) => {
+    this.provider.getData('','transaction/badge').then((res:any) => {
       if(res._data.status){
         this.cleared_result = res._data.result.cleared;
         this.releasing_result = res._data.result.releasing;
