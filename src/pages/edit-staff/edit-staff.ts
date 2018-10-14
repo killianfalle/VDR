@@ -24,6 +24,7 @@ export class EditStaffPage {
   origin: any;
   staff:any;
   error:any = {};
+  warehouseList: any = [];
 
   constructor(
   	public navCtrl: NavController, 
@@ -33,8 +34,13 @@ export class EditStaffPage {
   	public toast: ToastComponent
   ) {
   	this.staff = this.navParams.get('data');
+
+    console.log("STAFF INFORMATION:");
+    console.log(this.staff);
   	this._callback = navParams.get('callback');
   	this.origin = navParams.get('self');
+
+    this.warehouseList = navParams.get('warehouseList');
   }
 
   update() {

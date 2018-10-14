@@ -48,6 +48,15 @@
 	</ion-item>
 	<div class="error" *ngIf="error.email">{{ error.email }}</div>
 
+	<ion-item *ngIf="staff.user_role == 'warehouse_staff'">
+		<ion-label stacked>Designated Warehouse</ion-label>
+		<ion-select [(ngModel)]="staff.warehouse_info.warehouse_id">
+			<ion-option *ngFor="let warehouse of warehouseList" value="{{ warehouse.id }}">
+				{{ warehouse.name }} - {{ warehouse.address }}
+			</ion-option>
+		</ion-select>
+	</ion-item>
+
 	<br>
 	<br>
 
