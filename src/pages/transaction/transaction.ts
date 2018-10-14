@@ -73,6 +73,7 @@ export class TransactionPage {
     private socket: Socket) {
     this.profile = JSON.parse(localStorage.getItem('_info'));
 
+    this.enableInfinite();
   	this.get_transaction();
 
     this.add_pending_transaction().subscribe((_data) => {
@@ -161,6 +162,14 @@ export class TransactionPage {
     });
   }
 
+  on_find_by_date() {
+    console.log("by date");
+    this.offset_cleared = 0;
+    this.cleared_transactions = [];
+    this.enableInfinite();
+    this.get_transaction();
+  }
+
   get_transaction() {
     switch (this.tabs) {
       case "cleared":
@@ -236,6 +245,7 @@ export class TransactionPage {
   }
 
   doInfinite(infiniteScroll) {
+    console.log("trigger");
     setTimeout(() => {
       this.get_transaction();
 
@@ -245,6 +255,9 @@ export class TransactionPage {
 
   stopInfinite(){
     switch (this.tabs) {
+      case "cleared":
+        this.infinite_cleared.enable(false);
+        break;
       case "releasing":
         this.infinite_releasing.enable(false);
         break;
@@ -549,7 +562,8 @@ export class TransactionPage {
   }
 
   ionViewCanEnter() {
-    this.provider.getData({ date : this.search_date },'transaction/badge').then((res:any) => {
+    //this.provider.getData({ date : this.search_date },'transaction/badge').then((res:any) => {
+    this.provider.getData('','transaction/badge').then((res:any) => {
       if(res._data.status){
         this.cleared_result = res._data.result.cleared;
         this.releasing_result = res._data.result.releasing;

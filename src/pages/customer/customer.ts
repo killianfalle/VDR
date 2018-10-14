@@ -127,6 +127,21 @@ export class CustomerPage {
     })
   }
 
+  restore(_data) {
+    this.alert.confirm('Restore Customer').then((response:any) => {
+      if(response){
+        this.loader.show_loader('processing');
+        this.provider.postData({ id : _data.id },'customer/restore').then((res:any) => {
+          if(res._data.status){
+            this.loader.hide_loader();
+            this.toast.presentToast(res._data.message);
+            this.refresh(this,true);
+          }
+        })
+      }
+    })
+  }
+
   reset() {
     this.keyword = '';
     this.offset = 0;

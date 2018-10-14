@@ -85,19 +85,19 @@
 				<ion-col>
 					<ion-card>
 						<ion-item class="item-option">
-							<ion-label>QTY :</ion-label>
-							<ion-label class="custom-label" text-capitalize>{{ form.qty_type.name }}</ion-label>
+							<ion-label stacked>QTY :
+								<span>
+									<strong>{{ form.qty_type.name }}</strong>
+								</span>
+							</ion-label>
 							<ion-input type="number" [ngStyle]="{'color': '#222'}" [(ngModel)]="form.quantity" (input)="setTotal()" text-right></ion-input>
 						</ion-item>
 					</ion-card>
 				</ion-col>
-			</ion-row>
-
-			<ion-row>
 				<ion-col>
 					<ion-card>
 						<ion-item class="item-option">
-							<ion-label>Price :</ion-label>
+							<ion-label stacked>Price :</ion-label>
 							<ion-input type="number" [ngStyle]="{'color': '#222'}" [(ngModel)]="form.price" (input)="setTotal()" text-right></ion-input>
 						</ion-item>
 					</ion-card>
@@ -106,7 +106,7 @@
 
 			<ion-row>
 				<ion-col>
-					<ion-card>
+					<ion-card class="price">
 						<ion-item class="item-option">
 							<ion-label>Total :</ion-label>
 							<ion-input type="number" [ngStyle]="{'color': '#222'}" [(ngModel)]="form.total" text-right disabled></ion-input>
@@ -126,17 +126,16 @@
 		</ion-col>
 
 		&nbsp;
-		&nbsp;
 
 		<ion-col *ngIf="steps == 2">
 			<button ion-button color="primary" block (click)="preview(); $event.stopPropagation()">
 				Review
 			</button>
 		</ion-col>
-	</ion-row>
 
-	<ion-row padding *ngIf="steps == 2">
-		<ion-col>
+		&nbsp;
+
+		<ion-col *ngIf="steps == 2">
 			<button ion-button color="orange" block (click)="submit(); $event.stopPropagation()" 
 			[disabled]="(form.price == null || form.price == '') || (form.quantity == null || form.quantity == '')">
 				Add to Cart
