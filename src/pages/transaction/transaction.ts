@@ -73,7 +73,7 @@ export class TransactionPage {
     private socket: Socket) {
     this.profile = JSON.parse(localStorage.getItem('_info'));
 
-    this.enableInfinite();
+    //this.enableInfinite();
   	this.get_transaction();
 
     this.add_pending_transaction().subscribe((_data) => {
