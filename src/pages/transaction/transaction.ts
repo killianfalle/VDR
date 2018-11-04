@@ -138,9 +138,9 @@ export class TransactionPage {
     });
 
     this.add_cleared_transaction().subscribe((_data:any) => {
-      this.cleared_result += 1;
       if(this.search_date == _data.release_at){
         if(this.keyword == ''){
+          this.cleared_result += 1;
           this.cleared_transactions.push(_data);
           this.offset_cleared += 1;
         }
@@ -162,7 +162,7 @@ export class TransactionPage {
     });
   }
 
-  on_find_by_date() {
+  onChangeDate() {
     console.log("by date");
     this.offset_cleared = 0;
     this.cleared_transactions = [];
@@ -211,6 +211,7 @@ export class TransactionPage {
             }
             break;
           default:
+            this.cleared_result = res._data.total;
             if(res._data.status){
               if(res._data.result > 0){
                 this.offset_cleared += res._data.result;
@@ -562,8 +563,7 @@ export class TransactionPage {
   }
 
   ionViewCanEnter() {
-    //this.provider.getData({ date : this.search_date },'transaction/badge').then((res:any) => {
-    this.provider.getData('','transaction/badge').then((res:any) => {
+    this.provider.getData({ date : this.search_date },'transaction/badge').then((res:any) => {
       if(res._data.status){
         this.cleared_result = res._data.result.cleared;
         this.releasing_result = res._data.result.releasing;
