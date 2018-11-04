@@ -139,6 +139,14 @@ export class WarehousePage {
     });
   }
 
+  onChangeDate() {
+    this.offset = 0;
+    this.cleared_result = 0;
+    this.offset_cleared = 0;
+    this.cleared_transactions = [];
+    this.get_transaction();
+  }
+
   async get_transaction() {
     switch (this.tabs) {
       case "cleared":
@@ -164,9 +172,9 @@ export class WarehousePage {
             }
             break;
           default:
+            this.cleared_result = res._data.total;
             if(res._data.result > 0){
               this.offset_cleared += res._data.result;
-              this.releasing_result = this.offset;
               this.load_cleared(res._data.data);
             }else {
               this.stopInfinite();
@@ -422,8 +430,7 @@ export class WarehousePage {
   }
 
   ionViewCanEnter() {
-    //this.provider.getData({ date : this.search_date },'transaction/badge').then((res:any) => {
-    this.provider.getData('','transaction/badge').then((res:any) => {
+    this.provider.getData({ date : this.search_date },'transaction/badge').then((res:any) => {
       if(res._data.status){
         this.cleared_result = res._data.result.cleared;
         this.releasing_result = res._data.result.releasing;
