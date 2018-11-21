@@ -29,20 +29,16 @@
 
 		<br>
 
-		<div class="product">
-			<div *ngFor="let prod of product; let i = index">
-				<div id="product" *ngFor="let class of prod.class; let i = index" [ngClass]="{'selected-item' : (form.id == prod.id && form.class.id == prod.class[i].id) }" (click)="select_product(prod,i)" align-self-center>
-					<div class="product-item">
-				    	<h6 text-capitalize ion-text text-center>{{ prod.name }}</h6>
-				    	<h5 text-capitalize ion-text text-center class="class-lbl">{{ class.name }}</h5>
-					</div>
-				</div>
-			</div>
-		</div>
+		<ion-row class="product" padding text-center text-wrap>
+			<ion-col padding col-6 *ngFor="let list of product;" [ngClass]="{'selected' : (form.name == list.product.name && form.class.name == list.class.name)}" (click)="select_product(list.product,list.class)">
+		    	<h4 text-capitalize>{{ list.product?.name }}</h4>
+		    	<p text-capitalize>{{ list.class?.name }}</p>
+			</ion-col>
+		</ion-row>
 	</div>
 
 	<div *ngIf="steps > 0">
-		<div [hidden]="steps != 1">
+		<div class="size" [hidden]="steps != 1">
 			<div class="hr-divider">
 			  <div class="hr-line"></div>
 			  <div class="hr-icon">
@@ -58,7 +54,7 @@
 			</ion-row>
 		</div>
 
-		<div [hidden]="steps != 2">
+		<div class="type" [hidden]="steps != 2">
 			<div class="hr-divider" *ngIf="quantities.length > 0">
 			  <div class="hr-line"></div>
 			  <div class="hr-icon">
@@ -72,14 +68,6 @@
 			    	<p text-capitalize>{{ qty.name }}</p>
 				</ion-col>
 			</ion-row>
-
-			<div class="hr-divider">
-			  <div class="hr-line"></div>
-			  <div class="hr-icon">
-			  	<ion-icon name="calculator"></ion-icon>
-			  </div>
-			  <div class="hr-line"></div>
-			</div>
 
 			<ion-row>
 				<ion-col>

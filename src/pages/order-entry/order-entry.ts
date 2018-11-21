@@ -1,6 +1,7 @@
 import { Component,
          OnInit,
-         Pipe } from '@angular/core';
+         Pipe,
+         NgZone } from '@angular/core';
 import { IonicPage,
          NavController,
          NavParams,
@@ -41,7 +42,8 @@ export class OrderEntryPage implements OnInit {
     private provider: DataProvider,
     public loader: LoaderComponent,
     public alert: AlertComponent,
-    private event: Events
+    private event: Events,
+    private zone: NgZone
   ) {
     this.customer = navParams.get('customer');
     this.user = JSON.parse(localStorage.getItem('_info'));
@@ -69,18 +71,40 @@ export class OrderEntryPage implements OnInit {
   ngOnInit() {
     this.provider.getData('','product').then((res: any) => {
       if(res._data.data){
-        this.product = res._data.data;
+        //this.product = res._data.data;
+        this.loadProducts(res._data.data);
       }
     });
   }
 
-  select_product(_data,_index) {
-    this.form.id = _data.id;
-    this.form.name = _data.name;
-    this.form.class.id = _data.class[_index].id;
-    this.form.class.name = _data.class[_index].name;
-    this.sizes = _data.class[_index].size;
-    this.quantities = _data.quantity;
+  loadProducts(products) {
+    products.map(obj => {
+      obj.class.map(obj_class => {
+        this.zone.run(() => {
+          this.product.push({
+            product: {
+              'id': obj.id,
+              'name': obj.name,
+              'quantity': obj.quantity
+            },
+            class: {
+              'id': obj_class.id,
+              'name': obj_class.name,
+              'size': obj_class.size
+            }
+          });
+        });
+      })
+    });
+  }
+
+  select_product(_product,_class) {
+    this.form.id = _product.id;
+    this.form.name = _product.name;
+    this.form.class.id = _class.id;
+    this.form.class.name = _class.name;
+    this.sizes = _class.size;
+    this.quantities = _product.quantity;
 
     setTimeout(() => {
       this.onPage();
