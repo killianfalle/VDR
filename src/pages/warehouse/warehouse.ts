@@ -281,7 +281,9 @@ export class WarehousePage {
     return observable;
   }
 
-  cleared_transaction(_data) {
+  cleared_transaction(_data,date_release) {
+    _data.release_at = date_release;
+
     this.provider.postData({ transaction : _data, status : 'cleared' },'transaction/status').then((res:any) => {
       if(res._data.status){
         let params = { data : _data.id, type : 'remove-releasing-transaction' };
@@ -360,14 +362,16 @@ export class WarehousePage {
 
     header = '        Vista del rio \n'+ _data.warehouse_designation.warehouse_info.address;
 
+    let date_release = moment().format('YYYY-MM-DD');
+
     if(_data.void){
-      content = header+'\n'+ separator +'Order#: '+ _data.order_id +'\nReleased by: '+this.profile.first_name+' '+this.profile.last_name+'\n'+ separator +'Owner: '+_data.first_name+' '+_data.last_name+'\nRelease: '+moment(_data.release_at).format("MM/DD/YYYY")+'\nRemarks: Void\n'+separator+item+separator+"Payment: "+_data.payment_type+"\nDelivery: "+_data.delivery_option+'\n'+separator+'Items received above are \ntrue & correct.\n\nReceived by:\n______________________________\n(Customer printed name)\n\nContact#:\n______________________________\n\n\n';
+      content = header+'\n'+ separator +'Order#: '+ _data.order_id +'\nReleased by: '+this.profile.first_name+' '+this.profile.last_name+'\n'+ separator +'Owner: '+_data.first_name+' '+_data.last_name+'\nRelease: '+moment(date_release).format('MM/DD/YYYY')+'\nRemarks: Void\n'+separator+item+separator+"Payment: "+_data.payment_type+"\nDelivery: "+_data.delivery_option+'\n'+separator+'Items received above are \ntrue & correct.\n\nReceived by:\n______________________________\n(Customer printed name)\n\nContact#:\n______________________________\n\n\n';
     }else {
-      content = header+'\n'+ separator +'Order#: '+ _data.order_id +'\nReleased by: '+this.profile.first_name+' '+this.profile.last_name+'\n'+ separator +'Owner: '+_data.first_name+' '+_data.last_name+'\nRelease: '+moment(_data.release_at).format("MM/DD/YYYY")+'\n'+separator+item+separator+"Payment: "+_data.payment_type+"\nDelivery: "+_data.delivery_option+'\n'+separator+'Items received above are \ntrue & correct.\n\nReceived by:\n______________________________\n(Customer printed name)\n\nContact#:\n______________________________\n\n\n';
+      content = header+'\n'+ separator +'Order#: '+ _data.order_id +'\nReleased by: '+this.profile.first_name+' '+this.profile.last_name+'\n'+ separator +'Owner: '+_data.first_name+' '+_data.last_name+'\nRelease: '+moment(date_release).format('MM/DD/YYYY')+'\n'+separator+item+separator+"Payment: "+_data.payment_type+"\nDelivery: "+_data.delivery_option+'\n'+separator+'Items received above are \ntrue & correct.\n\nReceived by:\n______________________________\n(Customer printed name)\n\nContact#:\n______________________________\n\n\n';
     }
 
     await this.printer.onWrite(content);
-    this.cleared_transaction(_data);
+    this.cleared_transaction(_data,date_release);
   }
 
   async reprint(_data,_ps){
