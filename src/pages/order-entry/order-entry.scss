@@ -5,6 +5,57 @@ page-order-entry {
 		padding: 0;
 	}
 
+	.product {
+		margin-top: 5px;
+
+		.col {
+			border: 1px solid color($colors,orange);
+		}
+
+		ion-card {
+			padding: 5px;
+			width: 100%;
+			margin: 0;
+			max-height: 141px;
+
+			.icon {
+				font-size: 5em;
+			}
+
+			h4 {
+				font-weight: 500;
+			}
+		}
+	}
+
+	.type {
+		.card {
+			min-height: 80px;
+			background: #EEEEEE;
+			border: 1px solid color($colors,orange);
+		}
+
+		.price {
+			min-height: 50px;
+			background: #EEEEEE;
+			border: 1px solid color($colors,orange);
+		}
+
+		.item-option {
+			color: color($colors,orange);
+			position: absolute;
+		    top: 50%;
+		    left: 50%;
+		    transform: translateX(-50%) translateY(-50%);
+			background: transparent;
+
+			.label {
+				font-size: 16px;
+			}
+		}
+
+	}
+
 	.option {
 		padding: 10px;
 		background: #EEEEEE;
@@ -16,62 +67,7 @@ page-order-entry {
 			font-size: 1.2em;
 		}
 	}
-
-	.product {
-		padding: 10px;
-	}
-
-	#product {
-		padding: 5px;
-		background: #EEEEEE;
-		border: 1px solid color($colors,orange);
-		margin-bottom: 2px;
-
-		.class-lbl {
-			font-weight: bold;
-		}
-	}
-
-	#product {
-		width: 49%;
-		max-width:  49%;
-		float: left;
-		min-height: 122px;
-	}
-
-	.item-divider {
-		color: color($colors,dark);
-		font-size: 1.5em;
-		font-weight: bolder;
-		background: color($colors,yellow);
-		text-align: center;
-	}
-
-	.card {
-		min-height: 80px;
-		background: #EEEEEE;
-		border: 1px solid color($colors,orange);
-	}
-
-	.price {
-		min-height: 50px;
-		background: #EEEEEE;
-		border: 1px solid color($colors,orange);
-	}
-
-	.item-option {
-		color: color($colors,orange);
-		position: absolute;
-	    top: 50%;
-	    left: 50%;
-	    transform: translateX(-50%) translateY(-50%);
-		background: transparent;
-
-		.label {
-			font-size: 16px;
-		}
-	}
-
+	
 	.last-col {
 		flex: 0 0 100% !important;
 	    width: 100% !important;
@@ -92,24 +88,8 @@ page-order-entry {
 		}
 	}
 
-	.selected-item {
-		border: 1px solid color($colors,orange) !important;
-		background: color($colors,orange) !important;
-		font-weight: bold;
-		font-style: italic;
-		color: color($colors,light) !important;
-	}
-
 	.text-input[disabled] {
 		opacity: 1 !important;
-	}
-
-	ion-label.custom-label {
-		text-align: right;
-		max-width: none;
-		width: 19vh;
-		font-size: 1.2em;
-		font-weight: bold;
 	}
 
 	.hr-divider {
