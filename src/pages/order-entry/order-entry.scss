@@ -9,7 +9,7 @@ page-order-entry {
 		margin-top: 5px;
 
 		.col {
-			border: 1px solid color($colors,orange);
+			border: 1px solid color($colors,primary);
 		}
 
 		ion-card {
@@ -31,18 +31,16 @@ page-order-entry {
 	.type {
 		.card {
 			min-height: 80px;
-			background: #EEEEEE;
-			border: 1px solid color($colors,orange);
+			border: 1px solid color($colors,primary);
 		}
 
 		.price {
 			min-height: 50px;
-			background: #EEEEEE;
-			border: 1px solid color($colors,orange);
+			border: 1px solid color($colors,primary);
 		}
 
 		.item-option {
-			color: color($colors,orange);
+			color: color($colors,danger);
 			position: absolute;
 		    top: 50%;
 		    left: 50%;
@@ -52,14 +50,17 @@ page-order-entry {
 			.label {
 				font-size: 16px;
 			}
+
+			span {
+				color: color($colors,primary);
+			}
 		}
 
 	}
 
 	.option {
 		padding: 10px;
-		background: #EEEEEE;
-		border: 1px solid color($colors,orange);
+		border: 1px solid color($colors,primary);
 		margin-bottom: 2px;
 
 		p {
@@ -75,11 +76,11 @@ page-order-entry {
 	}
 
 	.selected {
-		border: 1px solid color($colors,orange);
-		background: color($colors,orange);
+		border: 1px solid color($colors,primary);
+		background: color($colors,clearDay);
 		font-weight: bold;
 		font-style: italic;
-		color: color($colors,light) !important;
+		color: color($colors,dark) !important;
 
 		.item {
 			font-weight: bold;

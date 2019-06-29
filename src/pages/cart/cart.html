@@ -6,7 +6,7 @@
 -->
 <ion-header>
 
-  <ion-navbar color="orange">
+  <ion-navbar color="primary">
     <ion-title>Cart</ion-title>
   </ion-navbar>
 
@@ -65,7 +65,7 @@
 
 						<ion-row *ngIf="key == row">
 							<ion-col text-right>
-								<ion-icon class="qty-icon" color="orange" name='add' (click)="quantity(row,i)" ion-long-press [interval]="300" (onPressStart)="pressed()" (onPressing)="active(row,i)" (onPressEnd)="released()"></ion-icon>
+								<ion-icon class="qty-icon" color="danger" name='remove' (click)="quantity(row,i,false)" ion-long-press [interval]="300" (onPressStart)="pressed()" (onPressing)="active(row,i,false)" (onPressEnd)="released()"></ion-icon>
 							</ion-col>
 							<ion-col text-center>
 								<ion-item class="qty-box" no-lines style="min-width: 50px;">
@@ -73,7 +73,7 @@
 								</ion-item>
 							</ion-col>
 							<ion-col text-left>
-								<ion-icon class="qty-icon" color="orange" name='remove' (click)="quantity(row,i,false)" ion-long-press [interval]="300" (onPressStart)="pressed()" (onPressing)="active(row,i,false)" (onPressEnd)="released()"></ion-icon>
+								<ion-icon class="qty-icon" color="primary" name='add' (click)="quantity(row,i)" ion-long-press [interval]="300" (onPressStart)="pressed()" (onPressing)="active(row,i)" (onPressEnd)="released()"></ion-icon>
 							</ion-col>
 						</ion-row>
 									
@@ -94,13 +94,13 @@
 
 		<ion-row *ngIf="key == row">
 			<ion-col>
-				<button ion-button outline block color="danger" (click)="cancel_edit();">
+				<button ion-button block color="danger" (click)="cancel_edit();">
 					Cancel
 				</button>
 			</ion-col>
 			&nbsp;
 			<ion-col>
-				<button ion-button outline block color="orange" (click)="update(items);">
+				<button ion-button block color="primary" (click)="update(items);">
 					Save
 				</button>
 			</ion-col>
@@ -108,13 +108,13 @@
 
 		<ion-row [hidden]="key == row">
 			<ion-col>
-				<button  ion-button outline block color="danger" (click)="discard(row,items.id);">
+				<button  ion-button block color="danger" (click)="discard(row,items.id);">
 					Discard
 				</button>
 			</ion-col>
 			&nbsp;
 			<ion-col>
-				<button  ion-button outline block color="orange" (click)="check_out(items);">
+				<button  ion-button block color="shamrock" (click)="check_out(items);">
 					Checkout
 				</button>
 			</ion-col>
