@@ -6,7 +6,7 @@
 -->
 <ion-header>
 
-  <ion-navbar color="orange">
+  <ion-navbar color="primary">
     <ion-title>Report</ion-title>
     <ion-buttons end>
       <cart></cart>
@@ -75,10 +75,10 @@
 			<br>
 			<ion-row>
 				<ion-col>
-					<button ion-button block color="dark" (click)="exportCSVCleared(); $event.stopPropagation()">Export Cleared</button>
+					<button ion-button block color="shamrock" (click)="exportCSVCleared(); $event.stopPropagation()">Export Cleared</button>
 				</ion-col>
 				<ion-col>
-					<button ion-button block color="orange" (click)="exportCSVCancel(); $event.stopPropagation()">Export Cancelled</button>
+					<button ion-button block color="danger" (click)="exportCSVCancel(); $event.stopPropagation()">Export Cancelled</button>
 				</ion-col>
 			</ion-row>
 
@@ -147,7 +147,7 @@
 			</ion-card>
 			<br>
 			<div padding>
-				<button ion-button block color="orange" (click)="daily_report(); $event.stopPropagation()">Search</button>
+				<button ion-button block color="shamrock" (click)="daily_report(); $event.stopPropagation()">Search</button>
 			</div>
 
 			<ion-item no-lines>

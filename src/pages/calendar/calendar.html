@@ -6,7 +6,7 @@
 -->
 <ion-header>
 
-  <ion-navbar color="orange">
+  <ion-navbar color="primary">
     <ion-title>Calendar</ion-title>
   </ion-navbar>
 
@@ -15,11 +15,27 @@
 
 <ion-content>
 
+	<!-- New Update -->
+
+	<ion-item no-lines margin-vertical>
+	    <ion-label>Print Copies</ion-label>
+	    <ion-select [(ngModel)]="copies">
+	      <ion-option>2</ion-option>
+	      <ion-option>3</ion-option>
+	      <ion-option>4</ion-option>
+ 	    </ion-select>
+	</ion-item>
+
 	<ion-calendar [(ngModel)]="date"
 	              [options]="option"
 	              [type]="type"
 	              [format]="'YYYY-MM-DD'">
 	</ion-calendar>
+
+
+	<!-- 
+
+	Previous
 
 	<ion-list radio-group [(ngModel)]="copies">
 		<ion-list-header color="dark">
@@ -35,7 +51,7 @@
 		   <ion-label>3</ion-label>
 		   <ion-radio value="3"></ion-radio>
 		</ion-item>
-	</ion-list>
+	</ion-list> -->
 
 	<ion-row>
 		<ion-col>
@@ -43,7 +59,7 @@
 		</ion-col>
 		&nbsp;
 		<ion-col>
-			<button ion-button block color="orange" (click)="action()">Ok</button>
+			<button ion-button block color="shamrock" (click)="action()">Ok</button>
 		</ion-col>
 	</ion-row>
 
