@@ -113,6 +113,13 @@ export class StaffPage implements OnInit{
 
   show_confirmation(id,action) {
     switch(action){
+      case 'reset' :
+        this.alert.confirm('Reset Password').then((res:any) => {
+          if(res) {
+            this.resetPassword(id);
+          }
+        })
+        break;
       case 'delete' :
         this.alert.confirm('Delete Staff').then((res:any) => {
           if(res) {
@@ -139,6 +146,18 @@ export class StaffPage implements OnInit{
       }
     })
   }
+
+  resetPassword(id) {
+    this.provider.postData({ id: id },'staff/password/reset').then((res:any) => {
+      if (res._data.status) {
+        this.toast.presentToast(res._data.message);
+      }
+    }).catch((error) => {
+      console.log(error);
+      this.toast.presentToast("Failed to reset password. Please try again.");
+    })
+  }
+
 
   delete(id) {
     this.provider.postData({ id: id },'staff/delete').then((res:any) => {
