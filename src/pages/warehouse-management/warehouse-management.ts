@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { IonicPage, NavController, NavParams, LoadingController, AlertController } from 'ionic-angular';
+import { ToastComponent } from '../../components/toast/toast';
+import { AlertComponent } from '../../components/alert/alert';
 import { DataProvider } from '../../providers/data-provider';
 
 /**
@@ -14,7 +16,7 @@ import { DataProvider } from '../../providers/data-provider';
   	selector: 'page-warehouse-management',
   	templateUrl: 'warehouse-management.html',
 })
-export class WarehouseManagementPage {
+export class WarehouseManagementPage implements OnInit {
 	showAddForm: boolean = false;
 	showEditForm: boolean = false;
 	addForm: any = {
@@ -37,8 +39,12 @@ export class WarehouseManagementPage {
   		public navParams: NavParams, 
   		private provider: DataProvider,
   		public loadingCtrl: LoadingController,
-  		public alertCtrl: AlertController
-  	){
+  		public alertCtrl: AlertController,
+  		public alert: AlertComponent,
+   		public toast: ToastComponent,
+  	){	}
+
+  	ngOnInit() {
   		this.provider.getData({} ,'get-warehouses').then((res: any) => {
   			console.log("RESPONSE:");
   			console.log(res);
@@ -100,6 +106,16 @@ export class WarehouseManagementPage {
   		console.log(this.updateForm);
   	}
 
+  	toDelete(warehouseID,index) {
+  		this.provider.postData({ id: warehouseID },'delete-warehouse').then((res: any) => {
+	      	this.toast.presentToast(res.message);
+	      	this.warehouseList.splice(index,1);
+	    }).catch((error) => {
+	    	alert("Sever Error!");
+	    });
+  	}
+
+
   	submitEditForm(){
   		const loader = this.loadingCtrl.create({
 	      	content: "Please wait...",
@@ -137,6 +153,19 @@ export class WarehouseManagementPage {
 	    });
   	}
 
+  	show_confirmation(id,action,index) {
+  	  switch(action){
+  	    case 'delete' :
+  	      this.alert.confirm('Delete Warehouse').then((res:any) => {
+  	        if(res) {
+  	          this.toDelete(id,index);
+  	        }
+  	      })
+  	      break;
+  	    default:
+  	      break;
+  	  }
+  	}
 
   	clearApiValidators(){
   		for(var key in this.apiValidators){
