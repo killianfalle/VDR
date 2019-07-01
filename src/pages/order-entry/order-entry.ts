@@ -69,15 +69,37 @@ export class OrderEntryPage implements OnInit {
   }
 
   ngOnInit() {
-    this.provider.getData('','product').then((res: any) => {
+    this.provider.getData('','product/list').then((res: any) => {
       if(res._data.data){
-        //this.product = res._data.data;
-        this.loadProducts(res._data.data);
+        this.product = res._data.data;
+        
+        //this.loadProducts(res._data.data);
       }
     });
   }
 
-  loadProducts(products) {
+  select_product(_product,_class,_qty) {
+    this.form.id = _product.id;
+    this.form.name = _product.name;
+    this.form.class.id = _class.id;
+    this.form.class.name = _class.name;
+    this.sizes = _class.product_size;
+    this.quantities = _qty;
+
+    if(this.sizes.length > 0){
+
+      setTimeout(() => {
+        this.onPage();
+      },300)
+
+    }else if(this.sizes.length == 0 && this.quantities.length > 0){
+      this.steps = 2;
+    }else {
+      this.steps = 3;
+    }
+  }
+
+  /*loadProducts(products) {
     products.map(obj => {
       obj.class.map(obj_class => {
         this.zone.run(() => {
@@ -96,9 +118,12 @@ export class OrderEntryPage implements OnInit {
         });
       })
     });
-  }
 
-  select_product(_product,_class) {
+    console.log("load product");
+    console.log(this.product);
+  }*/
+
+  /*select_product(_product,_class) {
     this.form.id = _product.id;
     this.form.name = _product.name;
     this.form.class.id = _class.id;
@@ -109,15 +134,20 @@ export class OrderEntryPage implements OnInit {
     setTimeout(() => {
       this.onPage();
     },300)
-  }
+  }*/
   
   select_size(_size) {
     this.form.size.id = _size.id;
     this.form.size.name = _size.name;
 
-    setTimeout(() => {
-      this.onPage();
-    },300)
+    if(this.quantities.length > 0){
+      setTimeout(() => {
+        this.onPage();
+      },300)
+    }else {
+      this.steps += 2;
+    }
+
   }
 
   select_qty(_qty) {
@@ -125,6 +155,9 @@ export class OrderEntryPage implements OnInit {
     this.form.qty_type.name = _qty.name;
 
     console.log(this.form);
+    setTimeout(() => {
+      this.onPage();
+    },300)
   }
 
   setTotal() {
@@ -148,10 +181,21 @@ export class OrderEntryPage implements OnInit {
   }
 
   onPage(page = 'next') {
-    if(page == 'next')
+    if(page == 'next'){
       this.steps += 1;
-    else
-      this.steps -= 1;
+    }else{
+      if(this.steps == 3 && this.quantities.length == 0 && this.steps == 3 && this.sizes.length == 0){
+        this.steps = 0;
+      }else if(this.sizes.length > 0 && this.quantities.length > 0){
+        this.steps -= 1;
+      }else if(this.steps == 3 && this.quantities.length > 0) {
+        this.steps = 2;
+      }else if(this.steps == 3 && this.sizes.length > 0){
+        this.steps = 1;
+      }else {
+        this.steps -= 1;
+      }
+    }
   }
 
   preview(){
