@@ -41,6 +41,7 @@
 	</ion-item>
 
 	<ion-item *ngFor="let staff of staffs">
+		<ion-icon name="refresh" item-start color="shamrock" (click)="show_confirmation(staff.id,'reset'); $event.stopPropagation();"></ion-icon>
 		<h2 text-capitalize>{{ staff.first_name }} {{ staff.last_name }}</h2>
 		<h3>{{ staff.email }}</h3>
 		<p *ngIf="staff.user_role == 'admin_staff'" text-capitalize>Admin Staff</p>
