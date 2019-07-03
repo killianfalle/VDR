@@ -76,10 +76,10 @@ page-order-entry {
 	}
 
 	.selected {
-		background: color($colors,clearDay);
+		//background: color($colors,Gray97);
 		font-weight: bold;
 		font-style: italic;
-		color: color($colors,dark) !important;
+		color: color($colors, primary) !important;
 
 		.item {
 			font-weight: bold;
