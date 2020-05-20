@@ -48,15 +48,19 @@ export class AddCustomerPage {
     this.customer = this.form.group({
       first_name: ['', Validators.required],
       last_name: ['', Validators.required],
+      phone_number: ['', Validators.required],
+      location: ['', Validators.required],
       payment_type: ['', Validators.required],
       delivery_option: ['', Validators.required],
     });
+    this.customer.get('payment_type').setValue(1);
   }
 
   get_option() {
     this.provider.getData('','option/all').then((res:any) => {
       if(res._data.status) {
         this.payment_types = res._data.data.payment;
+        console.log(this.payment_types[1])
         this.delivery_options = res._data.data.delivery;
       }
     })

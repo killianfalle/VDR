@@ -18,12 +18,12 @@ import { ToastComponent } from '../../components/toast/toast';
 
 @IonicPage()
 @Component({
-  selector: 'page-add-payment',
-  templateUrl: 'add-payment.html',
+  selector: 'page-add-delivery',
+  templateUrl: 'add-delivery.html',
 })
-export class AddPaymentPage {
+export class AddDeliveryPage {
 
-	payment: any = {};
+	delivery: any = {};
 	_callback: any;
 	origin: any;
 	error:any = {};
@@ -43,11 +43,11 @@ export class AddPaymentPage {
 
   initForm() {
 
-    this.provider.getData('','payment').then((res: any) => {
+    this.provider.getData('','option/all').then((res: any) => {
       console.log(res);
-      this.result = res._data.data.length
+      this.result = res._data.data.delivery.length
         if(res._data.status){
-          this.payment = {
+          this.delivery = {
             name: null,
             position: this.result
           }
@@ -56,8 +56,8 @@ export class AddPaymentPage {
   }
 
   save() {
-    console.log(this.payment)
-    this.provider.postData(this.payment, 'payment/add').then((res: any) => {
+    console.log(this.delivery)
+    this.provider.postData(this.delivery, 'delivery/add').then((res: any) => {
       console.log(res._data.message);
       this.toast.presentToast(res._data.message);
       this._callback(this.origin,true);

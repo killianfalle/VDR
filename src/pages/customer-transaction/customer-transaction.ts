@@ -39,13 +39,15 @@ export class CustomerTransactionPage {
     public loader: LoaderComponent,
     public alert: AlertComponent) {
 
-  	this.customer = navParams.get('id');
+    this.customer = navParams.get('params');
+    console.log(this.customer)
   	this.get_transactions();
   }
 
   get_transactions() {
     this.isBusy = false;
-    this.provider.getData({ customer : this.customer, offset : this.offset, limit : this.limit },'customer/history').then((res: any) => {
+    this.provider.getData({ customer : this.customer.id, offset : this.offset, limit : this.limit },'customer/history').then((res: any) => {
+      console.log(res);
       if(res._data.status){
         if(res._data.result > 0){
           this.offset += res._data.result;

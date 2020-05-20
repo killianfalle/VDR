@@ -50,6 +50,7 @@ export class CustomerPage {
   ngOnInit(self = this) {
     self.isBusy = false;
     self.provider.getData({ search : self.keyword, offset : self.offset, limit : self.limit },'customer').then((res: any) => {
+      console.log(res);
         if(res._data.status){
           if(res._data.result > 0){
             self.offset += res._data.result;
@@ -89,7 +90,7 @@ export class CustomerPage {
         this.navCtrl.push(page, params );
         break;
       case "history":
-        params = { id : _params };
+        params = { params : _params };
   	    this.navCtrl.push(page, params );
         break;
       default:
@@ -109,6 +110,7 @@ export class CustomerPage {
 
   on_edit(_data) {
     let params = { self : this, callback : this.refresh, data : _data };
+    console.log(params)
     this.navCtrl.push('EditCustomerPage', params );
   }
 
@@ -116,7 +118,7 @@ export class CustomerPage {
     this.alert.confirm('Delete Customer').then((response:any) => {
       if(response){
         this.loader.show_loader('processing');
-        this.provider.postData({ id : _data.id },'customer/remove').then((res:any) => {
+        this.provider.postData({ id : _data.id },'customer/delete').then((res:any) => {
           if(res._data.status){
             this.loader.hide_loader();
             this.toast.presentToast(res._data.message);

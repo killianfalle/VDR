@@ -1,5 +1,5 @@
 <!--
-  Generated template for the AddPaymentPage page.
+  Generated template for the EditPaymentPage page.
 
   See http://ionicframework.com/docs/components/#navigation for more info on
   Ionic pages and navigation.
@@ -7,17 +7,17 @@
 <ion-header>
 
   <ion-navbar color="primary">
-    <ion-title>New Payment</ion-title>
+    <ion-title>Edit Delivery</ion-title>
   </ion-navbar>
 
 </ion-header>
 
+
 <ion-content>
 
-	<br>
-	<ion-item>
+	<ion-item margin-top>
 		<ion-label stacked>Name</ion-label>
-		<ion-input type="text" text-center [(ngModel)]="payment.name"></ion-input>
+		<ion-input type="text" text-center [(ngModel)]="delivery.name"></ion-input>
 	</ion-item>
 	<div class="error" *ngIf="error.name">{{ error.name }}</div>
 
@@ -25,7 +25,7 @@
 	<br>
 
 	<div padding>
-		<button ion-button block color="shamrock" (click)="save()">Add Payment</button>
+		<button ion-button block color="shamrock" (click)="update()">Save Changes</button>
 	</div>
 
 </ion-content>

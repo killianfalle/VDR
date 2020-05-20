@@ -37,6 +37,22 @@
 
 	<br>
 
+	<ion-item>
+		<ion-label stacked>Contact Number</ion-label>
+		<ion-input type="number" text-center [(ngModel)]="customer.phone_number"></ion-input>
+	</ion-item>
+	<div class="error" *ngIf="error.phone_number">{{ error.phone_number }}</div>
+
+	<br>
+
+	<ion-item>
+		<ion-label stacked>Address</ion-label>
+		<ion-input type="text" text-center [(ngModel)]="customer.location"></ion-input>
+	</ion-item>
+	<div class="error" *ngIf="error.location">{{ error.location }}</div>
+
+	<br>
+
 	<ion-item-divider>
 		Transaction Information
 	</ion-item-divider>

@@ -39,7 +39,7 @@
 		<p>No result found.</p>
 	</ion-item>
 
-	<ion-item *ngFor="let customer of customers" (click)="navigate('CustomerTransactionPage','history',customer.id); $event.stopPropagation();" text-wrap text-capitalize>
+	<ion-item *ngFor="let customer of customers" (click)="navigate('CustomerTransactionPage','history',customer); $event.stopPropagation();" text-wrap text-capitalize>
 		<h2><strong>{{ customer.first_name }} {{ customer.last_name }}</strong></h2>
 		<h3><strong>{{ customer.payment }}</strong></h3>
 		<p ion-text color="dark"><strong>{{ customer.delivery }}</strong></p> 

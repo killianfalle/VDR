@@ -22,6 +22,7 @@ export class WarehouseManagementPage implements OnInit {
 	addForm: any = {
 		'name': '',
 		'address': '',
+		'position': '',
 	};
 	updateForm: any = {
 		'id': '',
@@ -33,7 +34,9 @@ export class WarehouseManagementPage implements OnInit {
 		'address': '',
 	};
 	warehouseList: any = [];
-
+	toggleReorder = 'Edit';
+	flag: any = false;
+	result: any;
   	constructor(
   		public navCtrl: NavController, 
   		public navParams: NavParams, 
@@ -47,7 +50,8 @@ export class WarehouseManagementPage implements OnInit {
   	ngOnInit() {
   		this.provider.getData({} ,'get-warehouses').then((res: any) => {
   			console.log("RESPONSE:");
-  			console.log(res);
+			console.log(res);
+			this.result = res.warehouses.length;
   			this.warehouseList = res.warehouses;
   		})
   	}
@@ -55,7 +59,8 @@ export class WarehouseManagementPage implements OnInit {
   	setAddForm(showForm){
   		this.clearApiValidators();
   		for(var key in this.addForm){
-  			this.addForm[key] = '';
+			this.addForm[key] = '';
+			this.addForm.position = this.result;
   		}
   		this.showAddForm = showForm;
   	}
@@ -65,7 +70,7 @@ export class WarehouseManagementPage implements OnInit {
 	      	content: "Please wait...",
 	      	duration: 3000
 	    });
-	    loader.present();
+		loader.present();
 	    this.clearApiValidators();
 
   		this.provider.postData(this.addForm ,'save-new-warehouse').then((res: any) => {
@@ -86,7 +91,6 @@ export class WarehouseManagementPage implements OnInit {
 	    		this.apiValidators[key] = errors[key][0];
 	    	}
 	    	loader.dismiss();
-	      
 	    });
   	}
 
@@ -107,7 +111,7 @@ export class WarehouseManagementPage implements OnInit {
   	}
 
   	toDelete(warehouseID,index) {
-  		this.provider.postData({ id: warehouseID },'delete-warehouse').then((res: any) => {
+  		this.provider.postData({ id: warehouseID },'hard-delete-warehouse').then((res: any) => {
 	      	this.toast.presentToast(res.message);
 	      	this.warehouseList.splice(index,1);
 	    }).catch((error) => {
@@ -175,6 +179,32 @@ export class WarehouseManagementPage implements OnInit {
 
   	ionViewDidLoad() {
     	console.log('ionViewDidLoad WarehouseManagementPage');
-  	}
+	  }
+	  
+	  reorderItems(indexes){
+		let element = this.warehouseList[indexes.from];
+		this.warehouseList.splice(indexes.from, 1);
+		this.warehouseList.splice(indexes.to, 0, element);
+	  }
+	
+	  reorderList(){
+		if(this.toggleReorder == 'Edit'){
+		  this.toggleReorder = 'Done';
+		  this.flag = true;
+		}else{
+		  this.toggleReorder = 'Edit';
+		  this.flag = false;
+		  console.log(this.warehouseList);
+		  for(let i = 0; i < this.warehouseList.length; i++){
+			this.warehouseList[i].position = i;
+			console.log(this.warehouseList[i])
+			this.provider.postData(this.warehouseList[i], 'reorder-warehouse', true).then((res:any) => {
+			  console.log(res)
+			}).catch(err => {
+			  console.log(err);
+			});
+		  }
+		}
+	  }
 
 }

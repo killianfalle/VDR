@@ -22,6 +22,10 @@
 			<ion-icon name="add"></ion-icon>
 			Add Warehouse
 		</button>
+
+		<button ion-button outline icon-start padding color="primary" (click)="reorderList()" item-end>
+			{{toggleReorder}}
+		</button>
 	</ion-item>
 
 	<!-- ADD WAREHOUSE FORM -->
@@ -90,12 +94,14 @@
 
 	<!-- WAREHOUSE LIST -->
 	<div *ngIf="!showAddForm && !showEditForm">
-		<ion-item *ngFor="let warehouse of warehouseList; let i = index">
-			<h2><strong>{{ warehouse.name }}</strong></h2>
-			<h3>{{ warehouse.address }}</h3>
-			<button ion-button (click)="selectToEdit(warehouse.id)" clear item-end>Edit</button>
-			<button ion-button (click)="show_confirmation(warehouse.id,'delete', i)" clear item-end color="danger">Delete</button>
-		</ion-item>
+		<ion-item-group reorder="{{flag}}" (ionItemReorder)="reorderItems($event)">
+			<ion-item *ngFor="let warehouse of warehouseList; let i = index">
+				<h2><strong>{{ warehouse.name }}</strong></h2>
+				<h3>{{ warehouse.address }}</h3>
+				<button ion-button (click)="selectToEdit(warehouse.id)" clear item-end>Edit</button>
+				<button ion-button (click)="show_confirmation(warehouse.id,'delete', i)" clear item-end color="danger">Delete</button>
+			</ion-item>
+		</ion-item-group>
 	</div>
 		
 </ion-content>

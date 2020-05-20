@@ -8,6 +8,8 @@ import { IonicPage,
 import { DataProvider } from '../../providers/data-provider';
 import { Socket } from 'ng-socket-io';
 import { Keyboard } from '@ionic-native/keyboard';
+import { FCM } from '@ionic-native/fcm';
+import { OneSignal } from '@ionic-native/onesignal';
 
 @IonicPage()
 @Component({
@@ -30,6 +32,8 @@ export class TabsPage implements OnInit {
     private provider: DataProvider,
     private event: Events,
     public keyboard: Keyboard,
+    private fcm: FCM,
+    public oneSignal: OneSignal,
     private platform: Platform) {
   	this.profile = JSON.parse(localStorage.getItem('_info'));
 
@@ -48,9 +52,12 @@ export class TabsPage implements OnInit {
   }
 
   ngOnInit(){
+    console.log(this.profile)
+    this.oneSignal.sendTags({session: 'logged_in', user_type: this.profile.type, email: this.profile.email});
+
     if(localStorage.getItem('_device')){
       try {
-        FCMPlugin.getToken((data) => {
+        this.fcm.getToken().then((data) => {
           localStorage.setItem('_device',data);
           this.registerDevice(data);
         }, (result) => {
@@ -74,7 +81,7 @@ export class TabsPage implements OnInit {
     try {
       await this.platform.ready();
 
-      FCMPlugin.onNotification((data) => {
+      this.fcm.onNotification().subscribe((data) => {
         console.log(data);
       }, (result) => {
         console.log(result);

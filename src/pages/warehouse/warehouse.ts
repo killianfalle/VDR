@@ -51,7 +51,8 @@ export class WarehousePage {
   keyword:any = '';
 
   isBusy:any = false;
-
+  releasing_transaction_data: any;
+  cleared_transaction_data: any;
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams,
@@ -64,7 +65,9 @@ export class WarehousePage {
     private decimal: DecimalPipe,
     private socket: Socket) {
     this.profile = JSON.parse(localStorage.getItem('_info'));
+  }
 
+  ionViewWillEnter(){
     this.get_transaction();
 
     this.add_releasing_transaction().subscribe((_data:any) => {
@@ -186,15 +189,21 @@ export class WarehousePage {
   }
 
   load_releasing(_transaction) {
+    this.releasing_transactions = [];
+    this.releasing_transaction_data = _transaction;
     _transaction.map(data => {
       this.releasing_transactions.push(data);
     });
+    console.log(this.releasing_transactions)
   }
 
   load_cleared(_transaction) {
+    this.cleared_transaction_data = [];
+    this.cleared_transaction_data = _transaction;
     _transaction.map(data => {
       this.cleared_transactions.push(data);
     });
+    console.log(this.cleared_transactions)
   }
 
   doInfinite(infiniteScroll) {
@@ -299,14 +308,15 @@ export class WarehousePage {
         this.socket.emit('transaction', { text: anotherParams });
 
         this.toast.presentToast('Successfully released transaction');
+        this.load_releasing(this.releasing_transaction_data);
       }
     })
   }
 
   print(title,_data,reprint = false,ps = false){
-    // this.cleared_transaction(_data);
     this.alert.confirm(title).then((res:any) => {
       if(res){
+        console.log(title);
         this.do_print(_data,reprint,ps);
       }
     });
@@ -314,7 +324,9 @@ export class WarehousePage {
 
   do_print(_data,_reprint,_ps){
     this.printer.is_enabled().then((res: any) => {
-      this.verify_connectivity(_data,_reprint,_ps);
+      console.log(_data)
+      this.ready_print(_data);
+      // this.verify_connectivity(_data,_reprint,_ps);
     }).catch((err) => {
       this.enable_blueetooth(_data,_reprint,_ps);
     });
@@ -362,14 +374,25 @@ export class WarehousePage {
 
     header = '        Vista del rio \n'+ _data.warehouse_designation.warehouse_info.address;
 
+    let location = '-- -- --';
+    let phoneNumber = '-- -- --';
+    if(_data.phone_number != null){
+      phoneNumber = _data.phone_number;
+    }
+    
+    if(_data.location != null){
+      location = _data.location;
+    }
+    
     let date_release = moment().format('YYYY-MM-DD');
 
     if(_data.void){
-      content = header+'\n'+ separator +'Order#: '+ _data.order_id +'\nReleased by: '+this.profile.first_name+' '+this.profile.last_name+'\n'+ separator +'Owner: '+_data.first_name+' '+_data.last_name+'\nRelease: '+moment(date_release).format('MM/DD/YYYY')+'\nRemarks: Void\n'+separator+item+separator+"Payment: "+_data.payment_type+"\nDelivery: "+_data.delivery_option+'\n'+separator+'Items received above are \ntrue & correct.\n\nReceived by:\n______________________________\n(Customer printed name)\n\nContact#:\n______________________________\n\n\n';
+      content = header+'\n'+ separator +'ORDER #: '+ _data.order_id +'\nRELEASED BY: '+this.profile.first_name+' '+this.profile.last_name+'\n'+ separator +'OWNER: '+_data.first_name+' '+_data.last_name+'\nCONTACT #: '+phoneNumber+'\nADDRESS: '+location+'\nREMARKS: Void\n'+separator+item+separator+"RELEASE: "+moment(date_release).format('MM/DD/YYYY')+"\nPAYMENT: "+_data.payment_type+"\nDELIVERY: "+_data.delivery_option+'\n'+separator+'Items received above are \ntrue & correct.\n\nRECEIVED BY:\n______________________________\n(Customer printed name)\n\nDATE/TIME:\n______________________________\n\n\n';
     }else {
-      content = header+'\n'+ separator +'Order#: '+ _data.order_id +'\nReleased by: '+this.profile.first_name+' '+this.profile.last_name+'\n'+ separator +'Owner: '+_data.first_name+' '+_data.last_name+'\nRelease: '+moment(date_release).format('MM/DD/YYYY')+'\n'+separator+item+separator+"Payment: "+_data.payment_type+"\nDelivery: "+_data.delivery_option+'\n'+separator+'Items received above are \ntrue & correct.\n\nReceived by:\n______________________________\n(Customer printed name)\n\nContact#:\n______________________________\n\n\n';
+      content = header+'\n'+ separator +'ORDER #: '+ _data.order_id +'\nRELEASED BY: '+this.profile.first_name+' '+this.profile.last_name+'\n'+ separator +'OWNER: '+_data.first_name+' '+_data.last_name+'\nCONTACT #: '+phoneNumber+'\nADDRESS: '+location+'\n'+separator+item+separator+"RELEASE: "+moment(date_release).format('MM/DD/YYYY')+"\nPAYMENT: "+_data.payment_type+"\nDELIVERY: "+_data.delivery_option+'\n'+separator+'Items received above are \ntrue & correct.\n\nRECEIVED BY:\n______________________________\n(Customer printed name)\n\nDATE/TIME:\n______________________________\n\n\n';
     }
 
+    console.log(content)
     await this.printer.onWrite(content);
     this.cleared_transaction(_data,date_release);
   }
@@ -395,17 +418,21 @@ export class WarehousePage {
     }
 
     header = '        Vista del rio \n       Zayas Warehouse,\n     Cagayan de Oro City';
-
-    if(_ps){
-      content = header+'\n'+ separator +'Order#: '+ _data.order_id +'\nReleased by: '+this.profile.first_name+' '+this.profile.last_name+'\n'+ separator +'Owner: '+_data.first_name+' '+_data.last_name+'\nRelease: '+moment(_data.release_at).format("MM/DD/YYYY")+'\nRemarks: Packing Slip\n'+separator+item+separator+"Payment: "+_data.payment_type+"\nDelivery: "+_data.delivery_option+'\n'+separator+'\n\n\n';
-    }else {
-      if(_data.void){
-        content = header+'\n'+ separator +'Order#: '+ _data.order_id +'\nReleased by: '+this.profile.first_name+' '+this.profile.last_name+'\n'+ separator +'Owner: '+_data.first_name+' '+_data.last_name+'\nRelease: '+moment(_data.release_at).format("MM/DD/YYYY")+'\nRemarks: Void\n'+separator+item+separator+"Payment: "+_data.payment_type+"\nDelivery: "+_data.delivery_option+'\n'+separator+'Items received above are \ntrue & correct.\n\nReceived by:\n______________________________\n(Customer printed name)\n\nContact#:\n______________________________\n\n\n';
-      }else {
-        content = header+'\n'+ separator +'Order#: '+ _data.order_id +'\nReleased by: '+this.profile.first_name+' '+this.profile.last_name+'\n'+ separator +'Owner: '+_data.first_name+' '+_data.last_name+'\nRelease: '+moment(_data.release_at).format("MM/DD/YYYY")+'\n'+separator+item+separator+"Payment: "+_data.payment_type+"\nDelivery: "+_data.delivery_option+'\n'+separator+'Items received above are \ntrue & correct.\n\nReceived by:\n______________________________\n(Customer printed name)\n\nContact#:\n______________________________\n\n\n';
-      }
+    let location = '-- -- --';
+    if(_data.location != null){
+      location = _data.location;
     }
 
+    if(_ps){
+      content = header+'\n'+ separator +'ORDER #: '+ _data.order_id +'\nRELEASED BY: '+this.profile.first_name+' '+this.profile.last_name+'\n'+ separator +'OWNER: '+_data.first_name+' '+_data.last_name+'\nADDRESS: '+location+'\nRELEASE: '+moment(_data.release_at).format("MM/DD/YYYY")+'\nREMARKS: Packing Slip\n'+separator+item+separator+"PAYMENT: "+_data.payment_type+"\nDELIVERY: "+_data.delivery_option+'\n'+separator+'\n\n\n';
+    }else {
+      if(_data.void){
+        content = header+'\n'+ separator +'ORDER #: '+ _data.order_id +'\nRELEASED BY: '+this.profile.first_name+' '+this.profile.last_name+'\n'+ separator +'OWNER: '+_data.first_name+' '+_data.last_name+'\nADDRESS: '+location+'\nRELEASE: '+moment(_data.release_at).format("MM/DD/YYYY")+'\nREMARKS: Void\n'+separator+item+separator+"PAYMENT: "+_data.payment_type+"\nDELIVERY: "+_data.delivery_option+'\n'+separator+'Items received above are \ntrue & correct.\n\nRECEIVED BY:\n______________________________\n(Customer printed name)\n\nCONTACT #:\n______________________________\n\n\n';
+      }else {
+        content = header+'\n'+ separator +'ORDER #: '+ _data.order_id +'\nRELEASED BY: '+this.profile.first_name+' '+this.profile.last_name+'\n'+ separator +'OWNER: '+_data.first_name+' '+_data.last_name+'\nADDRESS: '+location+'\nRELEASE: '+moment(_data.release_at).format("MM/DD/YYYY")+'\n'+separator+item+separator+"PAYMENT: "+_data.payment_type+"\nDELIVERY: "+_data.delivery_option+'\n'+separator+'Items received above are \ntrue & correct.\n\nRECEIVED BY:\n______________________________\n(Customer printed name)\n\nCONTACT #:\n______________________________\n\n\n';
+      }
+    }
+    console.log(content)
     await this.printer.onWrite(content);
   }
 

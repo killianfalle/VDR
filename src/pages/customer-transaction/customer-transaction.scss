@@ -8,4 +8,42 @@ page-customer-transaction {
 			background: transparent;
 		}
 	}
+
+	h4{
+		font-weight: bold!important;
+	}
+	.customer_details_container{
+		padding: 0px 25px;
+		border-radius: 0px 0px 30px 30px;
+		box-shadow: 0px 0px 15px #8d8d8d;
+		height: 22%;
+		background: #e7e7e7;
+		// background: color($colors, palette-yellow);
+		// background: #b6b6b6;
+
+		ion-label{
+			color: #323232;
+			margin-top: -5px;
+
+			p{
+				font-size: 15px;
+				font-weight: bold;
+				color: #323232;
+			}
+		}
+	}
+
+	.customer_fullname{
+		margin-bottom: 5px;
+		font-size: 22px;
+		padding: 2px 0px;
+    	font-weight: bold;
+	}
+
+	.history_text{
+		margin: 25px 10px;
+		font-size: 28px;
+		font-weight: bold;
+		color: #d0d0d0;
+	}
 }

@@ -21,11 +21,15 @@ import { ToastComponent } from '../../components/toast/toast';
 })
 export class AddStaffPage {
 
-  info: FormGroup;
+  info: any = {};
   _callback: any;
   error:any = {};
   warehouseList: any = [];
 
+  keyword: any = '';
+  offset:any = 0;
+  limit:any = 500;
+  result: any;
   constructor(
   	public navCtrl: NavController, 
   	public navParams: NavParams,
@@ -42,22 +46,29 @@ export class AddStaffPage {
   }
 
   initForm() {
-  	this.info = this.form.group({
-      first_name: ['', Validators.required],
-      last_name: ['', Validators.required],
-      user_role: ['', Validators.required],
-      designated_warehouse: [''],
-      email: ['', Validators.required],
-      password: ['', Validators.required],
-      confirm_password: ['', Validators.required]
+    this.provider.getData({ search : this.keyword, offset : this.offset, limit : this.limit },'staff').then((res: any) => {
+      console.log(res._data.data)
+      this.result = res._data.data.length
+        if(res._data.status){
+          this.info = {
+            first_name: '',
+            last_name: '',
+            user_role: '',
+            designated_warehouse: '',
+            email: '',
+            password: '',
+            confirm_password: '',
+            position: this.result
+          }
+        }
     });
-
 
     // console.log(this);
   }
 
   register() {
-  	this.provider.postData(this.info.value,'register').then((res: any) => {
+    console.log(this.info)
+  	this.provider.postData(this.info,'register').then((res: any) => {
   		if(res._data.status){
   			console.log(res._data.message);
         this.toast.presentToast(res._data.message);

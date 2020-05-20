@@ -1,9 +1,7 @@
 <ion-header>
   <ion-navbar color="primary">
-    <ion-buttons start>
-      <logo></logo>
-    </ion-buttons>
-    <ion-title>Vista Del Rio</ion-title>
+    
+    <ion-title><logo></logo></ion-title>
     <ion-buttons end>
       <cart></cart>
     </ion-buttons>
@@ -16,10 +14,10 @@
     <ion-col col-6>
       <ion-card (click)="navigate('CustomerEntryPage')" color="shamrock">
         <ion-card-header color="dark" text-wrap>
-          Order Entry
-        </ion-card-header>
-        <ion-card-content text-right>
           <ion-icon color="light" name="add-circle"></ion-icon>
+        </ion-card-header>
+        <ion-card-content text-center>
+          Order Entry
         </ion-card-content>
       </ion-card>
     </ion-col>
@@ -27,10 +25,10 @@
     <ion-col col-6 *ngIf="profile.type === 'admin'">
       <ion-card (click)="navigate('ProductPage')" color="shamrock">
         <ion-card-header color="dark" text-wrap>
-          Product
+          <ion-icon color="light" name="md-list-box"></ion-icon>
         </ion-card-header>
-        <ion-card-content text-right>
-          <ion-icon color="light" name="cube"></ion-icon>
+        <ion-card-content text-center>
+          Product
         </ion-card-content>
       </ion-card>
     </ion-col>
@@ -38,10 +36,10 @@
     <ion-col  col-6>
       <ion-card (click)="navigate('CustomerPage')" color="shamrock">
         <ion-card-header color="dark" text-wrap>
-          Customer
-        </ion-card-header>
-        <ion-card-content text-right>
           <ion-icon color="light" name="person"></ion-icon>
+        </ion-card-header>
+        <ion-card-content text-center>
+          Customer
         </ion-card-content>
       </ion-card>
     </ion-col>
@@ -49,10 +47,10 @@
     <ion-col  col-6>
       <ion-card (click)="navigate('TransactionPage')" color="shamrock">
         <ion-card-header color="dark" text-wrap>
-          Transaction
+          <ion-icon color="light" name="filing"></ion-icon>
         </ion-card-header>
-        <ion-card-content text-right>
-            <ion-icon color="light" name="filing"></ion-icon>
+        <ion-card-content text-center>
+          Transaction
         </ion-card-content>
       </ion-card>
     </ion-col>
@@ -60,10 +58,10 @@
     <ion-col  col-6>
       <ion-card (click)="navigate('PaymentPage')" color="shamrock">
         <ion-card-header color="dark" text-wrap>
-          Payment
-        </ion-card-header>
-        <ion-card-content text-right>
           <ion-icon color="light" name="card"></ion-icon>
+        </ion-card-header>
+        <ion-card-content text-center>
+          Payment
         </ion-card-content>
       </ion-card>
     </ion-col>
@@ -71,10 +69,10 @@
     <ion-col col-6>
       <ion-card (click)="navigate('ReportPage')" color="shamrock">
         <ion-card-header color="dark" text-wrap>
-          Report
-        </ion-card-header>
-        <ion-card-content text-right>
           <ion-icon color="light" name="list-box"></ion-icon>
+        </ion-card-header>
+        <ion-card-content text-center>
+          Report
         </ion-card-content>
       </ion-card>
     </ion-col>
@@ -82,10 +80,21 @@
     <ion-col col-6>
       <ion-card (click)="navigate('WarehouseManagementPage')" color="shamrock">
         <ion-card-header color="dark" text-wrap>
-          Warehouses
-        </ion-card-header>
-        <ion-card-content text-right>
           <ion-icon color="light" name="clipboard"></ion-icon>
+        </ion-card-header>
+        <ion-card-content text-center>
+          Warehouses
+        </ion-card-content>
+      </ion-card>
+    </ion-col>
+
+    <ion-col col-6>
+      <ion-card (click)="navigate('DeliveryPage')" color="shamrock">
+        <ion-card-header color="dark" text-wrap>
+          <ion-icon color="light" name="cube"></ion-icon>
+        </ion-card-header>
+        <ion-card-content text-center>
+          Delivery
         </ion-card-content>
       </ion-card>
     </ion-col>

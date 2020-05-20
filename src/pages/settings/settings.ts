@@ -5,6 +5,7 @@ import { App,
          NavParams } from 'ionic-angular';
 import { DataProvider } from '../../providers/data-provider';
 import { LoaderComponent } from '../../components/loader/loader';
+import { OneSignal } from '@ionic-native/onesignal';
 
 /**
  * Generated class for the SettingsPage page.
@@ -28,6 +29,7 @@ export class SettingsPage {
   	public navCtrl: NavController, 
   	public navParams: NavParams,
     public provider: DataProvider,
+    public oneSignal: OneSignal,
     public loader: LoaderComponent) {
     this.profile = JSON.parse(localStorage.getItem('_info'));
     this.device = localStorage.getItem('_device');
@@ -40,6 +42,7 @@ export class SettingsPage {
   logout() {
     this.provider.postData({ token : this.device } , 'device/unregister').then((res: any) => {
       localStorage.clear();
+      this.oneSignal.sendTags({session: 'logged_out'});
   	  this.app.getRootNav().setRoot('LoginPage', { logout : true, email : this.profile.email });
     });
   }

@@ -16,12 +16,12 @@ import { ToastComponent } from '../../components/toast/toast';
 
 @IonicPage()
 @Component({
-  selector: 'page-payment',
-  templateUrl: 'payment.html',
+  selector: 'page-delivery',
+  templateUrl: 'delivery.html',
 })
-export class PaymentPage {
+export class DeliveryPage {
 
-  payments: any = [];
+  deliveries: any = [];
 
   keyword: any = '';
 
@@ -40,10 +40,10 @@ export class PaymentPage {
 
   ngOnInit(self = this) {
     self.isBusy = false;
-    self.provider.getData('','payment').then((res: any) => {
+    self.provider.getData('','option/all').then((res: any) => {
       console.log(res);
         if(res._data.status){
-          self.payments = res._data.data;
+          self.deliveries = res._data.data.delivery;
           self.result = res._data.result;
         }
         self.isBusy = true;
@@ -55,19 +55,19 @@ export class PaymentPage {
       self.ngOnInit(self);
     }else {
       self.result = 0;
-      self.payments = [];
+      self.deliveries = [];
       self.ngOnInit(self);
     }
   }
 
   navigate() {
     let params = { self : this, callback : this.refresh };
-    this.navCtrl.push('AddPaymentPage', params );
+    this.navCtrl.push('AddDeliveryPage', params );
   }
 
   on_edit(_data) {
     let params = { self : this, data : _data, callback : this.refresh };
-    this.navCtrl.push('EditPaymentPage', params );
+    this.navCtrl.push('EditDeliveryPage', params );
   }
 
   on_delete(_id) {
@@ -81,7 +81,7 @@ export class PaymentPage {
   }
 
   delete(_id) {
-    this.provider.postData({ id: _id },'payment/hard-delete').then((res:any) => {
+    this.provider.postData({ id: _id },'delivery/hard-delete').then((res:any) => {
       if(res._data.status) {
         this.refresh();
         this.toast.presentToast(res._data.message);
@@ -98,9 +98,9 @@ export class PaymentPage {
   }
 
   reorderItems(indexes){
-    let element = this.payments[indexes.from];
-    this.payments.splice(indexes.from, 1);
-    this.payments.splice(indexes.to, 0, element);
+    let element = this.deliveries[indexes.from];
+    this.deliveries.splice(indexes.from, 1);
+    this.deliveries.splice(indexes.to, 0, element);
   }
 
   reorderList(){
@@ -110,11 +110,11 @@ export class PaymentPage {
     }else{
       this.toggleReorder = 'Edit';
       this.flag = false;
-      console.log(this.payments);
-      for(let i = 0; i < this.payments.length; i++){
-        this.payments[i].position = i;
-        console.log(this.payments[i])
-        this.provider.postData(this.payments[i], 'payment/reorder', true).then((res:any) => {
+      console.log(this.deliveries);
+      for(let i = 0; i < this.deliveries.length; i++){
+        this.deliveries[i].position = i;
+        console.log(this.deliveries[i])
+        this.provider.postData(this.deliveries[i], 'delivery/reorder', true).then((res:any) => {
           console.log(res)
         }).catch(err => {
           console.log(err);

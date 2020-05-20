@@ -9,6 +9,7 @@ import { DataProvider } from '../../providers/data-provider';
 import { LoaderComponent } from '../../components/loader/loader';
 import { ToastComponent } from '../../components/toast/toast';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
+import { OneSignal } from '@ionic-native/onesignal';
 
 /**
  * Generated class for the LoginPage page.
@@ -34,6 +35,7 @@ export class LoginPage {
     private form: FormBuilder,
     public toast: ToastComponent,
     public loader: LoaderComponent,
+    public oneSignal: OneSignal,
     private sqliteDB: SQLite
   ) {
     this.logout = navParams.get('logout');
@@ -72,12 +74,14 @@ export class LoginPage {
                 this.unRememberUser();
 
               setTimeout(() => {
+                console.log('res', res._data);
                 this.navCtrl.setRoot('TabsPage');
               },300);
 
               this.loader.hide_loader();
             }
         }).catch((error) => {
+          console.log(error);
           this.toast.presentToast(JSON.parse(error._body).error.message);
           this.loader.hide_loader();
         })
@@ -90,11 +94,15 @@ export class LoginPage {
       location: 'default'
     })
     .then((db: SQLiteObject) => {
-      db.executeSql('SELECT * FROM Authenticated WHERE email="'+this.user.value.email+'" LIMIT 1', {})
+      db.executeSql('SELECT * FROM Authenticated WHERE email="'+this.user.value.email+'" LIMIT 1')
         .then((data) => {
+          console.log(data)
           if(data.rows.length == 0){
              db.executeSql('INSERT INTO Authenticated(email,password,remember) VALUES(?,?,?)',[this.user.value.email,this.user.value.password,this.user.value.remember])
-               .then((data) => console.log("Authenticated"))
+               .then((data) => {
+                console.log("Authenticated")
+                console.log(data)
+              })
                .catch(e => console.log(e));
           }
         }).catch(e => console.log(e));
@@ -108,7 +116,7 @@ export class LoginPage {
       location: 'default'
     })
     .then((db: SQLiteObject) => {
-      db.executeSql('SELECT * FROM Authenticated WHERE email="'+this.user.value.email+'" LIMIT 1', {})
+      db.executeSql('SELECT * FROM Authenticated WHERE email="'+this.user.value.email+'" LIMIT 1')
         .then((data) => {
           if(data.rows.length > 0){
              this.user.controls['password'].setValue(data.rows.item(0).password);
@@ -125,10 +133,10 @@ export class LoginPage {
       location: 'default'
     })
     .then((db: SQLiteObject) => {
-      db.executeSql('SELECT * FROM Authenticated WHERE email="'+this.user.value.email+'" LIMIT 1', {})
+      db.executeSql('SELECT * FROM Authenticated WHERE email="'+this.user.value.email+'" LIMIT 1')
         .then((data) => {
            if(data.rows.length > 0){
-             db.executeSql('DELETE FROM Authenticated WHERE email="'+this.user.value.email+'"', {})
+             db.executeSql('DELETE FROM Authenticated WHERE email="'+this.user.value.email+'"')
                .then((data) => {
                   console.log("unremembered");
                }).catch(e => console.log(e));

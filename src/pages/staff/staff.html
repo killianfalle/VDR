@@ -7,9 +7,6 @@
 <ion-header>
 
   <ion-navbar color="primary">
-  	<ion-buttons start>
-      <logo></logo>
-    </ion-buttons>
     <ion-title>Staff</ion-title>
     <ion-buttons end>
       <cart></cart>
@@ -32,6 +29,10 @@
 			<ion-icon name="person-add"></ion-icon>
 			Add Staff
 		</button>
+
+		<button ion-button outline icon-start padding color="primary" (click)="reorderList()" item-end>
+			{{toggleReorder}}
+		</button>
 	</ion-item>
 	<ion-item no-lines text-center *ngIf="staffs.length == 0 && keyword == null && isBusy">
 		<p>No staff.</p>
@@ -40,23 +41,26 @@
 		<p>No result found.</p>
 	</ion-item>
 
-	<ion-item *ngFor="let staff of staffs">
-		<ion-icon name="refresh" item-start color="shamrock" (click)="show_confirmation(staff.id,'reset'); $event.stopPropagation();"></ion-icon>
-		<h2 text-capitalize>{{ staff.first_name }} {{ staff.last_name }}</h2>
-		<h3>{{ staff.email }}</h3>
-		<p *ngIf="staff.user_role == 'admin_staff'" text-capitalize>Admin Staff</p>
-		<p *ngIf="staff.user_role == 'sale_staff'" text-capitalize>Sale Staff</p>
-		<p *ngIf="staff.user_role == 'warehouse_staff'" text-capitalize>Warehouse Staff</p>
-		<p *ngIf="staff.user_role == 'printer_staff'" text-capitalize>Printer Staff</p>
-
-		<p item-end>
-			<span ion-text color="primary" (click)="navigate('EditStaffPage','edit',staff); $event.stopPropagation();" [hidden]="staff.status == 'disabled'">Edit</span>
-			&nbsp;
-			<span ion-text color="danger" (click)="show_confirmation(staff.id,'delete'); $event.stopPropagation();" [hidden]="staff.status == 'disabled'">Delete</span>
-			&nbsp;
-			<span ion-text color="secondary" (click)="show_confirmation(staff.id,'restore'); $event.stopPropagation();" *ngIf="staff.status == 'disabled'">Restore</span>
-		</p>
-	</ion-item>
+	<ion-item-group reorder="{{flag}}" (ionItemReorder)="reorderItems($event)">
+		<ion-item *ngFor="let staff of staffs">
+			<ion-icon name="refresh" item-start color="shamrock" (click)="show_confirmation(staff.id,'reset'); $event.stopPropagation();"></ion-icon>
+			<h2 text-capitalize>{{ staff.first_name }} {{ staff.last_name }}</h2>
+			<h3>{{ staff.email }}</h3>
+			<p *ngIf="staff.user_role == 'admin_staff'" text-capitalize>Admin Staff</p>
+			<p *ngIf="staff.user_role == 'sale_staff'" text-capitalize>Sale Staff</p>
+			<p *ngIf="staff.user_role == 'warehouse_staff'" text-capitalize>Warehouse Staff</p>
+			<p *ngIf="staff.user_role == 'printer_staff'" text-capitalize>Printer Staff</p>
+	
+			<p item-end>
+				<span ion-text color="primary" (click)="navigate('EditStaffPage','edit',staff); $event.stopPropagation();" [hidden]="staff.status == 'disabled'">Edit</span>
+				&nbsp;
+				<span ion-text color="danger" (click)="show_confirmation(staff.id,'delete'); $event.stopPropagation();" [hidden]="staff.status == 'disabled'">Delete</span>
+				&nbsp;
+				<span ion-text color="secondary" (click)="show_confirmation(staff.id,'restore'); $event.stopPropagation();" *ngIf="staff.status == 'disabled'">Restore</span>
+			</p>
+		</ion-item>
+	</ion-item-group>
+	
 
 	<spinner [hidden]="isBusy"></spinner>
 

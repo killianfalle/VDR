@@ -1,5 +1,5 @@
 <!--
-  Generated template for the PaymentPage page.
+  Generated template for the deliveryPage page.
 
   See http://ionicframework.com/docs/components/#navigation for more info on
   Ionic pages and navigation.
@@ -7,7 +7,7 @@
 <ion-header>
 
   <ion-navbar color="primary">
-    <ion-title>Payment</ion-title>
+    <ion-title>Delivery</ion-title>
     <ion-buttons end>
       <cart></cart>
     </ion-buttons>
@@ -20,7 +20,7 @@
 	<ion-item>
 		<button ion-button outline icon-start padding color="primary" (click)="navigate()" item-end>
 			<ion-icon name="add"></ion-icon>
-			Add Payment
+			Add Delivery 
 		</button>
 
 		<button ion-button outline icon-start padding color="primary" (click)="reorderList()" item-end>
@@ -28,22 +28,22 @@
 		</button>
 	</ion-item>
 
-	<ion-item *ngIf="payments.length == 0 && keyword == null && isBusy" text-center no-lines>
-		<p>No payment.</p>
+	<ion-item *ngIf="deliveries.length == 0 && keyword == null && isBusy" text-center no-lines>
+		<p>No delivery.</p>
 	</ion-item>
 
-	<ion-item *ngIf="payments.length == 0 && keyword != null && isBusy" text-center no-lines>
+	<ion-item *ngIf="deliveries.length == 0 && keyword != null && isBusy" text-center no-lines>
 		<p>No result found.</p>
 	</ion-item>
 
 	<ion-item-group reorder="{{flag}}" (ionItemReorder)="reorderItems($event)">
-		<ion-item *ngFor="let payment of payments">
-			<h2 text-capitalize>{{ payment.name }}</h2>
+		<ion-item *ngFor="let delivery of deliveries">
+			<h2 text-capitalize>{{ delivery.name }}</h2>
 	
 			<p item-end>
-				<span ion-text color="primary" (click)="on_edit(payment); $event.stopPropagation();">Edit</span>
+				<span ion-text color="primary" (click)="on_edit(delivery); $event.stopPropagation();">Edit</span>
 				&nbsp;
-				<span ion-text color="danger" (click)="on_delete(payment.id); $event.stopPropagation();">Delete</span>
+				<span ion-text color="danger" (click)="on_delete(delivery.id); $event.stopPropagation();">Delete</span>
 			</p>
 		</ion-item>
 	</ion-item-group>

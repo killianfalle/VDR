@@ -1,0 +1,25 @@
+<ion-header>
+
+  <ion-navbar color="primary">
+    <ion-title>New Delivery Option</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+<ion-content>
+
+	<br>
+	<ion-item>
+		<ion-label stacked>Name</ion-label>
+		<ion-input type="text" text-center [(ngModel)]="delivery.name"></ion-input>
+	</ion-item>
+	<div class="error" *ngIf="error.name">{{ error.name }}</div>
+
+	<br>
+	<br>
+
+	<div padding>
+		<button ion-button block color="shamrock" (click)="save()">Add Delivery Option</button>
+	</div>
+
+</ion-content>

@@ -23,7 +23,8 @@ export class AddProductPage {
   product:any = {};
   _callback: any;
   error: any = {};
-
+  keyword: any = '';
+  result: any;
   constructor(
   	public navCtrl: NavController, 
   	public navParams: NavParams,
@@ -35,11 +36,22 @@ export class AddProductPage {
   	this.initForm();
   }
 
+ 
+
   initForm() {
-  	this.product = {
+    console.log(this.product)
+    this.provider.getData({ search : this.keyword },'product').then((res: any) => {
+      this.result = res._data.data.length;
+      this.getInitForm(this.result);
+    })
+  }
+
+  getInitForm(res){
+    this.product = {
       name: null,
       classes: [],
       quantities: [],
+      position: res
     };
   }
 
@@ -80,6 +92,7 @@ export class AddProductPage {
   }
 
   submit() {
+    console.log(this.product)
   	this.provider.postData(this.product,'product/add').then((res: any) => {
   		if(res._data.status){
         this.toast.presentToast(res._data.message);

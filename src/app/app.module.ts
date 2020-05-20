@@ -18,6 +18,8 @@ import { SQLite } from '@ionic-native/sqlite';
 import { Keyboard } from '@ionic-native/keyboard';
 import { File } from '@ionic-native/file';
 import { DecimalPipe } from '@angular/common';
+import { FCM } from '@ionic-native/fcm';
+import { OneSignal } from '@ionic-native/onesignal';
 
 import { SocketIoModule, SocketIoConfig } from 'ng-socket-io';
 //const socket: SocketIoConfig = { url: 'http://178.128.16.58:3001', options: {} };
@@ -59,7 +61,9 @@ var config = {
     SQLite,
     Keyboard,
     File,
+    FCM,
     DecimalPipe,
+    OneSignal,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

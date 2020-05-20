@@ -39,10 +39,29 @@ export class TransactionPage {
 
   tabs: any = 'cleared';
   search_date: any = moment().format('YYYY-MM-DD');
+  search_date_pending: any = '';
+  search_date_releasing: any = '';
 
   cleared_transactions: any = [];
   releasing_transactions: any = [];
   pending_transactions: any = [];
+
+  //LOCTION FILTER
+  filtered_cleared_transactions: any = [];
+  filtered_releasing_transactions: any = [];
+  filtered_pending_transactions: any = [];
+  releasingFilter: any;
+  clearedFilter: any;
+  pendingFilter: any;
+
+  //DATE FILTER
+  filtered_date_releasing_transactions: any = [];
+  filtered_date_pending_transactions: any = [];
+
+  //TOGGLE FILTER
+  toggleReleasingFilter: boolean = false;
+  togglePendingFilter: boolean = false;
+  toggleClearedFilter: boolean = false;
 
   cleared_result = 0;
   releasing_result = 0;
@@ -57,7 +76,10 @@ export class TransactionPage {
   keyword:any = '';
 
   isBusy:any = false;
-
+  warehouses: any = [];
+  clearTextAppearR: boolean = false;
+  clearTextAppearP: boolean = false;
+  selectedTab: any;
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams,
@@ -72,10 +94,16 @@ export class TransactionPage {
     private decimal: DecimalPipe,
     private socket: Socket) {
     this.profile = JSON.parse(localStorage.getItem('_info'));
+    this.selectedTab = navParams.get('selectedTab');
+    if(this.selectedTab == 'pending'){
+      this.tabs = 'pending';
+    }
+    //DEFAULT FILTERS
+    this.pendingFilter = 'all'
+    this.releasingFilter = 'all'
+    this.clearedFilter = 'all'
 
-    //this.enableInfinite();
   	this.get_transaction();
-
     this.add_pending_transaction().subscribe((_data) => {
       console.log(_data);
       this.pending_result += 1;
@@ -162,10 +190,22 @@ export class TransactionPage {
     });
   }
 
+  ngOnInit() {
+    this.provider.getData({} ,'get-warehouses').then((res: any) => {
+      console.log("RESPONSE:");
+      this.warehouses = res.warehouses;
+      console.log(this.warehouses);
+    })
+  }
+
   onChangeDate() {
     console.log("by date");
     this.offset_cleared = 0;
+    this.offset_releasing = 0;
+    this.offset_pending = 0;
     this.cleared_transactions = [];
+    this.releasing_transactions = [];
+    this.pending_transactions = [];
     this.enableInfinite();
     this.get_transaction();
   }
@@ -228,21 +268,26 @@ export class TransactionPage {
   }
 
   loadData_pending(_transaction) {
+    console.log('_transaction:', _transaction)
     _transaction.map(data => {
+      console.log('data:', data)
       this.pending_transactions.push(data);
     });
+    console.log('pending_transactions: ', this.pending_transactions)
   }
 
   loadData_releasing(_transaction) {
     _transaction.map(data => {
       this.releasing_transactions.push(data);
     });
+    console.log('releasing_transactions: ', this.releasing_transactions)
   }
 
   loadData_cleared(_transaction) {
     _transaction.map(data => {
       this.cleared_transactions.push(data);
     });
+    console.log('cleared_transactions: ', this.cleared_transactions)
   }
 
   doInfinite(infiniteScroll) {
@@ -474,6 +519,7 @@ export class TransactionPage {
     this.alert.confirm('Re-print').then((response: any) => {
       if (response) {
         this.printer.is_enabled().then((res: any) => {
+          console.log(_data);
           this.verify_connectivity(_data);
         }).catch((err) => {
           this.enable_blueetooth(_data);
@@ -520,12 +566,23 @@ export class TransactionPage {
 
     header = '        Vista del rio \n Carmen, Cagayan de Oro City';
 
-    if(_data.void){
-      content = header+'\n'+separator+'Order#: '+_data.order_id+'\nPrinted by: '+_data.printed_by+'\nPrinted on: '+_data.printed_at+'\n'+separator+'Owner: '+_data.first_name+' '+_data.last_name+'\nRelease: '+moment(_data.release_at).format("MM/DD/YYYY")+'\nRemarks: Void\n'+separator+item+separator+'Total: P'+this.decimal.transform(_data.total_payment,'1.2-2')+'\n'+separator+'Payment: '+_data.payment_type+'\nDelivery: '+_data.delivery_option+'\n\n\n';
-    }else {
-      content = header+'\n'+separator+'Order#: '+_data.order_id+'\nPrinted by: '+_data.printed_by+'\nPrinted on: '+_data.printed_at+'\n'+separator+'Owner: '+_data.first_name+' '+_data.last_name+'\nRelease: '+moment(_data.release_at).format("MM/DD/YYYY")+'\n'+separator+item+separator+'Total: P'+this.decimal.transform(_data.total_payment,'1.2-2')+'\n'+separator+'Payment: '+_data.payment_type+'\nDelivery: '+_data.delivery_option+'\n\n\n';
+    let phoneNumber = '-- -- --';
+    let location = '-- -- --';
+    if(_data.phone_number != null){
+      phoneNumber = _data.phone_number;
     }
 
+    if(_data.location != null){
+      location = _data.location;
+    }
+
+    if(_data.void){
+      content = header+'\n'+separator+'ORDER #: '+_data.order_id+'\nPRINTED BY: '+_data.printed_by+'\nPRINTED ON: '+_data.printed_at+'\n'+separator+'OWNER: '+_data.first_name+' '+_data.last_name+'\nCONTACT #: '+phoneNumber+'\nRELEASE: '+moment(_data.release_at).format("MM/DD/YYYY")+'\nREMARKS: Void\n'+separator+item+separator+'TOTAL: ₱'+this.decimal.transform(_data.total_payment,'1.2-2')+'\n'+separator+'PAYMENT: '+_data.payment_type+'\nADDRESS: '+location+'\nDELIVERY: '+_data.delivery_option+'\n\n\n';
+    }else {
+      content = header+'\n'+separator+'ORDER #: '+_data.order_id+'\nPRINTED BY: '+_data.printed_by+'\nPRINTED ON: '+_data.printed_at+'\n'+separator+'OWNER: '+_data.first_name+' '+_data.last_name+'\nCONTACT #: '+phoneNumber+'\nRELEASE: '+moment(_data.release_at).format("MM/DD/YYYY")+'\n'+separator+item+separator+'TOTAL: ₱'+this.decimal.transform(_data.total_payment,'1.2-2')+'\n'+separator+'PAYMENT: '+_data.payment_type+'\nADDRESS: '+location+'\nDELIVERY: '+_data.delivery_option+'\n\n\n';
+    }
+
+    console.log(content)
     await this.printer.onWrite(content);
   }
 
@@ -568,8 +625,95 @@ export class TransactionPage {
         this.cleared_result = res._data.result.cleared;
         this.releasing_result = res._data.result.releasing;
         this.pending_result = res._data.result.pending;
+        console.log(res._data.result);
       }
     })
   }
 
+  onChangeDateClientSide(filterType){
+    if(filterType == 'releasing'){
+      this.provider.getData({ status : this.tabs , date : this.search_date_releasing, search: this.keyword, offset : this.offset, limit : this.limit },'transaction/releasing').then((res: any) => {
+        this.releasing_transactions = res._data.data;
+        this.releasing_result = res._data.total;
+        this.clearTextAppearR = true;
+      })
+    }else{
+      this.provider.getData({ status : this.tabs , date : this.search_date_pending, search: this.keyword, offset : this.offset, limit : this.limit },'transaction/pending').then((res: any) => {
+        this.pending_transactions = res._data.data;
+        this.pending_result = res._data.total;
+        this.clearTextAppearP = true;
+      })
+    }
+  }
+
+  clearFilter(filterType){
+    if(filterType == 'releasing'){
+      this.provider.getData({ status : this.tabs , date : this.search_date, search: this.keyword, offset : this.offset, limit : this.limit },'transaction').then((res: any) => {
+        this.releasing_transactions = res._data.data;
+        this.clearTextAppearR = false;
+        // this.search_date_releasing = null
+      })
+    }else{
+      this.provider.getData({ status : this.tabs , date : this.search_date, search: this.keyword, offset : this.offset, limit : this.limit },'transaction').then((res: any) => {
+        if(res._data.status){
+          this.pending_transactions = res._data.data;
+          this.clearTextAppearP = false;
+          // this.search_date_pending = null
+        }
+      })
+    }
+  }
+
+  onChange(filterType){
+    // console.log(this.clearedFilter)
+    if(filterType == 'releasing'){
+      console.log('1')
+      console.log(this.releasingFilter)
+      if(this.releasingFilter == 'all'){
+        this.toggleReleasingFilter = false;
+        return this.filtered_releasing_transactions = [];
+      }
+
+      this.filtered_releasing_transactions = this.releasing_transactions.filter((item) => {
+        if(item.warehouse_designation){
+          this.toggleReleasingFilter = true;
+          return item.warehouse_designation.warehouse_info.address.toLowerCase().indexOf(this.releasingFilter.toLowerCase()) > -1;
+        }
+      });
+      console.log(this.filtered_releasing_transactions)
+    }else if (filterType == 'cleared'){
+      console.log('2')
+      console.log(this.clearedFilter)
+      
+      if(this.clearedFilter == 'all'){
+        this.toggleClearedFilter = false;
+        return this.filtered_cleared_transactions = [];
+      }
+
+      this.filtered_cleared_transactions = this.cleared_transactions.filter((item) => {
+        if(item.warehouse_designation){
+          this.toggleClearedFilter = true;
+          return item.warehouse_designation.warehouse_info.address.toLowerCase().indexOf(this.clearedFilter.toLowerCase()) > -1;
+        }
+      });
+      console.log(this.filtered_cleared_transactions)
+    }else{
+      console.log('3')
+      console.log(this.pendingFilter)
+
+      if(this.pendingFilter == 'all'){
+        this.togglePendingFilter = false;
+        return this.filtered_pending_transactions = [];
+      }
+
+      this.filtered_pending_transactions = this.pending_transactions.filter((item) => {
+        if(item.warehouse_designation){
+          this.togglePendingFilter = true;
+          return item.warehouse_designation.warehouse_info.address.toLowerCase().indexOf(this.pendingFilter.toLowerCase()) > -1;
+        }
+      });
+      console.log(this.filtered_pending_transactions)
+    }
+
+  }
 }

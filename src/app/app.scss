@@ -97,3 +97,27 @@ body.keyboard-is-open .tabbar {
 body.keyboard-is-open .scroll-content {
   margin-bottom: 0 !important;
 }
+
+.header-ios .toolbar-ios:last-child .toolbar-background-ios {
+  border-width: 0 0 0px;
+}
+
+//HEADER
+.toolbar-ios-primary .toolbar-background-ios {
+  background: color($colors, palette-yellow);
+}
+
+//FOOTER TABS
+.tabs-ios-primary .tabbar {
+  border-color: color($colors, palette-yellow);
+  background-color: color($colors, palette-yellow);
+}
+
+.tab-button-icon {
+  font-weight: bold;
+}
+
+.tab-button-text{
+  font-weight: bold;
+  font-size: 12px;
+}

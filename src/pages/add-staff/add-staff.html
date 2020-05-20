@@ -18,13 +18,12 @@
 
 <ion-content>
 
-	<form [formGroup]="info" (ngSubmit)="register()">
 		<ion-item-divider>
 			Personal Information
 		</ion-item-divider>
 		<ion-item>
 			<ion-label stacked>First Name</ion-label>
-			<ion-input type="text" text-center formControlName="first_name"></ion-input>
+			<ion-input type="text" text-center [(ngModel)]="info.first_name"></ion-input>
 		</ion-item>
 		<div class="error" *ngIf="error.first_name">{{ error.first_name }}</div>
 
@@ -32,7 +31,7 @@
 
 		<ion-item>
 			<ion-label stacked>Last Name</ion-label>
-			<ion-input type="text" text-center formControlName="last_name"></ion-input>
+			<ion-input type="text" text-center [(ngModel)]="info.last_name"></ion-input>
 		</ion-item>
 		<div class="error" *ngIf="error.last_name">{{ error.last_name }}</div>
 
@@ -44,7 +43,7 @@
 		</ion-item-divider>
 		<ion-item>
 			<ion-label stacked>User Role</ion-label>
-			<ion-select formControlName="user_role">
+			<ion-select [(ngModel)]="info.user_role">
 				<ion-option value="admin_staff">Admin Staff</ion-option>
 				<ion-option value="warehouse_staff">Warehouse Staff</ion-option>
 				<ion-option value="printer_staff">Printer Staff</ion-option>
@@ -54,9 +53,9 @@
 
 		<br>
 
-		<ion-item *ngIf="info.value.user_role == 'warehouse_staff'">
+		<ion-item *ngIf="info.user_role == 'warehouse_staff'">
 			<ion-label stacked>Designated Warehouse</ion-label>
-			<ion-select formControlName="designated_warehouse">
+			<ion-select [(ngModel)]="info.designated_warehouse">
 				<ion-option *ngFor="let warehouse of warehouseList" value="{{ warehouse.id }}">
 					{{ warehouse.name }} - {{ warehouse.address }}
 				</ion-option>
@@ -68,7 +67,7 @@
 		
 		<ion-item>
 			<ion-label stacked>Email</ion-label>
-			<ion-input type="text" text-center formControlName="email"></ion-input>
+			<ion-input type="text" text-center [(ngModel)]="info.email"></ion-input>
 		</ion-item>
 		<div class="error" *ngIf="error.email">{{ error.email }}</div>
 
@@ -76,7 +75,7 @@
 
 		<ion-item>
 			<ion-label stacked>Password</ion-label>
-			<ion-input type="password" text-center formControlName="password"></ion-input>
+			<ion-input type="password" text-center [(ngModel)]="info.password"></ion-input>
 		</ion-item>
 		<div class="error" *ngIf="error.password">{{ error.password }}</div>
 
@@ -84,7 +83,7 @@
 
 		<ion-item>
 			<ion-label stacked>Confirm Password</ion-label>
-			<ion-input type="password" text-center formControlName="confirm_password"></ion-input>
+			<ion-input type="password" text-center [(ngModel)]="info.confirm_password"></ion-input>
 		</ion-item>
 		<div class="error" *ngIf="error.confirm_password">{{ error.confirm_password }}</div>
 
@@ -92,9 +91,8 @@
 		<br>
 
 		<div padding>
-			<button ion-button block color="shamrock">Add Staff</button>
+			<button ion-button block color="shamrock" (click)="register()">Add Staff</button>
 		</div>
 
-	</form>
 
 </ion-content>

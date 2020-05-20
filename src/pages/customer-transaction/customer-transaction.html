@@ -7,7 +7,7 @@
 <ion-header>
 
   <ion-navbar color="primary">
-    <ion-title>History</ion-title>
+    <ion-title>Details</ion-title>
     <ion-buttons end>
       <cart></cart>
     </ion-buttons>
@@ -18,6 +18,35 @@
 
 <ion-content>
 
+	<ion-item class="customer_details_container" color="primary">
+		<h2 class="customer_fullname">{{customer.first_name}} {{customer.last_name}}</h2>
+		<p class="customer_location">
+			<!-- <ion-icon style="font-size: 15px;" name="pin"></ion-icon> -->
+			<span>Address: </span>
+			<span *ngIf="customer.location">{{customer.location}}</span>
+			<span *ngIf="!customer.location">N/A</span>
+		</p>
+		<p class="customer_phoneNumber">
+			<!-- <ion-icon style="font-size: 15px;" name="call"></ion-icon> -->
+			<span>Contact Number: </span>
+			<span *ngIf="customer.phone_number">{{customer.phone_number}}</span>
+			<span *ngIf="!customer.phone_number">N/A</span>
+		</p>
+		<p class="customer_payment">
+			<!-- <ion-icon style="font-size: 15px;" name="cash"></ion-icon> -->
+			<span>Payment: </span>
+			<span *ngIf="customer.payment">{{customer.payment}}</span>
+			<span *ngIf="!customer.payment">N/A</span>
+		</p>
+		<p class="customer_delivery">
+			<!-- <ion-icon style="font-size: 15px;" name="call"></ion-icon> -->
+			<span>Delivery:</span>
+			<span *ngIf="customer.delivery">{{customer.delivery}}</span>
+			<span *ngIf="!customer.delivery">N/A</span>
+		</p>
+	</ion-item>
+
+	<h2 class="history_text">History</h2>
 	<div *ngFor="let transaction of transactions">
 		<ion-card>
 			<ion-item-divider  text-capitalize>

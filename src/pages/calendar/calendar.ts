@@ -49,6 +49,7 @@ export class CalendarPage {
 
     this.profile = JSON.parse(localStorage.getItem('_info'));
     this.params = navParams.get('data');
+    console.log(this.params);
     this.self = navParams.get('self');
     this._callback = navParams.get('callback');
     this.params.printed_by = this.profile.first_name+' '+this.profile.last_name;
@@ -69,7 +70,8 @@ export class CalendarPage {
       this.alert.confirm().then((response: any) => {
         if (response) {
           this.printer.is_enabled().then((res: any) => {
-            this.verify_connectivity();
+            this.ready_print(this.params);
+            // this.verify_connectivity();
           }).catch((err) => {
             this.enable_blueetooth();
           });
@@ -119,18 +121,28 @@ export class CalendarPage {
     //header =   '        '+ this.warehouseName + ' \n ' +  this.warehouseLocation;
     header =   '        Vista Del Rio \nWH: ' +  this.warehouseLocation;
 
-    let content = header+'\n'+separator+'Order#: '+_data.order_id+'\nPrinted by: '+this.params.printed_by+'\nPrinted on: '+this.params.printed_at+'\n'+separator+'Owner: '+_data.first_name+' '+_data.last_name+'\nRelease: '+moment(this.date).format("MM/DD/YYYY")+'\n'+separator+item+separator+'Total: P'+ this.decimal.transform(_data.total_payment,'1.2-2')+'\n'+separator+'Payment: '+_data.payment_type+'\nDelivery: '+_data.delivery_option+'\n\n\n';
-    this.print_for_release(content);
-    
-    for(let count = 1;count < this.copies; count++){
-      this.alert.confirm_print().then((res:any) => {
-        if(res){
-          this.print_for_release(content);
-          if((count+1) == this.copies)
-            this.callback();
-        }
-      });
+    let phoneNumber = '-- -- --';
+    let location = '-- -- --';
+    if(_data.phone_number != null){
+      phoneNumber = _data.phone_number;
     }
+
+    if(_data.location != null){
+      location = _data.location;
+    }
+    let content = `${header}\n${separator}ORDER #: ${_data.order_id}\nPRINTED BY: ${this.params.printed_by}\nPRINTED ON: ${this.params.printed_at}\n${separator}OWNER: ${_data.first_name} ${_data.last_name}\nCONTACT #: ${phoneNumber}\nADDRESS: ${location}\n${separator+item+separator}TOTAL: ₱${this.decimal.transform(_data.total_payment,'1.2-2')}\n${separator}RELEASE: ${moment(this.date).format("MM/DD/YYYY")}\nPAYMENT: ${_data.payment_type}\nDELIVERY: ${_data.delivery_option}\n\n\n`;
+    console.log(content)
+    // this.print_for_release(content);
+    
+    // for(let count = 1;count < this.copies; count++){
+    //   this.alert.confirm_print().then((res:any) => {
+    //     if(res){
+    //       this.print_for_release(content);
+    //       if((count+1) == this.copies)
+    //         this.callback();
+    //     }
+    //   });
+    // }
   }
 
   async print_for_release(_data) {

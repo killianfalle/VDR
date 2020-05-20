@@ -1,7 +1,7 @@
 page-home {
 
 	.row {
-		margin-top: 5px;
+		margin-top: 15px;
 	}
 
 	.card {
@@ -11,11 +11,39 @@ page-home {
 		max-height: 141px;
 
 		.icon {
-			font-size: 5em;
+			font-size: 6em;
+			color: #5a5a5a;
 		}
 
 		.card-header {
 			font-weight: bolder;
+			text-align: center;
 		}
+
+		.card-content{
+			color: #595959;
+			font-weight: bold;
+			font-size: 18px;
+			margin-top: -18px;
+		}
+	}
+
+	.toolbar-ios-primary .toolbar-background-ios {
+		background: white;
+	}
+	
+	ion-navbar.toolbar{
+		padding: 10px;
+	}
+
+	.ion-md-basket {
+		font-size: 2.0em;
+		color: #535353;
+	}
+
+	.card-ios-shamrock {
+		color: #4a4a4a;
+		background-color: #ffffff;
+		box-shadow: none;
 	}
 }

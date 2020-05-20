@@ -15,6 +15,9 @@ export class DataProvider {
 
 	api: any = APP_API;
 	loader: any;
+	signal_app_id: string = '43fc2482-fbe4-4fbb-bcc6-a1ba9cc4f34d';
+	firebase_id: string = '317029700148';
+	rest_api_key: string = 'OWJlZGNiZDYtNmZmNS00NWQ0LWEzMzktYzcyYTNiYjAyYThi';
 
 	private toastInstance: Toast;
 	public alertPresented: any; 
@@ -27,16 +30,20 @@ export class DataProvider {
      	public events: Events)
 	{ }
 
-	postData(data, route){
+	postData(data, route, reorder = false){
 		return new Promise((resolve, reject) => {
 			let token = localStorage.getItem('_token');
+			console.log('tokeeen: ', token);
 			let headers = new Headers();
+			console.log('headers: ', headers)
 			headers.append('Authorization', 'Bearer ' + token);
 			headers.append('Accept', 'application/json');
 			headers.append('Content-Type', 'application/json');
 			
 			this.http.post(this.api.src+route, JSON.stringify(data), {headers: headers}).subscribe(res => {
-				resolve(res.json());
+				if(!reorder){
+					resolve(res.json());
+				}
 			}, (err) => {        
 				reject(err);
 			});
@@ -45,16 +52,15 @@ export class DataProvider {
 
 	getData(data, route){
 		return new Promise((resolve, reject) => {
-
 			let headers = new Headers();
-
 			let token = localStorage.getItem('_token');
 
 			if(token != null){
 				headers.append('Authorization', 'Bearer ' + token);
 			}
 
-			let params = (data != undefined  || data != '' ? '?'+this.serialize(data) : '');
+			let params = (data != undefined || data != '' ? '?' + this.serialize(data) : '');
+			console.log(this.api.src+route+params);
 			this.http.get(this.api.src+route+params, {headers: headers}).subscribe( res => {
 				resolve(res.json());
 			}, (err) => {        
@@ -155,4 +161,27 @@ export class DataProvider {
 	hideLoader(){
 		this.loader.dismiss();
 	}
+
+	CartToPending(orderNumber){
+        let headers = new Headers();
+		headers.append('Authorization', 'Basic ' + this.rest_api_key);
+		headers.append('Content-type', 'application/json');
+		var body = {
+			app_id: this.signal_app_id,
+			included_segments: ['Cashier and Admin'],
+			contents: {
+				en: `Order Number: ${orderNumber}`
+			},
+			headings: {
+				en: 'A new order has arrived. Click to view.'
+			},
+			small_icon: "assets/imgs/vdr-logo.jpg",
+			large_icon: "assets/imgs/vdr-logo.jpg"
+		};
+		this.http.post('https://onesignal.com/api/v1/notifications', body, {headers: headers}).subscribe(data => {
+			console.log(data);
+		} , error => {
+			console.log(error);
+		});
+    }
 }

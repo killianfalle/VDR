@@ -7,9 +7,6 @@
 <ion-header>
 
   <ion-navbar color="primary">
-  	<ion-buttons start>
-  	  <logo></logo>
-  	</ion-buttons>
     <ion-title>Vista Del Rio</ion-title>
   </ion-navbar>
 
@@ -110,7 +107,7 @@
 			<br>
 
 			<div *ngFor="let transaction of releasing_transactions">
-				<ion-card>
+				<ion-card *ngIf="transaction.status == 'releasing'">
 					<ion-item-divider  text-capitalize>
 						<h4 ion-text text-wrap>Order #: {{ transaction.order_id }}</h4>
 						<h4 ion-text text-wrap>

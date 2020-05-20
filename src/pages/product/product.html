@@ -29,6 +29,12 @@
 			<ion-icon name="add"></ion-icon>
 			Add Product
 		</button>
+
+		<button ion-button outline icon-start padding color="primary" (click)="reorderList()" item-end>
+			{{toggleReorder}}
+		</button>
+
+		
 	</ion-item>
 
 	<ion-item *ngIf="products.length == 0 && keyword == null && isBusy" text-center no-lines>
@@ -39,15 +45,18 @@
 		<p>No result found.</p>
 	</ion-item>
 
-	<ion-item *ngFor="let product of products" (click)="view_info(product); $event.stopPropagation();">
-		<h2 text-capitalize>{{ product.name }}</h2>
-
-		<p item-end>
-			<span ion-text color="primary" (click)="on_edit(product); $event.stopPropagation();">Edit</span>
-			&nbsp;
-			<span ion-text color="danger" (click)="remove(product); $event.stopPropagation();">Delete</span>
-		</p>
-	</ion-item>
+	<ion-item-group reorder="{{flag}}" (ionItemReorder)="reorderItems($event)">
+		<ion-item *ngFor="let product of products" (click)="view_info(product); $event.stopPropagation();">
+			<h2 text-capitalize>{{ product.name }}</h2>
+	
+			<p item-end>
+				<span ion-text color="primary" (click)="on_edit(product); $event.stopPropagation();">Edit</span>
+				&nbsp;
+				<span ion-text color="danger" (click)="remove(product); $event.stopPropagation();">Delete</span>
+			</p>
+		</ion-item>
+	</ion-item-group>
+	
 
 	<spinner [hidden]="isBusy"></spinner>
 

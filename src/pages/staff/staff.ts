@@ -30,6 +30,8 @@ export class StaffPage implements OnInit{
   staffs: any = [];
   keyword: any = '';
   result: any = 0;
+  toggleReorder = 'Edit';
+  flag: any = false;
 
   offset:any = 0;
   limit:any = 20;
@@ -64,6 +66,10 @@ export class StaffPage implements OnInit{
         }
         self.isBusy = true;
     });
+  }
+
+  ionViewWillEnter(){
+    console.log(this.staffs);
   }
 
   loadData(_customer) {
@@ -206,5 +212,30 @@ export class StaffPage implements OnInit{
     this.loader.hide_loader();
   }
 
+  reorderItems(indexes){
+    let element = this.staffs[indexes.from];
+    this.staffs.splice(indexes.from, 1);
+    this.staffs.splice(indexes.to, 0, element);
+  }
+
+  reorderList(){
+    if(this.toggleReorder == 'Edit'){
+      this.toggleReorder = 'Done';
+      this.flag = true;
+    }else{
+      this.toggleReorder = 'Edit';
+      this.flag = false;
+      console.log(this.staffs);
+      for(let i = 0; i < this.staffs.length; i++){
+        this.staffs[i].position = i;
+        console.log(this.staffs[i])
+        this.provider.postData(this.staffs[i], 'staff/reorder', true).then((res:any) => {
+          console.log(res)
+        }).catch(err => {
+          console.log(err);
+        });
+      }
+    }
+  }
 
 }

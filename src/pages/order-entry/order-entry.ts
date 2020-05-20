@@ -174,6 +174,9 @@ export class OrderEntryPage implements OnInit {
           if(res._data.status){
             this.event.publish('notification:badge',null,res._data.badge);
             this.navCtrl.pop();
+            this.navCtrl.push('OrderEntryPage', {
+              customer : this.customer
+            });
           }
         });
       }
