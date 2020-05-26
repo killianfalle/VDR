@@ -162,6 +162,29 @@ export class DataProvider {
 		this.loader.dismiss();
 	}
 
+	CartToPendingAdmin(orderNumber){
+        let headers = new Headers();
+		headers.append('Authorization', 'Basic ' + this.rest_api_key);
+		headers.append('Content-type', 'application/json');
+		var body = {
+			app_id: this.signal_app_id,
+			included_segments: ['Admin'],
+			contents: {
+				en: `Order Number: ${orderNumber}`
+			},
+			headings: {
+				en: 'A new order has arrived. Click to view.'
+			},
+			small_icon: "assets/imgs/vdr-logo.jpg",
+			large_icon: "assets/imgs/vdr-logo.jpg"
+		};
+		this.http.post('https://onesignal.com/api/v1/notifications', body, {headers: headers}).subscribe(data => {
+			console.log(data);
+		} , error => {
+			console.log(error);
+		});
+	}
+
 	CartToPending(orderNumber){
         let headers = new Headers();
 		headers.append('Authorization', 'Basic ' + this.rest_api_key);
@@ -174,6 +197,29 @@ export class DataProvider {
 			},
 			headings: {
 				en: 'A new order has arrived. Click to view.'
+			},
+			small_icon: "assets/imgs/vdr-logo.jpg",
+			large_icon: "assets/imgs/vdr-logo.jpg"
+		};
+		this.http.post('https://onesignal.com/api/v1/notifications', body, {headers: headers}).subscribe(data => {
+			console.log(data);
+		} , error => {
+			console.log(error);
+		});
+	}
+	
+	CartToPendingCashierSales(orderNumber, approval){
+        let headers = new Headers();
+		headers.append('Authorization', 'Basic ' + this.rest_api_key);
+		headers.append('Content-type', 'application/json');
+		var body = {
+			app_id: this.signal_app_id,
+			included_segments: ['Cashier and Sales Staff'],
+			contents: {
+				en: `Click to view.`
+			},
+			headings: {
+				en: `Order Number: ${orderNumber} has been ${approval}.`
 			},
 			small_icon: "assets/imgs/vdr-logo.jpg",
 			large_icon: "assets/imgs/vdr-logo.jpg"

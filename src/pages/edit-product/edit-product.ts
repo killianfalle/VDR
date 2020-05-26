@@ -48,7 +48,8 @@ export class EditProductPage {
   }
 
   initForm() {
-  	this.product = this.navParams.get('data');
+    this.product = this.navParams.get('data');
+    console.log(this.product)
   	if(localStorage.getItem('edit_product') != null){
   		let _product = JSON.parse(localStorage.getItem('edit_product'));
   		if(this.product.id == _product.id){

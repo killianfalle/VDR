@@ -22,14 +22,23 @@
 		Product
 	</ion-item-divider>
 	<ion-item>
-		<ion-input type="text" [(ngModel)]="product.name" placeholder="enter product name"></ion-input>
+		<ion-input type="text" [(ngModel)]="product.name" placeholder="Enter Product Name"></ion-input>
 	</ion-item>
 	<div class="error" *ngIf="error.name">{{ error.name }}</div>
+	<br>
 
+
+	<ion-item-divider>
+		Price
+	</ion-item-divider>
+	<ion-item>
+		<ion-input type="number" [(ngModel)]="product.default_price" placeholder="Enter Price"></ion-input>
+	</ion-item>
+	<div class="error" *ngIf="error.default_price">{{ error.default_price }}</div>
 	<br>
 
 	<ion-item-divider>
-		Class
+		Product Class
 		<button ion-button color="dark" clear icon-only (click)="add_class()" item-end>
 			<ion-icon name="add-circle"></ion-icon>
 		</button>
@@ -39,7 +48,7 @@
 			<ion-col>
 				<ion-item>
 					<ion-label>{{ (i+1) }}.</ion-label>
-					<ion-input type="text" [(ngModel)]="class.name" placeholder="enter class"></ion-input>
+					<ion-input type="text" [(ngModel)]="class.name" placeholder="Enter Product Class"></ion-input>
 				</ion-item>
 			</ion-col>
 			<ion-col col-1 align-self-center text-center>
@@ -61,15 +70,13 @@
 				</ion-col>
 				<ion-col>
 					<ion-item>
-						<ion-input type="text" [(ngModel)]="size.name" placeholder="enter size" [disabled]="class.name == ''"></ion-input>
+						<ion-input type="text" [(ngModel)]="size.name" placeholder="Enter Size" [disabled]="class.name == ''"></ion-input>
 					</ion-item>
 				</ion-col>
 			</ion-row>
 		</div>
-
 		<br>
 	</div>
-
 	<br>
 
 
@@ -83,7 +90,7 @@
 		<ion-row>
 			<ion-col>
 				<ion-item>
-					<ion-input type="text" [(ngModel)]="quantity.name" placeholder="enter quantity"></ion-input>
+					<ion-input type="text" [(ngModel)]="quantity.name" placeholder="Enter Quantity"></ion-input>
 				</ion-item>
 			</ion-col>
 			<ion-col col-1 align-self-center text-center>
@@ -91,7 +98,6 @@
 			</ion-col>
 		</ion-row>
 	</div>
-
 	<br>
 
 	<div padding>

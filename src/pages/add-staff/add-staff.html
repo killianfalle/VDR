@@ -46,7 +46,8 @@
 			<ion-select [(ngModel)]="info.user_role">
 				<ion-option value="admin_staff">Admin Staff</ion-option>
 				<ion-option value="warehouse_staff">Warehouse Staff</ion-option>
-				<ion-option value="printer_staff">Printer Staff</ion-option>
+				<ion-option value="printer_staff">Cashier Staff</ion-option>
+				<!-- <ion-option value="sales_staff">Sales Staff</ion-option> -->
 			</ion-select>
 		</ion-item>
 		<div class="error" *ngIf="error.user_role">{{ error.user_role }}</div>

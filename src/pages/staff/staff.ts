@@ -153,6 +153,14 @@ export class StaffPage implements OnInit{
     })
   }
 
+  change_access(staff, event){
+    console.log(event._value)
+    console.log(staff)
+    this.provider.postData({ id: staff.id, admin_access: event._value },'staff/update_access').then((res:any) => {
+      console.log(res);
+    })
+  }
+
   resetPassword(id) {
     this.provider.postData({ id: id },'staff/password/reset').then((res:any) => {
       if (res._data.status) {

@@ -43,19 +43,75 @@
 	</ion-item-divider>
 	
 	<ion-item>
-		<ion-label stacked>Email</ion-label>
-		<ion-input type="text" text-center [(ngModel)]="staff.email"></ion-input>
+		<ion-label stacked>User Role</ion-label>
+		<ion-select [(ngModel)]="staff.user_role">
+			<ion-option value="admin_staff">Admin Staff</ion-option>
+			<ion-option value="warehouse_staff">Warehouse Staff</ion-option>
+			<ion-option value="printer_staff">Cashier Staff</ion-option>
+			<!-- <ion-option value="sales_staff">Sales Staff</ion-option> -->
+		</ion-select>
 	</ion-item>
-	<div class="error" *ngIf="error.email">{{ error.email }}</div>
+	<div class="error" *ngIf="error.user_role">{{ error.user_role }}</div>
+
+	<br>
 
 	<ion-item *ngIf="staff.user_role == 'warehouse_staff'">
 		<ion-label stacked>Designated Warehouse</ion-label>
-		<ion-select [(ngModel)]="staff.warehouse_info.warehouse_id">
+		<ion-select *ngIf="staff.warehouse_info" [(ngModel)]="staff.warehouse_info.warehouse_id">
+			<ion-option *ngFor="let warehouse of warehouseList" value="{{ warehouse.id }}">
+				{{ warehouse.name }} - {{ warehouse.address }}
+			</ion-option>
+		</ion-select>
+
+		<ion-select *ngIf="!staff.warehouse_info" [(ngModel)]="designated_warehouse">
 			<ion-option *ngFor="let warehouse of warehouseList" value="{{ warehouse.id }}">
 				{{ warehouse.name }} - {{ warehouse.address }}
 			</ion-option>
 		</ion-select>
 	</ion-item>
+
+	<br>
+
+	<ion-item>
+		<ion-label stacked>Email</ion-label>
+		<ion-input type="text" text-center [(ngModel)]="staff.email"></ion-input>
+	</ion-item>
+	<div class="error" *ngIf="error.email">{{ error.email }}</div>
+
+
+	<!-- <ion-item-divider (click)="toggleChangingPassword()">
+		Change Password
+		<ion-icon style="float: right;margin-right: 10px;font-size: 22px;font-weight: bold;" name="{{toggleChange}}"></ion-icon>
+	</ion-item-divider>
+
+	<div *ngIf="toggleChange == 'remove'">
+		<br>
+		<ion-item>
+			<ion-label stacked>Old Password</ion-label>
+			<ion-input type="password" text-center [(ngModel)]="staff.current_password"></ion-input>
+		</ion-item>
+		<div class="error" *ngIf="error.current_password">{{ error.current_password }}</div>
+	
+		<br>
+	
+		<ion-item>
+			<ion-label stacked>New Password</ion-label>
+			<ion-input type="password" text-center [(ngModel)]="staff.password"></ion-input>
+		</ion-item>
+		<div class="error" *ngIf="error.password">{{ error.password }}</div>
+	
+		<br>
+	
+		<ion-item>
+			<ion-label stacked>Confirm Password</ion-label>
+			<ion-input type="password" text-center [(ngModel)]="staff.confirm_password"></ion-input>
+		</ion-item>
+		<div class="error" *ngIf="error.confirm_password">{{ error.confirm_password }}</div>
+		<div padding style="padding-top: 5px;">
+			<button ion-button block style="background: #fca534;" (click)="changePassword()">Save New Password</button>
+		</div>
+	</div> -->
+	
 
 	<br>
 	<br>

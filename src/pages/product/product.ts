@@ -28,6 +28,7 @@ export class ProductPage {
   result: any = 0;
   isBusy: any = false;
   flag: any = false;
+  profile: any;
 
   constructor(
   	public navCtrl: NavController, 
@@ -137,6 +138,11 @@ export class ProductPage {
 
   ionViewDidLoad() {
     this.loader.show_loader();
+  }
+
+  ionViewWillEnter(){
+    this.profile = JSON.parse(localStorage.getItem('_info')); 
+    console.log(this.profile)
   }
 
   ionViewDidEnter() {

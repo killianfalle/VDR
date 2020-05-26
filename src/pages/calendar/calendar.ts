@@ -70,8 +70,8 @@ export class CalendarPage {
       this.alert.confirm().then((response: any) => {
         if (response) {
           this.printer.is_enabled().then((res: any) => {
-            this.ready_print(this.params);
-            // this.verify_connectivity();
+            // this.ready_print(this.params);
+            this.verify_connectivity();
           }).catch((err) => {
             this.enable_blueetooth();
           });
@@ -132,17 +132,17 @@ export class CalendarPage {
     }
     let content = `${header}\n${separator}ORDER #: ${_data.order_id}\nPRINTED BY: ${this.params.printed_by}\nPRINTED ON: ${this.params.printed_at}\n${separator}OWNER: ${_data.first_name} ${_data.last_name}\nCONTACT #: ${phoneNumber}\nADDRESS: ${location}\n${separator+item+separator}TOTAL: ₱${this.decimal.transform(_data.total_payment,'1.2-2')}\n${separator}RELEASE: ${moment(this.date).format("MM/DD/YYYY")}\nPAYMENT: ${_data.payment_type}\nDELIVERY: ${_data.delivery_option}\n\n\n`;
     console.log(content)
-    // this.print_for_release(content);
+    this.print_for_release(content);
     
-    // for(let count = 1;count < this.copies; count++){
-    //   this.alert.confirm_print().then((res:any) => {
-    //     if(res){
-    //       this.print_for_release(content);
-    //       if((count+1) == this.copies)
-    //         this.callback();
-    //     }
-    //   });
-    // }
+    for(let count = 1;count < this.copies; count++){
+      this.alert.confirm_print().then((res:any) => {
+        if(res){
+          this.print_for_release(content);
+          if((count+1) == this.copies)
+            this.callback();
+        }
+      });
+    }
   }
 
   async print_for_release(_data) {

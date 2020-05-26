@@ -44,7 +44,7 @@
 		<h3><strong>{{ customer.payment }}</strong></h3>
 		<p ion-text color="dark"><strong>{{ customer.delivery }}</strong></p> 
 
-		<p item-end>
+		<p item-end *ngIf="profile.type == 'admin'">
 			<span ion-text color="primary" (click)="on_edit(customer); $event.stopPropagation();" [hidden]="customer.status == 'inactive'">Edit</span>
 			&nbsp;
 			<span ion-text color="danger" (click)="remove(customer); $event.stopPropagation();" [hidden]="customer.status == 'inactive'">Delete</span>

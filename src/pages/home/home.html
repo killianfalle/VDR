@@ -22,7 +22,7 @@
       </ion-card>
     </ion-col>
 
-    <ion-col col-6 *ngIf="profile.type === 'admin'">
+    <ion-col col-6 *ngIf="profile.type === 'admin' || profile.type === 'sales_staff'">
       <ion-card (click)="navigate('ProductPage')" color="shamrock">
         <ion-card-header color="dark" text-wrap>
           <ion-icon color="light" name="md-list-box"></ion-icon>
@@ -55,7 +55,7 @@
       </ion-card>
     </ion-col>
     
-    <ion-col  col-6>
+    <ion-col *ngIf="profile.type === 'admin'" col-6>
       <ion-card (click)="navigate('PaymentPage')" color="shamrock">
         <ion-card-header color="dark" text-wrap>
           <ion-icon color="light" name="card"></ion-icon>
@@ -66,7 +66,7 @@
       </ion-card>
     </ion-col>
 
-    <ion-col col-6>
+    <ion-col *ngIf="profile.type === 'admin'" col-6>
       <ion-card (click)="navigate('ReportPage')" color="shamrock">
         <ion-card-header color="dark" text-wrap>
           <ion-icon color="light" name="list-box"></ion-icon>
@@ -77,7 +77,7 @@
       </ion-card>
     </ion-col>
 
-    <ion-col col-6>
+    <ion-col *ngIf="profile.type === 'admin'" col-6>
       <ion-card (click)="navigate('WarehouseManagementPage')" color="shamrock">
         <ion-card-header color="dark" text-wrap>
           <ion-icon color="light" name="clipboard"></ion-icon>
@@ -88,7 +88,7 @@
       </ion-card>
     </ion-col>
 
-    <ion-col col-6>
+    <!-- <ion-col *ngIf="profile.type === 'admin'" col-6>
       <ion-card (click)="navigate('DeliveryPage')" color="shamrock">
         <ion-card-header color="dark" text-wrap>
           <ion-icon color="light" name="cube"></ion-icon>
@@ -97,7 +97,7 @@
           Delivery
         </ion-card-content>
       </ion-card>
-    </ion-col>
+    </ion-col> -->
   </ion-row>
 
 </ion-content>

@@ -325,8 +325,8 @@ export class WarehousePage {
   do_print(_data,_reprint,_ps){
     this.printer.is_enabled().then((res: any) => {
       console.log(_data)
-      this.ready_print(_data);
-      // this.verify_connectivity(_data,_reprint,_ps);
+      // this.ready_print(_data);
+      this.verify_connectivity(_data,_reprint,_ps);
     }).catch((err) => {
       this.enable_blueetooth(_data,_reprint,_ps);
     });

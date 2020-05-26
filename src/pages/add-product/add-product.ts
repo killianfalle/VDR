@@ -51,7 +51,8 @@ export class AddProductPage {
       name: null,
       classes: [],
       quantities: [],
-      position: res
+      position: res,
+      default_price: null
     };
   }
 

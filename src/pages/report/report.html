@@ -34,6 +34,9 @@
 
 	<div [ngSwitch]="report_tab" >
 		<div *ngSwitchCase="'csv-report'">
+			<div *ngIf="user_info.type == 'warehouse_staff'">
+				<h2 class="designated_warehouse">Warehouse: {{warehouseName}} - {{warehouseAddress}}</h2>
+			</div>
 			<ion-card (click)="show_product(); $event.stopPropagation()">
 			  <ion-item>
 			  	<ion-label>Select Product</ion-label>
@@ -43,7 +46,7 @@
 			  </ion-item>
 			</ion-card>
 
-			<ion-card>
+			<ion-card *ngIf="user_info.type == 'admin'">
 				<ion-item>
 					<ion-label>
 						Select Warehouse
@@ -116,7 +119,9 @@
 		</div>
 
 		<div *ngSwitchCase="'daily-report'">
-
+			<div *ngIf="user_info.type == 'warehouse_staff'">
+				<h2 class="designated_warehouse">Warehouse: {{warehouseName}} - {{warehouseAddress}}</h2>
+			</div>
 			<ion-card (click)="show_product(); $event.stopPropagation()">
 			  <ion-item>
 			  	<ion-label>Select Product</ion-label>
@@ -126,7 +131,7 @@
 			  </ion-item>
 			</ion-card>
 
-			<ion-card>
+			<ion-card *ngIf="user_info.type == 'admin'">
 				<ion-item>
 					<ion-label>
 						Select Warehouse

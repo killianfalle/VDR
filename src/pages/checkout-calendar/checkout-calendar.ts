@@ -28,7 +28,7 @@ export class CheckoutCalendarPage {
   _callback: any;
   params: any;
   self: any;
-
+  user: any;
   constructor(
   	public navCtrl: NavController, 
     public navParams: NavParams,
@@ -45,11 +45,19 @@ export class CheckoutCalendarPage {
   }
 
    action(submit = true) {
+    let approval = 'pending'
+  	this.user = JSON.parse(localStorage.getItem('_info'));
+
     if(submit){
       this.alert.confirm().then((response: any) => {
         if (response) {
-          this._callback(this.params,moment(this.date).format('YYYY-MM-DD'),this.self, this.navParams.get('warhouseID'));
+          console.log(this.params)
+          if(this.user.type == 'admin'){
+            approval = 'approved'
+          }
+          this._callback(this.params,moment(this.date).format('YYYY-MM-DD'),this.self, this.navParams.get('warhouseID'), approval);
           this.dataProvider.CartToPending(this.params.order_id)
+          // this.dataProvider.CartToPendingAdmin(this.params.order_id)
           this.navCtrl.pop();
         }
       });

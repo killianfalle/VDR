@@ -49,7 +49,7 @@
 		<ion-item *ngFor="let product of products" (click)="view_info(product); $event.stopPropagation();">
 			<h2 text-capitalize>{{ product.name }}</h2>
 	
-			<p item-end>
+			<p item-end *ngIf="profile.type == 'admin'">
 				<span ion-text color="primary" (click)="on_edit(product); $event.stopPropagation();">Edit</span>
 				&nbsp;
 				<span ion-text color="danger" (click)="remove(product); $event.stopPropagation();">Delete</span>

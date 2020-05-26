@@ -43,13 +43,14 @@
 
 	<ion-item-group reorder="{{flag}}" (ionItemReorder)="reorderItems($event)">
 		<ion-item *ngFor="let staff of staffs">
-			<ion-icon name="refresh" item-start color="shamrock" (click)="show_confirmation(staff.id,'reset'); $event.stopPropagation();"></ion-icon>
+			<!-- <ion-icon name="refresh" item-start color="shamrock" (click)="show_confirmation(staff.id,'reset'); $event.stopPropagation();"></ion-icon> -->
 			<h2 text-capitalize>{{ staff.first_name }} {{ staff.last_name }}</h2>
 			<h3>{{ staff.email }}</h3>
 			<p *ngIf="staff.user_role == 'admin_staff'" text-capitalize>Admin Staff</p>
 			<p *ngIf="staff.user_role == 'sale_staff'" text-capitalize>Sale Staff</p>
 			<p *ngIf="staff.user_role == 'warehouse_staff'" text-capitalize>Warehouse Staff</p>
-			<p *ngIf="staff.user_role == 'printer_staff'" text-capitalize>Printer Staff</p>
+			<p *ngIf="staff.user_role == 'printer_staff'" text-capitalize>Cashier Staff</p>
+			<p *ngIf="staff.user_role == 'sales_staff'" text-capitalize>Sales Staff</p>
 	
 			<p item-end>
 				<span ion-text color="primary" (click)="navigate('EditStaffPage','edit',staff); $event.stopPropagation();" [hidden]="staff.status == 'disabled'">Edit</span>
@@ -70,3 +71,101 @@
 	</ion-infinite-scroll>
 	
 </ion-content>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <ion-header>
+
+	<ion-navbar color="primary">
+	  <ion-title>Staff</ion-title>
+	  <ion-buttons end>
+		<cart></cart>
+	  </ion-buttons>
+	</ion-navbar>
+  
+	<ion-toolbar>
+		<form (ngSubmit)="search()">
+			<ion-searchbar mode="md" [(ngModel)]="keyword" name="keyword" (ionClear)="reset();" placeholder="search"></ion-searchbar>
+		</form>
+	</ion-toolbar>
+  
+  </ion-header>
+  
+  
+  <ion-content>
+  
+	  <ion-item>
+		  <button ion-button outline icon-start padding color="primary" (click)="navigate('AddStaffPage','add')" item-end>
+			  <ion-icon name="person-add"></ion-icon>
+			  Add Staff
+		  </button>
+  
+		  <button ion-button outline icon-start padding color="primary" (click)="reorderList()" item-end>
+			  {{toggleReorder}}
+		  </button>
+	  </ion-item>
+	  <ion-item no-lines text-center *ngIf="staffs.length == 0 && keyword == null && isBusy">
+		  <p>No staff.</p>
+	  </ion-item>
+	  <ion-item no-lines text-center *ngIf="staffs.length == 0 && keyword != null && isBusy">
+		  <p>No result found.</p>
+	  </ion-item>
+	  
+	  <ion-item-group reorder="{{flag}}" (ionItemReorder)="reorderItems($event)">
+		  <ion-list>
+			  <div *ngFor="let staff of staffs">
+				  <ion-item-sliding>
+					  <ion-item >
+						  <ion-label>
+							  <h2 text-capitalize>{{ staff.first_name }} {{ staff.last_name }}</h2>
+							  <h3>{{ staff.email }}</h3>
+							  <p *ngIf="staff.user_role == 'admin_staff'" text-capitalize>Admin Staff</p>
+							  <p *ngIf="staff.user_role == 'sale_staff'" text-capitalize>Sale Staff</p>
+							  <p *ngIf="staff.user_role == 'warehouse_staff'" text-capitalize>Warehouse Staff</p>
+							  <p *ngIf="staff.user_role == 'printer_staff'" text-capitalize>Cashier Staff</p>
+							  <p *ngIf="staff.user_role == 'sales_staff'" text-capitalize>Sales Staff</p>
+						  </ion-label>
+						  
+						  <ion-toggle [checked]="staff.admin_access" (ionChange)="change_access(staff, $event)" ></ion-toggle>
+					  </ion-item>
+	  
+					  <ion-item-options side="right">
+						  <button color="primary" ion-button (click)="navigate('EditStaffPage','edit',staff); $event.stopPropagation();">
+							  <h2>Edit</h2>
+						  </button>
+						  <button color="danger" ion-button (click)="show_confirmation(staff.id,'restore'); $event.stopPropagation();">
+							  <h2>Delete</h2>
+						  </button>
+					  </ion-item-options>
+				  </ion-item-sliding>
+			  </div>
+		  </ion-list>
+	  </ion-item-group>
+	  
+  
+	  <spinner [hidden]="isBusy"></spinner>
+  
+	  <ion-infinite-scroll #infinite (ionInfinite)="doInfinite($event)" threshold="100px">
+		<ion-infinite-scroll-content>
+		</ion-infinite-scroll-content>
+	  </ion-infinite-scroll>
+	  
+  </ion-content> -->
+  

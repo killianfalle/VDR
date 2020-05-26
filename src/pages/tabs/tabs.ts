@@ -24,6 +24,7 @@ export class TabsPage implements OnInit {
   tab3Root = 'WarehousePage';
   tab4Root = 'TransactionPage';
   tab5Root = 'SettingsPage';
+  tab6Root = 'ReportPage';
 
   profile: any;
 

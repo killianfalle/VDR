@@ -30,7 +30,47 @@ import moment from 'moment';
   templateUrl: 'transaction.html',
 })
 export class TransactionPage {
+  public customOptionsReleasing: any = {
+    buttons: [{
+      text: 'Clear',
+      handler: () => {
+        this.clearTextAppearR = false;
+        this.clearedReleasing = '';
+        this.search_date_releasing = '';
 
+        this.offset_cleared = 0;
+        this.offset_releasing = 0;
+        this.offset_pending = 0;
+
+        this.cleared_transactions = [];
+        this.releasing_transactions = [];
+        this.pending_transactions = [];
+        this.enableInfinite();
+        this.get_transaction();
+      }
+    }]
+  }
+
+  public customOptionsPending: any = {
+    buttons: [{
+      text: 'Clear',
+      handler: () => {
+        this.clearedPending = '';
+        this.clearTextAppearP = false;
+        this.search_date_pending = '';
+
+        this.offset_cleared = 0;
+        this.offset_releasing = 0;
+        this.offset_pending = 0;
+
+        this.cleared_transactions = [];
+        this.releasing_transactions = [];
+        this.pending_transactions = [];
+        this.enableInfinite();
+        this.get_transaction();
+      }
+    }]
+  }
   @ViewChild(InfiniteScroll) infinite_cleared: InfiniteScroll;
   @ViewChild(InfiniteScroll) infinite_releasing: InfiniteScroll;
   @ViewChild(InfiniteScroll) infinite_pending: InfiniteScroll;
@@ -71,7 +111,7 @@ export class TransactionPage {
   offset_pending:any = 0;
   offset_releasing:any = 0;
   offset_cleared:any = 0;
-  limit:any = 10;
+  limit:any = 19999990;
 
   keyword:any = '';
 
@@ -80,6 +120,8 @@ export class TransactionPage {
   clearTextAppearR: boolean = false;
   clearTextAppearP: boolean = false;
   selectedTab: any;
+  clearedReleasing: any = '';
+  clearedPending: any = '';
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams,
@@ -87,6 +129,7 @@ export class TransactionPage {
     public modalCtrl: ModalController,
     public alert: AlertComponent,
     public toast: ToastComponent,
+    public dataProvider: DataProvider,
     private provider: DataProvider,
     private event: Events,
     private keyboard: Keyboard,
@@ -198,11 +241,20 @@ export class TransactionPage {
     })
   }
 
-  onChangeDate() {
+  onChangeDate(releasing = false, pending = false) {
     console.log("by date");
     this.offset_cleared = 0;
     this.offset_releasing = 0;
     this.offset_pending = 0;
+    console.log(releasing, pending)
+    if(releasing){
+      this.clearTextAppearR = true;
+      this.clearedReleasing = 'releasing'
+    }else{
+      this.clearTextAppearP = true;
+      this.clearedPending = 'pending'
+    }
+  
     this.cleared_transactions = [];
     this.releasing_transactions = [];
     this.pending_transactions = [];
@@ -211,15 +263,23 @@ export class TransactionPage {
   }
 
   get_transaction() {
+    let date = this.search_date
+    let cleared: any;
     switch (this.tabs) {
       case "cleared":
         this.offset = this.offset_cleared;
         break;
       case "releasing":
+        console.log('naa ko sa releasing')
+        cleared = this.clearedReleasing;
         this.offset = this.offset_releasing;
+        date = this.search_date_releasing
         break;
       case "pending":
+        console.log('naa ko sa pending')
+        cleared = this.clearedPending;
         this.offset = this.offset_pending;
+        date = this.search_date_pending
         break;
       default:
         break;
@@ -227,7 +287,8 @@ export class TransactionPage {
     
     this.isBusy = false;
 
-    this.provider.getData({ status : this.tabs , date : this.search_date, search: this.keyword, offset : this.offset, limit : this.limit },'transaction').then((res: any) => {
+    console.log('date: ', date);
+    this.provider.getData({ status : this.tabs , date : date, search: this.keyword, offset : this.offset, limit : this.limit, cleared: cleared},'transaction').then((res: any) => {
       if(res._data.status){
         switch (this.tabs) {
           case "pending":
@@ -235,9 +296,10 @@ export class TransactionPage {
               if(res._data.result > 0){
                 this.offset_pending += res._data.result;
                 this.loadData_pending(res._data.data);
-              }else {
-                this.stopInfinite();
               }
+              // else {
+              //   this.stopInfinite();
+              // }
             }
             break;
           case "releasing":
@@ -245,9 +307,10 @@ export class TransactionPage {
               if(res._data.result > 0){
                 this.offset_releasing += res._data.result;
                 this.loadData_releasing(res._data.data);
-              }else {
-                this.stopInfinite();
               }
+              // else {
+              //   this.stopInfinite();
+              // }
             }
             break;
           default:
@@ -405,6 +468,25 @@ export class TransactionPage {
       data : _data,
       self : this,
       callback : this.releasing_transaction
+    })
+  }
+
+  transactionStatus(data, approval, index){
+    let approvalText = 'Approve'
+    if(approval == 'reject'){
+      approvalText = 'Reject'
+    }
+    this.alert.confirm(`${approvalText} Transaction`).then((response: any) => {
+      if(response){
+        this.provider.postData({ transaction : data, approval : approval}, 'transaction/approval_status').then((res:any) => {
+          if(res){
+            console.log('reees: ', res);
+            this.pending_transactions[index].approval = res._data.data.approval
+            this.dataProvider.CartToPendingCashierSales(res._data.data.order_id, res._data.data.approval)
+            this.toast.presentToast(`Successfully ${res._data.data.approval} approval`);
+          }
+        })
+      }
     })
   }
 
@@ -648,19 +730,44 @@ export class TransactionPage {
 
   clearFilter(filterType){
     if(filterType == 'releasing'){
-      this.provider.getData({ status : this.tabs , date : this.search_date, search: this.keyword, offset : this.offset, limit : this.limit },'transaction').then((res: any) => {
-        this.releasing_transactions = res._data.data;
-        this.clearTextAppearR = false;
-        // this.search_date_releasing = null
-      })
+      this.clearTextAppearR = false;
+      this.clearedReleasing = '';
+      this.search_date_releasing = '';
+
+      this.offset_cleared = 0;
+      this.offset_releasing = 0;
+      this.offset_pending = 0;
+
+      this.cleared_transactions = [];
+      this.releasing_transactions = [];
+      this.pending_transactions = [];
+      this.enableInfinite();
+      this.get_transaction();
+      // this.provider.getData({ status : this.tabs , date : this.search_date, search: this.keyword, offset : this.offset, limit : this.limit },'transaction').then((res: any) => {
+      //   this.releasing_transactions = res._data.data;
+      //   this.clearTextAppearR = false;
+      //   // this.search_date_releasing = null
+      // })
     }else{
-      this.provider.getData({ status : this.tabs , date : this.search_date, search: this.keyword, offset : this.offset, limit : this.limit },'transaction').then((res: any) => {
-        if(res._data.status){
-          this.pending_transactions = res._data.data;
-          this.clearTextAppearP = false;
-          // this.search_date_pending = null
-        }
-      })
+      this.clearedPending = '';
+      this.clearTextAppearP = false;
+
+      this.offset_cleared = 0;
+      this.offset_releasing = 0;
+      this.offset_pending = 0;
+
+      this.cleared_transactions = [];
+      this.releasing_transactions = [];
+      this.pending_transactions = [];
+      this.enableInfinite();
+      this.get_transaction();
+      // this.provider.getData({ status : this.tabs , date : this.search_date, search: this.keyword, offset : this.offset, limit : this.limit },'transaction').then((res: any) => {
+      //   if(res._data.status){
+      //     this.pending_transactions = res._data.data;
+      //     this.clearTextAppearP = false;
+      //     // this.search_date_pending = null
+      //   }
+      // })
     }
   }
 
@@ -716,4 +823,5 @@ export class TransactionPage {
     }
 
   }
+
 }

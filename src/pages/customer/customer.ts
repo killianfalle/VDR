@@ -35,7 +35,7 @@ export class CustomerPage {
   limit:any = 20;
 
   isBusy: any = false;
-
+  profile: any;
   constructor(
   	public navCtrl: NavController, 
     public navParams: NavParams,
@@ -160,6 +160,11 @@ export class CustomerPage {
 
   ionViewDidLoad() {
     this.loader.show_loader();
+  }
+
+  ionViewWillEnter(){
+    this.profile = JSON.parse(localStorage.getItem('_info')); 
+    console.log(this.profile)
   }
 
   ionViewDidEnter() {

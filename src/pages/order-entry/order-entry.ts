@@ -27,6 +27,7 @@ export class OrderEntryPage implements OnInit {
   customer: any;
   user: any;
   form: any;
+  productPrice: any;
 
   product: any = [];
 
@@ -51,6 +52,14 @@ export class OrderEntryPage implements OnInit {
   }
 
   initForm() {
+    this.provider.getData('','product/list').then((res: any) => {
+      if(res._data.data){
+        this.product = res._data.data;
+        console.log('rpdocas', this.product)
+        //this.loadProducts(res._data.data);
+      }
+    });
+
   	this.form = {
       id: null,
       name: null,
@@ -69,23 +78,34 @@ export class OrderEntryPage implements OnInit {
   }
 
   ngOnInit() {
-    this.provider.getData('','product/list').then((res: any) => {
-      if(res._data.data){
-        this.product = res._data.data;
-        
-        //this.loadProducts(res._data.data);
-      }
-    });
+    // this.provider.getData('','product/list').then((res: any) => {
+    //   if(res._data.data){
+    //     this.product = res._data.data;
+    //     console.log('rpdocas', this.product)
+    //     //this.loadProducts(res._data.data);
+    //   }
+    // });
   }
 
   select_product(_product,_class,_qty) {
+
+    //DEFAULT CASH
+    // this.product.forEach(product => {
+    //   if(_product.id == product.id){
+    //     console.log(product)
+    //     this.productPrice = product.default_price
+    //   }
+    // });
+    this.form.price = this.productPrice;
     this.form.id = _product.id;
     this.form.name = _product.name;
     this.form.class.id = _class.id;
     this.form.class.name = _class.name;
     this.sizes = _class.product_size;
     this.quantities = _qty;
-
+    // this.form.price = _product.price
+    console.log(this.form)
+    console.log(this.product)
     if(this.sizes.length > 0){
 
       setTimeout(() => {
@@ -170,7 +190,9 @@ export class OrderEntryPage implements OnInit {
   submit() {
     this.alert.confirm().then(res => {
       if(res){
+        console.log(this.form)
         this.provider.postData(this.form,'transaction/entry').then((res: any) => {
+          console.log(res);
           if(res._data.status){
             this.event.publish('notification:badge',null,res._data.badge);
             this.navCtrl.pop();
@@ -202,6 +224,7 @@ export class OrderEntryPage implements OnInit {
   }
 
   preview(){
+    console.log(this.form);
     this.navCtrl.push('ReviewEntryPage', { data : this.form, customer : this.customer });
   }
 

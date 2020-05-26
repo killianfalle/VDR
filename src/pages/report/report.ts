@@ -43,7 +43,12 @@ export class ReportPage implements OnInit {
   sales_report_date: any = moment().format('YYYY-MM-DD');
 
   isBusy: any = false;
-
+  user_info: any;
+  warehouse_staff_info: any;
+  warehouse_info: any;
+  warehouseName: any;
+  warehouseAddress: any;
+  warehouseID: any;
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams,
@@ -56,6 +61,7 @@ export class ReportPage implements OnInit {
     private printer: PrinterProvider) {
     this.getProduct();
     this.getWarehouse();
+    this.get_warehouse_info();
   }
 
   ngOnInit() {
@@ -69,6 +75,32 @@ export class ReportPage implements OnInit {
         this.get_daily_report();
         break;
     }
+  }
+
+  get_warehouse_info(){
+    this.user_info = JSON.parse(localStorage.getItem('_info'));
+    console.log(this.user_info)
+
+    if(this.user_info.type == 'warehouse_staff'){
+      this.provider.getData({ id: this.user_info.id},'staff/single').then((res: any) => {
+        if(res._data.status){
+          this.warehouse_staff_info = res._data.data[0];
+          this.provider.getData({warehouse_id: this.warehouse_staff_info.warehouse_info.warehouse_id}, 'get-warehouse').then((result: any) => {
+            this.warehouse_info = result.warehouse[0];
+            this.getWarehouseData(result.warehouse[0].name, result.warehouse[0].address, result.warehouse[0].id);
+            console.log(this.warehouse_info)
+          })
+        }
+        console.log(this.warehouse_staff_info)
+      });
+    }
+   
+  }
+
+  getWarehouseData(name, address, id){
+    this.warehouseName = name;
+    this.warehouseAddress = address;
+    this.warehouseID = id;
   }
 
   getProduct() {
@@ -124,9 +156,11 @@ export class ReportPage implements OnInit {
     this.provider.getData({ from : this.daily_report_from, to : this.daily_report_to },'report').then((res: any) => {
       if(res._data.status){
         this.reports = res._data.data;
+        console.log('reports', this.reports)
       }
       this.isBusy = true;
     });
+
   }
 
   exportCSVCleared() {
@@ -219,9 +253,14 @@ export class ReportPage implements OnInit {
   }
   
   release(_data) {
+    if(this.user_info.type == 'warehouse_staff'){
+      console.log(this.warehouseID)
+      this.daily_warehouse = this.warehouseID
+    }
     this.provider.getData({ product : _data, warehouse: this.daily_warehouse, date : this.sales_report_date, status : 'cleared' },'report/release').then((res:any) => {
       if(res._data.status){
         this.release_reports = res._data.data;
+        console.log(this.release_reports);
       }
       this.isBusy = true;
     });

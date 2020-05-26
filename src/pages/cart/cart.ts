@@ -52,11 +52,13 @@ export class CartPage implements OnInit {
   ngOnInit() {
     this.isBusy = false;
     this.provider.getData({ status : 'in_cart', user : this.user.id, search: this.keyword },'cart').then((res: any) => {
+      console.log(res)
       if(res._data.status){
         console.log("CART'S WAREHOUSE LIST:");
         console.log(res._data.warehouseList);
         this.warehouseList = res._data.warehouseList;
         this.cart = res._data.data;
+        console.log(this.cart)
       }
       this.isBusy = true;
     });
@@ -171,15 +173,19 @@ export class CartPage implements OnInit {
     // this.navCtrl.push('CheckoutCalendarPage',{ self: this, callback : this.checkout, data : _data });
   }
 
-  checkout(_data,date,self, warehouseID) {
-    self.provider.postData({ transaction : _data.id, release_at : date, status : 'pending', warehouseID: warehouseID },'cart/status').then((res:any) => {
+  checkout(_data,date,self, warehouseID, approval) {
+    console.log(approval)
+    self.provider.postData({ transaction : _data.id, release_at : date, status : 'pending', warehouseID: warehouseID, approval: approval },'cart/status').then((res:any) => {
+      console.log("RES DATA!:", res._data)
       if(res._data.status){
         self.ngOnInit();
         _data.release_at = date;
         _data.payment_type = res._data.data.payment_type;
         _data.delivery_option = res._data.data.delivery_option;
         _data.warehouse_designation = res._data.updated_trans.warehouse_designation;
+        _data.warehouse_designation = res._data.updated_trans.warehouse_designation;
         _data.status = 'pending';
+        _data.approval = approval;
         //let params = { data : res._data.updated_trans , type : 'add-pending-transaction' };
         let params = { data : _data , type : 'add-pending-transaction' };
         self.socket.emit('transaction', { text: params });
